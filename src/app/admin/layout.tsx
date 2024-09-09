@@ -1,7 +1,8 @@
-import { AdminHeaderContainer } from "@/layouts/admin/admin-header";
-import { AdminSidebarContainer } from "@/layouts/admin/admin-sidebar";
-import { PrivateWrapper } from "@/layouts/wrappers";
-import { Fragment, PropsWithChildren } from "react";
+import { AdminHeaderContainer } from '@/layouts/admin/admin-header'
+import { AdminSidebarContainer } from '@/layouts/admin/admin-sidebar'
+import { PrivateWrapper } from '@/layouts/wrappers'
+
+import { Fragment, PropsWithChildren } from 'react'
 
 export default function AdminLayout(props: PropsWithChildren) {
   return (
@@ -10,5 +11,5 @@ export default function AdminLayout(props: PropsWithChildren) {
       <AdminSidebarContainer />
       <PrivateWrapper>{props.children}</PrivateWrapper>
     </Fragment>
-  );
+  )
 }

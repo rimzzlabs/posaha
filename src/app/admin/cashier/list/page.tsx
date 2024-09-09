@@ -1,5 +1,5 @@
-import { HeadingOne } from "@/components/ui/headings";
+import { HeadingOne } from '@/components/ui/headings'
 
 export default function CashierListPage() {
-  return <HeadingOne>Daftar Kasir</HeadingOne>;
+  return <HeadingOne>Daftar Kasir</HeadingOne>
 }

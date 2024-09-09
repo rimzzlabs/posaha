@@ -1,7 +1,8 @@
-import { PublicWrapper } from "@/layouts/wrappers";
-import { SignInContainer } from "@/modules/auth/signin";
-import { PublicHeaderContainer } from "@/modules/shared/public-header";
-import { Fragment } from "react";
+import { PublicWrapper } from '@/layouts/wrappers'
+import { SignInContainer } from '@/modules/auth/signin'
+import { PublicHeaderContainer } from '@/modules/shared/public-header'
+
+import { Fragment } from 'react'
 
 export default function SigninPage() {
   return (
@@ -11,5 +12,5 @@ export default function SigninPage() {
         <SignInContainer />
       </PublicWrapper>
     </Fragment>
-  );
+  )
 }

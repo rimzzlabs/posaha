@@ -1,67 +1,45 @@
-import { formatPrice } from "@/lib/number";
-import { createColumnHelper } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, EyeIcon, PenIcon, Trash2Icon } from "lucide-react";
+import { formatDate } from '@/lib/dates'
+import { formatPrice } from '@/lib/number'
 
-let ch = createColumnHelper<Product>();
+import { ProductDataTableAction } from './product-data-table-action'
+
+import { N } from '@mobily/ts-belt'
+import { createColumnHelper } from '@tanstack/react-table'
+
+let ch = createColumnHelper<Product>()
 
 export const PRODUCT_DATA_TABLE_COLUMN = [
-  ch.accessor("name", { header: "Nama Produk" }),
-  ch.accessor("description", {
-    header: "Deksripsi Produk",
-    cell: (props) => (
-      <p className="whitespace-pre-wrap max-w-md text-balance">
-        {props.getValue()}
-      </p>
-    ),
-  }),
-  ch.accessor("price", {
-    header: "Harga Produk",
-    cell: (props) => formatPrice(props.getValue()),
-  }),
-  ch.accessor("stock.available", { header: "Stok Tersedia" }),
-  ch.accessor("stock.sold", { header: "Stok Terjual" }),
   ch.display({
-    id: "action",
-    header: "Aksi",
-    cell: () => {
-      return (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-x-2">
-              Menu
-              <ChevronDownIcon size="1em" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Menu Aksi</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <EyeIcon size="1em" />
-              Lihat Produk
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <PenIcon size="1em" />
-              Perbarui Produk
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Trash2Icon size="1em" />
-              Hapus Produk
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    header: 'No.',
+    id: 'Numeric',
+    cell: (props) => N.add(props.row.index, 1),
+  }),
+  ch.accessor('name', {
+    header: 'Nama Produk',
+    cell: (props) => <span className='text-balance'>{props.getValue()}</span>,
+  }),
+  ch.accessor('price', {
+    header: 'Harga produk',
+    cell: (p) => formatPrice(p.getValue()),
+  }),
+  ch.accessor('description', {
+    header: 'Deksripsi Produk',
+    cell: (props) =>
+      props.getValue() || <em className='text-muted-foreground'>Tidak ada deksripsi produk</em>,
+  }),
+  ch.accessor('stock.available', {
+    header: 'Stok Tersedia',
+    cell: (props) => props.getValue(),
+  }),
+  ch.accessor('updatedAt', {
+    header: 'Terakhir Diperbarui',
+    cell: (props) => formatDate(props.getValue(), 'EEEE, dd MMM, yyyy. HH:mm:ss'),
+  }),
+  ch.display({
+    id: 'action',
+    header: 'Aksi',
+    cell: (props) => {
+      return <ProductDataTableAction {...props.row.original} />
     },
   }),
-];
+]

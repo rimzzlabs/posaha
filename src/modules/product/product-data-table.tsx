@@ -1,31 +1,34 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { DataTableUI } from "../shared/data-table";
-import { useProductList } from "./hooks/use-product-list";
-import { PRODUCT_DATA_TABLE_COLUMN } from "./product-data-table-column";
-import { toFloat } from "radash";
+import { useProductList } from '@/app/admin/product/__hooks'
 
-const PPH_TAX = toFloat(process.env.UMKMK_PPH_TAX, 0.005); // 0,5%;
-const RENT_FEE = toFloat(process.env.RENT_FEE, 75000);
+import { DataTableUI } from '../shared/data-table'
+import { PRODUCT_DATA_TABLE_COLUMN } from './product-data-table-column'
+import { ProductDataTableFilter } from './product-data-table-filter'
+
+import { useSearchParams } from 'next/navigation'
+import { toFloat } from 'radash'
 
 export function ProductDataTable() {
-  let [isPending, setIsPending] = useState(true);
-  let data = useProductList();
+  let search = useSearchParams()
+  let data = useProductList()
+  let page = toFloat(search.get('page'), 1)
 
-  useEffect(() => {
-    let timerId = setTimeout(() => setIsPending(false), 500);
-
-    return () => clearTimeout(timerId);
-  }, []);
+  let limit = 10
+  let offset = (page - 1) * limit
+  let totalPage = Math.ceil(data.length / limit) || 1
+  let paginatedData = data.slice(offset, offset + limit)
 
   return (
-    <section className="pt-6">
+    <section>
+      <ProductDataTableFilter />
       <DataTableUI
-        data={data}
-        isPending={isPending}
+        page={page}
+        total={totalPage}
+        data={paginatedData}
+        isPending={false}
         columns={PRODUCT_DATA_TABLE_COLUMN}
       />
     </section>
-  );
+  )
 }
