@@ -1,3 +1,6 @@
+import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+
 import { formatDate } from '@/lib/dates'
 import { formatPrice } from '@/lib/number'
 
@@ -5,6 +8,7 @@ import { ProductDataTableAction } from './product-data-table-action'
 
 import { N } from '@mobily/ts-belt'
 import { createColumnHelper } from '@tanstack/react-table'
+import { MinusIcon } from 'lucide-react'
 
 let ch = createColumnHelper<Product>()
 
@@ -25,11 +29,33 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
   ch.accessor('description', {
     header: 'Deksripsi Produk',
     cell: (props) =>
-      props.getValue() || <em className='text-muted-foreground'>Tidak ada deksripsi produk</em>,
+      props.getValue() || (
+        <Tooltip delayDuration={250}>
+          <TooltipTrigger className='text-muted-foreground'>
+            <MinusIcon size='1rem' />
+            <span className='sr-only'>Tidak ada deskripsi produk</span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className='text-sm font-medium'>Produk ini belum mempunyai deskripsi</p>
+          </TooltipContent>
+        </Tooltip>
+      ),
   }),
   ch.accessor('stock.available', {
     header: 'Stok Tersedia',
     cell: (props) => props.getValue(),
+  }),
+  ch.accessor('category.name', {
+    header: 'Kategori Produk',
+    cell: (props) => {
+      let backgroundColor = props.row.original.category.color
+
+      return (
+        <Badge variant='secondary' className='text-neutral-800' style={{ backgroundColor }}>
+          {props.getValue()}
+        </Badge>
+      )
+    },
   }),
   ch.accessor('updatedAt', {
     header: 'Terakhir Diperbarui',

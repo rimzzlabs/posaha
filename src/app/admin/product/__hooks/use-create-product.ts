@@ -1,9 +1,11 @@
 import { productListAtom } from '@/states/product'
+import { productCategoryAtom } from '@/states/product-category'
 
 import { createProductSchema } from '../__schema/product-schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSetAtom } from 'jotai'
+import { A, pipe, S } from '@mobily/ts-belt'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { random, sleep, uid } from 'radash'
 import { useForm } from 'react-hook-form'
@@ -13,6 +15,7 @@ import { z } from 'zod'
 export function useCreateProduct() {
   let router = useRouter()
   let updateProductList = useSetAtom(productListAtom)
+  let productCategoryList = useAtomValue(productCategoryAtom)
 
   let form = useForm<z.infer<typeof createProductSchema>>({
     defaultValues: {
@@ -20,6 +23,7 @@ export function useCreateProduct() {
       stock: 1,
       description: '',
       price: '' as unknown as number,
+      category: '',
     },
     resolver: zodResolver(createProductSchema),
   })
@@ -31,7 +35,24 @@ export function useCreateProduct() {
     })
     await sleep(random(50, 800))
     let timestamp = new Date().toISOString()
+    let category = pipe(
+      productCategoryList,
+      A.getBy((category) => S.includes(values.category)(category.id)),
+    )
 
+    if (!category) {
+      toast.dismiss()
+      toast.error('Kategori produk tidak valid')
+      return
+    }
+
+    let stock = {
+      sold: 0,
+      id: uid(12),
+      available: values.stock,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    }
     let newProduct: Product = {
       id: uid(32),
       name: values.name,
@@ -39,13 +60,8 @@ export function useCreateProduct() {
       createdAt: timestamp,
       updatedAt: timestamp,
       price: values.price,
-      stock: {
-        sold: 0,
-        id: uid(12),
-        available: values.stock,
-        createdAt: timestamp,
-        updatedAt: timestamp,
-      },
+      category,
+      stock,
     }
     updateProductList((prev) => prev.concat([newProduct]))
     toast.dismiss(toastId)

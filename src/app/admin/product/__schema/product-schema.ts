@@ -28,4 +28,5 @@ export let createProductSchema = z.object({
         pipe('Minimal stok produk adalah ', S.append(String(MIN_PRODUCT_STOCK))),
       ),
   ),
+  category: z.string().min(1, 'Harap pilih kategori produk'),
 })

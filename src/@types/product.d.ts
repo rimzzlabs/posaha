@@ -19,6 +19,7 @@ type Product = TPrettify<
     name: string
     price: number
     stock: ProductStock
+    category: ProductCategory
 
     banner?: ProductImage
     images?: Array<ProductImage>

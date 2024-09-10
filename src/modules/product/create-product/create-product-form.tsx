@@ -16,6 +16,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { useCreateProduct } from '@/app/admin/product/__hooks'
 import { isFormPending } from '@/lib/utils'
 
+import { CreateProductCategory } from './create-product-category'
+
 import { B, N, pipe } from '@mobily/ts-belt'
 import { Loader2Icon, MinusIcon, PlusIcon, SendHorizonalIcon } from 'lucide-react'
 import { omit, toFloat } from 'radash'
@@ -77,6 +79,8 @@ export function CreateProductForm() {
             </FormItem>
           )}
         />
+
+        <CreateProductCategory />
 
         <FormField
           name='stock'
