@@ -1,13 +1,19 @@
 import { S, pipe } from '@mobily/ts-belt'
-import { toFloat, toInt } from 'radash'
+import { toInt } from 'radash'
 import { z } from 'zod'
 
-const MIN_PRODUCT_PRICE = toFloat(process.env.NEXT_PUBLIC_MIN_PRODUCT_PRICE, 100)
-const MIN_PRODUCT_STOCK = toFloat(process.env.NEXT_PUBLIC_MIN_PRODUCT_STOCK, 1)
+const MIN_PRODUCT_PRICE = toInt(process.env.NEXT_PUBLIC_MIN_PRODUCT_PRICE, 100)
+const MIN_PRODUCT_STOCK = toInt(process.env.NEXT_PUBLIC_MIN_PRODUCT_STOCK, 1)
+const MAX_REMARKS_TRANSACTION_STOCK = toInt(
+  process.env.NEXT_PUBLIC_MAX_REMARKS_TRANSACTION_STOCK,
+  1000,
+)
 
 export let createProductSchema = z.object({
   name: z.string().min(1, 'Harap isi bagian ini'),
   description: z.string().optional(),
+  category: z.string().min(1, 'Harap pilih kategori produk'),
+  sku: z.string().min(1, 'Harap isi bagian ini').max(20, 'SKU tidak boleh lebih dari 30 karakter'),
 
   price: z.preprocess(
     (a) => toInt(a, 0),
@@ -28,5 +34,24 @@ export let createProductSchema = z.object({
         pipe('Minimal stok produk adalah ', S.append(String(MIN_PRODUCT_STOCK))),
       ),
   ),
-  category: z.string().min(1, 'Harap pilih kategori produk'),
+})
+
+export let updateStockProductSchema = z.object({
+  stock: z.preprocess(
+    (a) => toInt(a, 0),
+    z
+      .number({ invalid_type_error: 'Harap isi bagian ini' })
+      .min(1, 'Jumlah minimal penambahan produk adalah 1'),
+  ),
+  remarks: z
+    .string()
+    .max(
+      MAX_REMARKS_TRANSACTION_STOCK,
+      pipe(
+        'Maksimal catatan tidak boleh melebihi ',
+        S.append(String(MAX_REMARKS_TRANSACTION_STOCK)),
+        S.append(' karakter'),
+      ),
+    )
+    .optional(),
 })

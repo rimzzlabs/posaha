@@ -1,4 +1,5 @@
 import { ModalConfirmation } from './modal-confirmation'
+import { ModalForm } from './modal-form'
 
 import { createPushModal } from 'pushmodal'
 
@@ -13,5 +14,6 @@ export const {
 } = createPushModal({
   modals: {
     ModalConfirmation,
+    ModalForm,
   },
 })

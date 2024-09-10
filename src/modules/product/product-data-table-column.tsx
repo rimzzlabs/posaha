@@ -18,9 +18,11 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
     id: 'Numeric',
     cell: (props) => N.add(props.row.index, 1),
   }),
+  ch.accessor('sku', {
+    header: 'SKU Produk',
+  }),
   ch.accessor('name', {
     header: 'Nama Produk',
-    cell: (props) => <span className='text-balance'>{props.getValue()}</span>,
   }),
   ch.accessor('price', {
     header: 'Harga produk',
@@ -43,7 +45,9 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
   }),
   ch.accessor('stock.available', {
     header: 'Stok Tersedia',
-    cell: (props) => props.getValue(),
+  }),
+  ch.accessor('stock.sold', {
+    header: 'Stok Terjual',
   }),
   ch.accessor('category.name', {
     header: 'Kategori Produk',

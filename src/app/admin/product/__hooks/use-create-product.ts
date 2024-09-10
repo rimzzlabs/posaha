@@ -4,7 +4,7 @@ import { productCategoryAtom } from '@/states/product-category'
 import { createProductSchema } from '../__schema/product-schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { A, pipe, S } from '@mobily/ts-belt'
+import { A, F, pipe, S } from '@mobily/ts-belt'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { random, sleep, uid } from 'radash'
@@ -22,8 +22,9 @@ export function useCreateProduct() {
       name: '',
       stock: 1,
       description: '',
-      price: '' as unknown as number,
       category: '',
+      sku: '',
+      price: '' as unknown as number,
     },
     resolver: zodResolver(createProductSchema),
   })
@@ -46,6 +47,23 @@ export function useCreateProduct() {
       return
     }
 
+    let sku = pipe(
+      values.sku,
+      S.toUpperCase,
+      S.replaceByRe(/\s+/g, '-'),
+      F.ifElse(S.startsWith('-'), S.sliceToEnd(1), F.identity),
+      (value) => {
+        const match = /-+$/.exec(value)
+        if (match && match[0].length > 1) {
+          return value.slice(0, -match[0].length) + '-'
+        }
+        return value
+      },
+      S.split('-'),
+      A.filter((value) => S.length(value) > 0),
+      A.join('-'),
+      S.prepend('POS-'),
+    )
     let stock = {
       sold: 0,
       id: uid(12),
@@ -60,6 +78,7 @@ export function useCreateProduct() {
       createdAt: timestamp,
       updatedAt: timestamp,
       price: values.price,
+      sku,
       category,
       stock,
     }

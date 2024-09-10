@@ -55,7 +55,7 @@ export function CreateProductCategory() {
           .otherwise(() => 'Pilih Kategori Produk')
 
         return (
-          <FormItem className='pt-3'>
+          <FormItem>
             <FormLabel asterisk>Kategori Produk</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
@@ -75,34 +75,36 @@ export function CreateProductCategory() {
                 <Command>
                   <CommandInput placeholder='Cari kategori produk' />
                   <CommandList>
-                    <CommandEmpty className='h-40 flex items-center justify-center'>
+                    <CommandEmpty>
                       <p className='text-sm font-medium text-muted-foreground'>
-                        Kategori ini belum dibuat
+                        Kategori tidak ditemukan
                       </p>
                     </CommandEmpty>
 
-                    <For each={productCategoryList}>
-                      {(category) => (
-                        <CommandItem
-                          value={category.id}
-                          onSelect={() => {
-                            field.onChange(category.id)
-                          }}
-                        >
-                          <CheckIcon
-                            className={cn(
-                              'mr-1 h-4 w-4',
-                              category.id === field.value ? 'opacity-100' : 'opacity-0',
-                            )}
-                          />
-                          <span
-                            className='w-5 mr-2 h-5 rounded'
-                            style={{ backgroundColor: category.color }}
-                          />
-                          {category.name}{' '}
-                        </CommandItem>
-                      )}
-                    </For>
+                    <CommandGroup>
+                      <For each={productCategoryList}>
+                        {(category) => (
+                          <CommandItem
+                            value={category.id}
+                            onSelect={() => {
+                              field.onChange(category.id)
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                'mr-1 h-4 w-4',
+                                category.id === field.value ? 'opacity-100' : 'opacity-0',
+                              )}
+                            />
+                            <span
+                              className='w-5 mr-2 h-5 rounded'
+                              style={{ backgroundColor: category.color }}
+                            />
+                            {category.name}{' '}
+                          </CommandItem>
+                        )}
+                      </For>
+                    </CommandGroup>
                   </CommandList>
                 </Command>
               </PopoverContent>
