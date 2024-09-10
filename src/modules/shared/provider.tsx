@@ -1,6 +1,7 @@
 'use client'
 
 import { ModalProvider } from '@/components/modals'
+import { ProgressBar } from '@/components/ui/progress-bar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
 import { getReactQueryConfig } from '@/lib/configs/react-query'
@@ -27,6 +28,7 @@ export function Provider(props: React.PropsWithChildren) {
           storageKey='app.posaha.theme'
         >
           <TooltipProvider>{props.children}</TooltipProvider>
+          <ProgressBar />
           <ModalProvider />
         </ThemeProvider>
         <ReactQueryDevtools position='bottom' buttonPosition='bottom-left' />

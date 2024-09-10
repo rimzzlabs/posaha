@@ -2,9 +2,8 @@
 
 import { useProductList } from '@/app/admin/product/__hooks'
 
-import { DataTableUI } from '../shared/data-table'
+import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { PRODUCT_DATA_TABLE_COLUMN } from './product-data-table-column'
-import { ProductDataTableFilter } from './product-data-table-filter'
 
 import { useSearchParams } from 'next/navigation'
 import { toFloat } from 'radash'
@@ -21,7 +20,13 @@ export function ProductDataTable() {
 
   return (
     <section>
-      <ProductDataTableFilter />
+      <DataTableHeader
+        search={{
+          label: 'Cari produk',
+          placeholder: 'Cari: minyak sayur, gula pasir',
+        }}
+        button={{ href: '/admin/product/create', label: 'Tambah Produk' }}
+      />
       <DataTableUI
         page={page}
         total={totalPage}

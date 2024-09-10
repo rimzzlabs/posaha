@@ -1,11 +1,8 @@
 import { ProductCategoryDataTable } from '@/modules/product-category'
 
-import { Suspense } from 'react'
+import { random, sleep } from 'radash'
 
-export default function ProductCategoryPage() {
-  return (
-    <Suspense>
-      <ProductCategoryDataTable />
-    </Suspense>
-  )
+export default async function ProductCategoryPage() {
+  await sleep(random(1000, 2000))
+  return <ProductCategoryDataTable />
 }

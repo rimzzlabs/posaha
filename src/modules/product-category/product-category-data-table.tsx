@@ -2,9 +2,8 @@
 
 import { useProductCategoryList } from '@/app/admin/product/__hooks'
 
-import { DataTableUI } from '../shared/data-table'
+import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { PRODUCT_CATEGORY_DATA_TABLE_COLUMN } from './product-category-data-table-column'
-import { ProductCategoryDataTableFilter } from './product-category-data-table-filter'
 
 import { useSearchParams } from 'next/navigation'
 import { toFloat } from 'radash'
@@ -21,7 +20,13 @@ export function ProductCategoryDataTable() {
 
   return (
     <section>
-      <ProductCategoryDataTableFilter />
+      <DataTableHeader
+        search={{
+          label: 'Cari produk kategori',
+          placeholder: 'Cari: makanan, minuman, bahan masakan',
+        }}
+        button={{ href: '/admin/product/category/create', label: 'Tambah Kategori' }}
+      />
       <DataTableUI
         page={page}
         total={totalPage}

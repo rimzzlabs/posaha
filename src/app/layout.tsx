@@ -1,4 +1,3 @@
-import { ProgressBar } from '@/components/ui/progress-bar'
 import { Toaster } from '@/components/ui/sonner'
 
 import { Provider } from '@/modules/shared/provider'
@@ -37,9 +36,8 @@ export default function RootLayout(props: PropsWithChildren) {
     <html lang='id' suppressHydrationWarning>
       <body className={pjs.variable}>
         <Provider>
-          {props.children}
           <Toaster />
-          <ProgressBar />
+          {props.children}
         </Provider>
       </body>
     </html>
