@@ -1,7 +1,7 @@
 import { signInSchema } from '../__schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next-nprogress-bar'
 import { random, sleep } from 'radash'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'

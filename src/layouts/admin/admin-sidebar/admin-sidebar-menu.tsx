@@ -31,7 +31,7 @@ export function AdminSidebarMenu() {
                 </p>
               )}
 
-              <div className='flex flex-col gap-2'>
+              <div className='flex flex-col gap-1'>
                 <For each={group.menus}>
                   {({ label, path, icon: Icon, ...args }) => {
                     if (!args.visible) return <Fragment />
@@ -64,7 +64,7 @@ export function AdminSidebarMenu() {
                           </Button>
                         </CollapsibleTrigger>
 
-                        <CollapsibleContent className='flex flex-col gap-x-1 pl-4 py-0.5'>
+                        <CollapsibleContent className='flex flex-col gap-x-1 pl-3 py-px'>
                           <For each={subMenus}>
                             {({ label, path, icon: Icon, newTab }, key) => (
                               <Button
@@ -78,7 +78,7 @@ export function AdminSidebarMenu() {
                                   rel='noopener noreferrer'
                                   href={path}
                                 >
-                                  <Icon size='0.875rem' />
+                                  <Icon size='1em' />
                                   {label}
                                   {newTab && <ArrowUpRight size='0.75rem' className='ml-auto' />}
                                 </Link>

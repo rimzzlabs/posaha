@@ -1,4 +1,4 @@
-import { B, S, pipe } from '@mobily/ts-belt'
+import { S, pipe } from '@mobily/ts-belt'
 import {
   LayoutGridIcon,
   type LucideIcon,
@@ -34,15 +34,29 @@ type TSidebarGroup = {
 export function getSidebarList(pathname: string): Array<TSidebarGroup> {
   return [
     {
-      label: 'Beranda',
+      label: 'Akses Cepat',
       visible: true,
       menus: [
         {
+          visible: true,
           label: 'Dasbor',
+          path: '/admin',
           icon: LayoutGridIcon,
           active: pathname === '/admin',
-          path: '/admin',
+        },
+        {
           visible: true,
+          label: 'Daftar Produk',
+          path: '/admin/product/list',
+          icon: PackageIcon,
+          active: false,
+        },
+        {
+          visible: true,
+          label: 'Daftar Penggnuna',
+          path: '/admin/user/list',
+          icon: UsersIcon,
+          active: false,
         },
       ],
     },
@@ -51,56 +65,45 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
       visible: true,
       menus: [
         {
-          label: 'Produk',
-          icon: PackageIcon,
-          active: pipe(
-            pathname,
-            S.endsWith('/product/list'),
-            B.or(S.endsWith('/product/create')(pathname)),
-            B.or(S.endsWith('/product/update')(pathname)),
-          ),
+          visible: true,
+          label: 'Daftar Produk',
           path: '/admin/product/list',
-          visible: true,
-          subMenus: [],
+          icon: PackageIcon,
+          active: pipe(pathname, S.endsWith('/product/list')),
         },
         {
-          icon: TagsIcon,
-          active: pipe(
-            pathname,
-            S.endsWith('/product/category/list'),
-            B.or(S.endsWith('/product/category/create')(pathname)),
-            B.or(S.endsWith('/product/category/update')(pathname)),
-          ),
-          label: 'Kategori Produk',
+          visible: true,
+          label: 'Daftar Produk Kategori',
           path: '/admin/product/category/list',
-          visible: true,
+          icon: TagsIcon,
+          active: pipe(pathname, S.endsWith('/category/list')),
         },
         {
-          label: 'Penjualan',
+          visible: true,
+          label: 'Laporan Penjualan',
+          path: '/admin/sales',
           icon: ChartNoAxesColumn,
           active: pathname.endsWith('/sales'),
-          path: '/admin/sales',
-          visible: true,
         },
       ],
     },
     {
-      label: 'Kelola Pengguna',
+      label: 'Pengguna',
       visible: true,
       menus: [
         {
-          label: 'Daftar Kasir',
-          icon: UsersIcon,
-          active: pathname.startsWith('admin/cashier'),
-          path: '/admin/cashier/list',
           visible: true,
+          label: 'Buat Pengguna',
+          path: '/admin/user/create',
+          icon: UserPlusIcon,
+          active: pathname.endsWith('/user/create'),
         },
         {
-          label: 'Tambah Pengguna',
-          icon: UserPlusIcon,
-          active: pathname.startsWith('admin/cashier'),
-          path: '/admin/cashier/add',
           visible: true,
+          label: 'Daftar Pengguna',
+          path: '/admin/user/list',
+          icon: UsersIcon,
+          active: pathname.endsWith('/user/list'),
         },
       ],
     },
