@@ -1,5 +1,14 @@
 import { HeadingOne } from '@/components/ui/headings'
 
+import { CreateUserForm } from '@/modules/user/create-user'
+
+import { Fragment } from 'react'
+
 export default function CreateUserPage() {
-  return <HeadingOne>Add User</HeadingOne>
+  return (
+    <Fragment>
+      <HeadingOne>Tambah Penguna Baru</HeadingOne>
+      <CreateUserForm />
+    </Fragment>
+  )
 }

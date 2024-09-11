@@ -1,7 +1,8 @@
 import { A, F, pipe } from '@mobily/ts-belt'
 import { atom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 
-export let userListAtom = atom<Array<UserProfile>>([])
+export let userListAtom = atomWithStorage<Array<UserProfile>>('app.posaha.user.profile.list', [])
 
 export let sortedUserListAtom = atom((get) =>
   pipe(

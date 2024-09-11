@@ -1,3 +1,5 @@
+import { Badge } from '@/components/ui/badge'
+
 import { formatDate } from '@/lib/dates'
 
 import { UserDataTableAction } from './user-data-table-action'
@@ -15,7 +17,18 @@ export const USER_DATA_TABLE_COLUMN = [
   }),
   ch.accessor('fullName', { header: 'Nama Lengkap' }),
   ch.accessor('email', { header: 'Email' }),
-  ch.accessor('role.name', { header: 'Role' }),
+  ch.accessor('role.label', {
+    header: 'Role',
+    cell: (props) => {
+      let backgroundColor = props.row.original.role.color
+      return (
+        <Badge style={{ backgroundColor }} variant='secondary'>
+          {props.getValue()}
+        </Badge>
+      )
+    },
+  }),
+  ch.accessor('address', { header: 'Alamat lengkap' }),
   ch.accessor('createdAt', {
     header: 'Terakhir diperbarui',
     cell: (props) => formatDate(props.getValue()),

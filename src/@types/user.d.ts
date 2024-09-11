@@ -6,18 +6,13 @@ type User = TPrettify<
   } & TTimeStamp
 >
 
-type UserRole = TPrettify<
-  {
-    id: string
-    name: 'admin' | 'cashier'
-  } & TTimeStamp
->
-
 type UserProfile = TPrettify<
   {
     id: string
+    avatar?: string | null
     userId: string
     fullName: string
+    address: string
     role: UserRole
   } & Omit<User, 'password' | 'id'>
 >
