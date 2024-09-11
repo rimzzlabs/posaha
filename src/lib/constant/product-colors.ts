@@ -1,4 +1,4 @@
-export const PRODUCT_COLORS = [
+export const PRODUCT_CATEGORY_COLORS = [
   { value: '#E7E5E4', label: 'Stone' },
   { value: '#FDE68A', label: 'Amber' },
   { value: '#FED7AA', label: 'Orange' },

@@ -2,6 +2,8 @@ import { ButtonProps, buttonVariants } from '@/components/ui/button'
 
 import { cn } from '@/lib/utils'
 
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
+
 import { ChevronLeftIcon, ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
 import * as React from 'react'
@@ -33,47 +35,53 @@ type PaginationLinkProps = {
 } & Pick<ButtonProps, 'size'> &
   React.ComponentProps<typeof Link>
 
-const PaginationLink = ({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) => (
-  <Link
-    aria-current={isActive ? 'page' : undefined}
-    className={cn(
-      buttonVariants({
-        variant: isActive ? 'outline' : 'ghost',
-        size,
-      }),
-      className,
-    )}
-    {...props}
-  />
+const PaginationLink = React.forwardRef<HTMLAnchorElement, PaginationLinkProps>(
+  ({ className, isActive, size = 'icon', ...props }, ref) => (
+    <Link
+      aria-current={isActive ? 'page' : undefined}
+      className={cn(
+        buttonVariants({
+          variant: isActive ? 'outline' : 'ghost',
+          size,
+        }),
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  ),
 )
 PaginationLink.displayName = 'PaginationLink'
 
-const PaginationPrevious = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label='Go to previous page'
-    size='default'
-    className={cn('gap-1 pl-2.5', className)}
-    {...props}
-  >
-    <ChevronLeftIcon className='h-4 w-4' />
-    <span>Sebelumnya</span>
-  </PaginationLink>
+const PaginationPrevious = (props: React.ComponentProps<typeof PaginationLink>) => (
+  <Tooltip delayDuration={50}>
+    <TooltipTrigger asChild>
+      <PaginationLink aria-label='Go to previous page' size='default' {...props}>
+        <ChevronLeftIcon className='h-4 w-4' />
+        <span className='sr-only'>Sebelumnya</span>
+      </PaginationLink>
+    </TooltipTrigger>
+
+    <TooltipContent>
+      <p className='font-medium'>Halaman sebelumnya</p>
+    </TooltipContent>
+  </Tooltip>
 )
 PaginationPrevious.displayName = 'PaginationPrevious'
 
-const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label='Go to next page'
-    size='default'
-    className={cn('gap-1 pr-2.5', className)}
-    {...props}
-  >
-    <span>Berikutnya</span>
-    <ChevronRightIcon className='h-4 w-4' />
-  </PaginationLink>
+const PaginationNext = (props: React.ComponentProps<typeof PaginationLink>) => (
+  <Tooltip delayDuration={50}>
+    <TooltipTrigger asChild>
+      <PaginationLink aria-label='Go to next page' size='default' {...props}>
+        <span className='sr-only'>Berikutnya</span>
+        <ChevronRightIcon className='h-4 w-4' />
+      </PaginationLink>
+    </TooltipTrigger>
+
+    <TooltipContent>
+      <p className='font-medium'>Halaman selanjutnya</p>
+    </TooltipContent>
+  </Tooltip>
 )
 PaginationNext.displayName = 'PaginationNext'
 

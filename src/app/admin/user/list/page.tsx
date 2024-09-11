@@ -1,5 +1,5 @@
-import { HeadingOne } from '@/components/ui/headings'
+import { UserDataTable } from '@/modules/user'
 
 export default function ListUserPage() {
-  return <HeadingOne>Hello User</HeadingOne>
+  return <UserDataTable />
 }

@@ -1,4 +1,4 @@
-import { PRODUCT_COLORS } from '@/lib/constant'
+import { PRODUCT_CATEGORY_COLORS } from '@/lib/constant'
 import { formatDate } from '@/lib/dates'
 
 import { ProductCategoryDataTableAction } from './product-category-data-table-action'
@@ -30,7 +30,7 @@ export const PRODUCT_CATEGORY_DATA_TABLE_COLUMN = [
           <span className='inline-flex items-center gap-x-2'>
             <span className='h-4 w-4 rounded' style={{ backgroundColor: fieldValue }} />
             {pipe(
-              PRODUCT_COLORS,
+              PRODUCT_CATEGORY_COLORS,
               A.getBy((field) => F.equals(fieldValue)(field.value)),
               O.getWithDefault({ label: '-', value: '' }),
               D.get('label'),

@@ -1,3 +1,5 @@
+'use client'
+
 import { For } from '@/components/ui/for'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {

@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { createProductCategorySchema } from '@/app/admin/product/__schema'
-import { PRODUCT_COLORS } from '@/lib/constant'
+import { PRODUCT_CATEGORY_COLORS } from '@/lib/constant'
 import { isFormPending } from '@/lib/utils'
 
 import { A, B, D, F, G, O, pipe } from '@mobily/ts-belt'
@@ -41,7 +41,7 @@ export function CreateProductCategoryColorPicker() {
                       <span className='inline-flex items-center gap-x-2'>
                         <span className='h-4 w-4 rounded' style={{ backgroundColor: fieldValue }} />
                         {pipe(
-                          PRODUCT_COLORS,
+                          PRODUCT_CATEGORY_COLORS,
                           A.getBy((field) => F.equals(fieldValue)(field.value)),
                           O.getWithDefault({ label: '-', value: '' }),
                           D.get('label'),
@@ -64,7 +64,7 @@ export function CreateProductCategoryColorPicker() {
                 onValueChange={field.onChange}
                 className='grid grid-cols-4 gap-2'
               >
-                <For each={PRODUCT_COLORS}>
+                <For each={PRODUCT_CATEGORY_COLORS}>
                   {(color) => (
                     <Tooltip delayDuration={150}>
                       <TooltipTrigger>
