@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --config ./.prettierrc.js -w \"./src/**/*.{js,jsx,astro,ts,tsx,mdx,md,css}\"",
     "ui:add": "pnpm dlx shadcn@latest add",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
     "prepare": "husky",
     "commit": "cz"
   },
@@ -81,8 +85,6 @@
     }
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,mdx,md,css}": [
-      "prettier --config ./.prettierrc.js \"./src/**/*.{js,jsx,astro,ts,tsx,mdx,md,css}\""
-    ]
+    "**/*.{js,jsx,ts,tsx,mdx,md,css}": "pnpm format"
   }
 }

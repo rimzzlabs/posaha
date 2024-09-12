@@ -9,7 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { HeadingTwo } from '@/components/ui/headings'
 import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
 
@@ -18,18 +17,9 @@ import { isFormPending } from '@/lib/utils'
 
 import { B } from '@mobily/ts-belt'
 import { Loader2Icon, SendHorizonalIcon } from 'lucide-react'
-import { match } from 'ts-pattern'
 
-type TSignInForm = {
-  type: 'admin' | 'cashier'
-}
-
-export function SignInForm(props: TSignInForm) {
+export function SignInForm() {
   let signIn = useSignIn()
-
-  let headingLabel = match(props.type)
-    .with('admin', () => 'Masuk sebagai Administrator')
-    .otherwise(() => 'Masuk sebagai kasir')
 
   let disabledInteractive = isFormPending(signIn.form.formState)
   let submitIcon = B.ifElse(
@@ -41,8 +31,6 @@ export function SignInForm(props: TSignInForm) {
   return (
     <Form {...signIn.form}>
       <form className='space-y-4 md:space-y-6' onSubmit={signIn.onSubmit}>
-        <HeadingTwo>{headingLabel}</HeadingTwo>
-
         <FormField
           name='email'
           control={signIn.form.control}

@@ -15,10 +15,11 @@ export function useSignIn() {
     resolver: zodResolver(signInSchema),
   })
 
-  let onSubmit = form.handleSubmit(async (values) => {
+  let onSubmit = form.handleSubmit(async () => {
     let toastId = toast.loading('Memproses, harap tunggu...')
-    await sleep(random(250, 800))
+    await sleep(random(800, 1400))
     toast.dismiss(toastId)
+
     toast.success('Berhasil masuk!')
     router.push('/admin')
   })

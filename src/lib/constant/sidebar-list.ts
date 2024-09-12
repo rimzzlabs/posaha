@@ -53,7 +53,7 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
         },
         {
           visible: true,
-          label: 'Daftar Penggnuna',
+          label: 'Daftar Pengguna',
           path: '/admin/user/list',
           icon: UsersIcon,
           active: false,
