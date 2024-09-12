@@ -9,7 +9,7 @@ import {
   DashboardTransaction,
 } from '@/modules/dashboard'
 
-import { A, F, N, O, pipe, S } from '@mobily/ts-belt'
+import { A, F, N, O, pipe } from '@mobily/ts-belt'
 import { DollarSignIcon, PackageCheckIcon, PackagePlusIcon, UsersIcon } from 'lucide-react'
 import { draw, random, sleep, toFloat, uid } from 'radash'
 import { Fragment } from 'react'
@@ -59,7 +59,7 @@ async function getCardsData() {
       0: 'Total Penjualan',
       1: 'Total Produk Terjual',
       2: 'Total Produk Baru',
-      3: 'Total Pengguna Baru',
+      3: 'Total Kasir Beroperasi',
     })[index] || '--'
 
   let getValue = (index: number) =>
@@ -108,19 +108,14 @@ async function getLatestTransaction() {
     let price = random(5000, 32500)
     let qty = random(1, 10)
     let total = N.multiply(price)(qty)
-    let label = pipe(
-      draw(products) || 'Minyakita 1L',
-      S.prepend('Terjual produk '),
-      S.append(' Sebanyak '),
-      S.append(String(qty)),
-    )
+    let name = draw(products) || 'Minyakita 1L'
     let time = new Date()
     time.setMinutes(time.getMinutes() - n)
     let timestamp = time.toISOString()
 
     return {
       id: uid(14),
-      label,
+      name,
       price,
       qty,
       total,

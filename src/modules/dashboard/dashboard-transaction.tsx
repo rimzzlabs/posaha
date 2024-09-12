@@ -16,7 +16,7 @@ import { formatPrice } from '@/lib/number'
 import { cn } from '@/lib/utils'
 
 import { B, O, Option, pipe } from '@mobily/ts-belt'
-import { EyeIcon, InboxIcon, Package, RefreshCwIcon } from 'lucide-react'
+import { ArrowRight, EyeIcon, InboxIcon, Package, RefreshCwIcon } from 'lucide-react'
 import { random, sleep } from 'radash'
 import * as React from 'react'
 import { toast } from 'sonner'
@@ -25,7 +25,7 @@ type TDashboardTransaction = {
   data: Option<
     Array<{
       id: string
-      label: string
+      name: string
       price: number
       qty: number
       total: number
@@ -75,36 +75,42 @@ export function DashboardTransaction(props: TDashboardTransaction) {
             {B.ifElse(
               B.inverse(isEmpty),
               () => (
-                <For each={transactions}>
-                  {(trx) => (
-                    <Card key={trx.id} className='flex items-end shadow-none'>
-                      <CardHeader className='p-4'>
-                        <CardTitle className='relative text-emerald-500'>
-                          <span className='sr-only'>Penghasilan bertambah sebesar</span>+
-                          {formatPrice(trx.total)}
-                        </CardTitle>
-                        <CardDescription>
-                          <span className='font-semibold'>Jumlah Pembelian</span>: {trx.qty}
-                        </CardDescription>
-                        <CardDescription>
-                          <span className='font-semibold'>Harga Produk</span>:{' '}
-                          {formatPrice(trx.price)}
-                        </CardDescription>
-                      </CardHeader>
+                <React.Fragment>
+                  <For each={transactions}>
+                    {(trx) => (
+                      <Card key={trx.id} className='flex items-end shadow-none'>
+                        <CardHeader className='p-4'>
+                          <CardTitle className='relative'>{trx.name}</CardTitle>
+                          <CardDescription className='text-emerald-500 font-semibold'>
+                            {formatPrice(trx.total)}
+                          </CardDescription>
+                          <CardDescription>
+                            <span className='font-semibold'>Jumlah Pembelian</span>: {trx.qty}
+                          </CardDescription>
+                          <CardDescription>
+                            <span className='font-semibold'>Harga Produk</span>:{' '}
+                            {formatPrice(trx.price)}
+                          </CardDescription>
+                        </CardHeader>
 
-                      <CardFooter className='p-4 gap-1 flex-col items-end ml-auto'>
-                        <Button className='gap-x-1' size='sm' variant='secondary'>
-                          <EyeIcon size='1em' />
-                          Lihat Transaksi
-                        </Button>
-                        <Button className='gap-x-1' size='sm' variant='ghost'>
-                          <Package size='1em' />
-                          Lihat Produk
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  )}
-                </For>
+                        <CardFooter className='p-4 gap-1 flex-col items-end ml-auto'>
+                          <Button className='gap-x-1' size='sm' variant='ghost'>
+                            <Package size='1em' />
+                            Lihat Produk
+                          </Button>
+                          <Button className='gap-x-1' size='sm' variant='secondary'>
+                            <EyeIcon size='1em' />
+                            Lihat Transaksi
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    )}
+                  </For>
+
+                  <Button variant='ghost' className='gap-x-2 max-w-max mx-auto'>
+                    Semua Transaksi <ArrowRight size='1em' />
+                  </Button>
+                </React.Fragment>
               ),
               () => (
                 <div className='h-96 flex flex-col items-center justify-center gap-2'>
