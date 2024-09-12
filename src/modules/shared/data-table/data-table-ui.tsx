@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils'
 import { DataTablePagination } from './data-table-pagination'
 import { TUseDataTablePagination } from './hooks/use-data-table-pagination'
 
-import { B, N, O, Option, pipe } from '@mobily/ts-belt'
+import { B, F, N, O, Option, pipe } from '@mobily/ts-belt'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { InboxIcon, Loader2 } from 'lucide-react'
 import { Fragment } from 'react'
@@ -37,11 +37,15 @@ type TDataTableUI<D> = TPrettify<
 >
 
 export function DataTableUI<D>(props: TDataTableUI<D>) {
+  let data = pipe(O.fromNullable(props.data), O.mapWithDefault([], F.identity))
   let table = useReactTable({
+    data,
     columns: props.columns,
-    data: pipe(O.fromNullable(props.data), O.getWithDefault([] as Array<D>)),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
+    state: {
+      pagination: { pageIndex: props.page, pageSize: props.total },
+    },
   })
 
   let headerGroups = table.getHeaderGroups()
