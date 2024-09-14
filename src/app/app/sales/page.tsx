@@ -1,4 +1,5 @@
 import { SalesDataTable } from '@/modules/sales'
+import { SpinnerCard } from '@/modules/shared/spinner-card'
 
 import { faker } from '@faker-js/faker/locale/id_ID'
 import { A, D, F, N, pipe, S } from '@mobily/ts-belt'
@@ -9,7 +10,7 @@ export default async function AdminSalesPage() {
   let sales = await getSalesData()
 
   return (
-    <Suspense>
+    <Suspense fallback={<SpinnerCard />}>
       <SalesDataTable data={sales} />
     </Suspense>
   )
