@@ -28,7 +28,7 @@ export function UserDataTable() {
             label: 'Cari pengguna',
             placeholder: 'Cari: nama, nik, role, alamat',
           }}
-          button={{ href: '/admin/user/create', label: 'Tambah Pengguna' }}
+          button={{ href: '/app/user/create', label: 'Tambah Pengguna' }}
         />
       </CardHeader>
       <CardContent>

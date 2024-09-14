@@ -35,7 +35,7 @@ export function useCreateProductCategory() {
     updateProductCategory((prev) => pipe(prev, A.append(newCategory), F.toMutable))
     toast.dismiss(toastId)
     toast.success('Kategori produk berhasil ditambahkan!')
-    router.push('/admin/product/category/list')
+    router.push('/app/product/category/list')
   })
 
   return { form, onSubmit }

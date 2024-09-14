@@ -60,7 +60,7 @@ export function useCreateUser() {
     updateUserList((prev) => [newUser].concat(prev))
     toast.dismiss()
     toast.success('Berhasil menambhkan pengguna baru!')
-    router.push('/admin/user/list')
+    router.push('/app/user/list')
   })
 
   return { form, onSubmit }

@@ -28,7 +28,7 @@ export function ProductCategoryDataTable() {
             label: 'Cari produk kategori',
             placeholder: 'Cari: makanan, minuman, bahan masakan',
           }}
-          button={{ href: '/admin/product/category/create', label: 'Tambah Kategori' }}
+          button={{ href: '/app/product/category/create', label: 'Tambah Kategori' }}
         />
       </CardHeader>
 

@@ -85,7 +85,7 @@ export function useCreateProduct() {
     updateProductList((prev) => prev.concat([newProduct]))
     toast.dismiss(toastId)
     toast.success('Berhasil menambahkan produk baru!')
-    router.push('/admin/product/list')
+    router.push('/app/product/list')
   })
 
   return { form, onSubmit }
