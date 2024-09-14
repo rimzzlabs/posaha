@@ -21,7 +21,7 @@ export function useSignIn() {
     toast.dismiss(toastId)
 
     toast.success('Berhasil masuk!')
-    router.push('/admin')
+    router.push('/app')
   })
 
   return { form, onSubmit }
