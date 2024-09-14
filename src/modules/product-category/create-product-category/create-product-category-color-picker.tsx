@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
-import { createProductCategorySchema } from '@/app/admin/product/__schema'
+import { createProductCategorySchema } from '@/app/app/product/__schema'
 import { PRODUCT_CATEGORY_COLORS } from '@/lib/constant'
 import { isFormPending } from '@/lib/utils'
 

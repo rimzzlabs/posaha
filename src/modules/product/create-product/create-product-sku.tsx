@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { createProductSchema } from '@/app/admin/product/__schema'
+import { createProductSchema } from '@/app/app/product/__schema'
 import { isFormPending } from '@/lib/utils'
 
 import { A, F, pipe, S } from '@mobily/ts-belt'

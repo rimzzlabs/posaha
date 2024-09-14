@@ -1,12 +1,12 @@
 import { ToggleTheme } from '@/components/ui/toggle-theme'
 
-import { AdminHeaderNavbarProfile } from './admin-header-navbar-profile'
+import { HeaderNavbarProfile } from './header-navbar-profile'
 
-export function AdminHeaderNavbar() {
+export function HeaderNavbar() {
   return (
     <nav className='inline-flex items-center gap-x-2 ml-auto'>
       <ToggleTheme />
-      <AdminHeaderNavbarProfile />
+      <HeaderNavbarProfile />
     </nav>
   )
 }

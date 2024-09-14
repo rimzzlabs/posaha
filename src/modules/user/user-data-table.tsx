@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-import { useUserProfileList } from '@/app/admin/user/__hooks'
+import { useUserProfileList } from '@/app/app/user/__hooks'
 
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { USER_DATA_TABLE_COLUMN } from './user-data-table-column'

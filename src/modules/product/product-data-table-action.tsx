@@ -29,7 +29,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-import { updateStockProductSchema } from '@/app/admin/product/__schema'
+import { updateStockProductSchema } from '@/app/app/product/__schema'
 import { isFormPending } from '@/lib/utils'
 import { productListAtom } from '@/states/product'
 

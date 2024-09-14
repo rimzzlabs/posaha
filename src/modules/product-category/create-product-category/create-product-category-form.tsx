@@ -10,7 +10,7 @@ import {
 import { HeadingThree } from '@/components/ui/headings'
 import { Input } from '@/components/ui/input'
 
-import { useCreateProductCategory } from '@/app/admin/product/__hooks'
+import { useCreateProductCategory } from '@/app/app/product/__hooks'
 import { isFormPending } from '@/lib/utils'
 
 import { CreateProductCategoryColorPicker } from './create-product-category-color-picker'

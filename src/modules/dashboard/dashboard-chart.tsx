@@ -53,7 +53,7 @@ export function DashboardChart(props: TDashboardChart) {
         <CardDescription>January - Juli 2024</CardDescription>
       </CardHeader>
       <CardContent className='w-full'>
-        <ChartContainer config={chartConfig} className='h-32 sm:h-52 md:h-56 xl:h-96 w-full'>
+        <ChartContainer config={chartConfig} className='h-32 sm:h-52 md:h-56 xl:h-[31rem] w-full'>
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis

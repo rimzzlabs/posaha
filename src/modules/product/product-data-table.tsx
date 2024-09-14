@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-import { useProductList } from '@/app/admin/product/__hooks'
+import { useProductList } from '@/app/app/product/__hooks'
 
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { PRODUCT_DATA_TABLE_COLUMN } from './product-data-table-column'
