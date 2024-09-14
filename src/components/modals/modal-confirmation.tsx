@@ -10,7 +10,7 @@ import {
 
 import { D, F, pipe } from '@mobily/ts-belt'
 import { Loader2Icon } from 'lucide-react'
-import { useState } from 'react'
+import * as R from 'react'
 
 type TModalConfirmation = {
   title: string
@@ -21,7 +21,7 @@ type TModalConfirmation = {
 }
 
 export function ModalConfirmation(props: TModalConfirmation) {
-  let [isPending, setIsPending] = useState(false)
+  let [isPending, setIsPending] = R.useState(false)
 
   let title = pipe(props, D.get('title'), F.defaultTo('Judul komponen modal'))
   let description = pipe(props, D.get('description'), F.defaultTo('Deksripsi komponen modal'))

@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { F } from '@mobily/ts-belt'
 import { PlusIcon, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
-import * as React from 'react'
+import * as R from 'react'
 import { match, P } from 'ts-pattern'
 
 type TDataTableHeader = {
@@ -27,8 +27,8 @@ type TDataTableHeader = {
 }
 
 export function DataTableHeader(props: TDataTableHeader) {
-  let id = React.useId()
-  let [inputValue, setInputValue] = React.useState('')
+  let id = R.useId()
+  let [inputValue, setInputValue] = R.useState('')
 
   let label = match(props?.search?.label)
     .with(P.string, F.identity)
@@ -49,12 +49,12 @@ export function DataTableHeader(props: TDataTableHeader) {
     .with(P.instanceOf(Function), F.identity)
     .otherwise(F.always(F.ignore))
 
-  let onChangeDebounced = React.useMemo(
+  let onChangeDebounced = R.useMemo(
     () => F.debounce(onSearchChange, delay),
     [delay, onSearchChange],
   )
 
-  let onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let onChangeInput = (e: R.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     onChangeDebounced(value)
     setInputValue(value)

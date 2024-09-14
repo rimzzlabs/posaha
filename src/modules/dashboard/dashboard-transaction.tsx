@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils'
 import { B, O, Option, pipe } from '@mobily/ts-belt'
 import { ArrowRight, EyeIcon, InboxIcon, Package, RefreshCwIcon } from 'lucide-react'
 import { random, sleep } from 'radash'
-import * as React from 'react'
+import * as R from 'react'
 import { toast } from 'sonner'
 
 type TDashboardTransaction = {
@@ -34,12 +34,12 @@ type TDashboardTransaction = {
   >
 }
 export function DashboardTransaction(props: TDashboardTransaction) {
-  let [pending, setPending] = React.useState(false)
+  let [pending, setPending] = R.useState(false)
   let transactions = pipe(
     props.data,
     O.mapWithDefault([], (data) => data),
   )
-  let [isEmpty, setIsEmpty] = React.useState(true)
+  let [isEmpty, setIsEmpty] = R.useState(true)
 
   let mockRefresh = async () => {
     setPending(true)
@@ -75,7 +75,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
             {B.ifElse(
               B.inverse(isEmpty),
               () => (
-                <React.Fragment>
+                <R.Fragment>
                   <For each={transactions}>
                     {(trx) => (
                       <Card key={trx.id} className='flex items-end shadow-none'>
@@ -110,7 +110,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
                   <Button variant='ghost' className='gap-x-2 max-w-max mx-auto'>
                     Semua Transaksi <ArrowRight size='1em' />
                   </Button>
-                </React.Fragment>
+                </R.Fragment>
               ),
               () => (
                 <div className='h-96 flex flex-col items-center justify-center gap-2'>

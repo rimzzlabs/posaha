@@ -47,13 +47,13 @@ import {
   Trash2Icon,
 } from 'lucide-react'
 import { random, sleep, toInt } from 'radash'
-import { useState } from 'react'
+import * as R from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 export function ProductDataTableAction(props: Product) {
-  let [dialogOpen, setDialogOpen] = useState(false)
+  let [dialogOpen, setDialogOpen] = R.useState(false)
   let setProductList = useSetAtom(productListAtom)
 
   let onClickDelete = () => {
