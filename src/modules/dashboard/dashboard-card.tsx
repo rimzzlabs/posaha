@@ -19,7 +19,7 @@ export function DashboardCard(props: TDashboardCard) {
     .otherwise((Icon) => <Icon size='1em' />)
 
   let formatter = match(props.formatter)
-    .with(P.instanceOf(Function), (f) => f)
+    .with(P.instanceOf(Function), F.identity)
     .otherwise(() => F.identity)
 
   return (

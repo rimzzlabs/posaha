@@ -53,6 +53,8 @@ input[type='number'] {
     --accent-foreground: 24 9.8% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 60 9.1% 97.8%;
+    --success: 158.11 64.37% 51.57%;
+    --success-foreground: 165.71 91.3% 9.02%;
     --border: 20 5.9% 90%;
     --input: 20 5.9% 90%;
     --ring: 20 14.3% 4.1%;

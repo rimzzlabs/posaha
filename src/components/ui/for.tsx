@@ -1,7 +1,7 @@
 import { Children } from 'react'
 
 type TFor<D> = {
-  each: Array<D>
+  each: Array<D> | Readonly<Array<D>>
   children: (item: D, index: number) => JSX.Element
 }
 

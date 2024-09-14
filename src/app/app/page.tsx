@@ -5,11 +5,11 @@ import { formatPrice } from '@/lib/number'
 import {
   DashboardCard,
   DashboardChart,
-  DashboardDatePicker,
+  DashboardFilter,
   DashboardTransaction,
 } from '@/modules/dashboard'
 
-import { A, F, N, O, pipe } from '@mobily/ts-belt'
+import { A, B, F, N, O, pipe } from '@mobily/ts-belt'
 import { DollarSignIcon, PackageCheckIcon, PackagePlusIcon, UsersIcon } from 'lucide-react'
 import { draw, random, sleep, toFloat, uid } from 'radash'
 import { Fragment } from 'react'
@@ -26,10 +26,10 @@ export default async function AdminDashboardPage() {
       <div className='flex items-center justify-between'>
         <HeadingTwo>Dasbor</HeadingTwo>
 
-        <DashboardDatePicker />
+        <DashboardFilter />
       </div>
 
-      <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-2 pt-8'>
+      <div className='grid sm:grid-cols-2 2xl:grid-cols-4 gap-2 pt-6'>
         <For each={cardsData}>
           {(item, index) => (
             <DashboardCard
@@ -89,13 +89,26 @@ async function getCardsData() {
 
 async function getChartData() {
   await sleep(random(500, 700))
-  let dates = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli']
+  let dates = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ]
 
   return pipe(
     dates.length,
     A.makeWithIndex((index) => ({
       month: pipe(dates, A.get(index), O.mapWithDefault('-', F.identity)),
-      sale: random(6_000_000, 20_000_000),
+      sale: B.ifElse(N.gt(7)(index), F.always(0), () => random(50_000_000, 120_000_000)),
     })),
     F.toMutable,
   )

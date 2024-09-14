@@ -17,7 +17,7 @@ import {
 
 import { formatPrice } from '@/lib/number'
 
-import { A, D, N, O, Option, pipe } from '@mobily/ts-belt'
+import { A, D, F, N, O, Option, pipe } from '@mobily/ts-belt'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
 let chartConfig = {
@@ -33,24 +33,20 @@ type TDashboardChart = {
   data: Option<Array<{ month: string; sale: number }>>
 }
 export function DashboardChart(props: TDashboardChart) {
-  let data = pipe(
-    props.data,
-    O.fromNullable,
-    O.mapWithDefault([], (data) => data),
-  )
+  let data = pipe(props.data, O.mapWithDefault([], F.identity))
+  let grossRevenue = pipe(data, A.map(D.getUnsafe('sale')), A.reduce(0, N.add))
   let netRevenue = pipe(
     data,
-    A.map(D.getUnsafe('sale')),
-    A.map((value) => N.subtract(value * PPH_TAX)(value)),
+    A.map((value) => ({ sale: value.sale, tax: value.sale * PPH_TAX })),
+    A.map((value) => N.subtract(value.tax)(value.sale)),
     A.reduce(0, N.add),
   )
-  let grossRevenue = pipe(data, A.map(D.getUnsafe('sale')), A.reduce(0, N.add))
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Grafis Chart Penjualan</CardTitle>
-        <CardDescription>January - Juli 2024</CardDescription>
+        <CardDescription>Data penjualan periode Tahun 2024</CardDescription>
       </CardHeader>
       <CardContent className='w-full'>
         <ChartContainer config={chartConfig} className='h-32 sm:h-52 md:h-56 xl:h-[31rem] w-full'>
