@@ -10,7 +10,7 @@ import {
 
 import { LogOutIcon, UserIcon } from 'lucide-react'
 
-export function AdminHeaderNavbarProfile() {
+export function HeaderNavbarProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

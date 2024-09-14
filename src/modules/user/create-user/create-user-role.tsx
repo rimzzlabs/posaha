@@ -3,7 +3,7 @@ import { For } from '@/components/ui/for'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem } from '@/components/ui/select'
 
-import { createUserSchema } from '@/app/admin/user/__schema/user-schema'
+import { createUserSchema } from '@/app/app/user/__schema/user-schema'
 import { USER_ROLES } from '@/lib/constant'
 import { cn } from '@/lib/utils'
 

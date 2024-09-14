@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-import { createProductSchema } from '@/app/admin/product/__schema'
+import { createProductSchema } from '@/app/app/product/__schema'
 import { cn } from '@/lib/utils'
 import { productCategoryAtom } from '@/states/product-category'
 

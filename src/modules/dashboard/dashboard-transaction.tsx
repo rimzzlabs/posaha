@@ -70,7 +70,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
       </CardHeader>
 
       <CardContent className='px-4'>
-        <ScrollArea className='h-96 pr-4'>
+        <ScrollArea className='h-[31rem] pr-4'>
           <div className='flex flex-col gap-2'>
             {B.ifElse(
               B.inverse(isEmpty),

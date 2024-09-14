@@ -1,4 +1,4 @@
-import { S, pipe } from '@mobily/ts-belt'
+import { F, S, pipe } from '@mobily/ts-belt'
 import {
   LayoutGridIcon,
   type LucideIcon,
@@ -40,9 +40,9 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
         {
           visible: true,
           label: 'Dasbor',
-          path: '/admin',
+          path: '/app',
           icon: LayoutGridIcon,
-          active: pathname === '/admin',
+          active: pipe(pathname, F.equals('/app')),
         },
       ],
     },
@@ -53,23 +53,23 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
         {
           visible: true,
           label: 'Daftar Produk',
-          path: '/admin/product/list',
+          path: '/app/product/list',
           icon: PackageIcon,
           active: pipe(pathname, S.endsWith('/product/list')),
         },
         {
           visible: true,
           label: 'Produk Kategori',
-          path: '/admin/product/category/list',
+          path: '/app/product/category/list',
           icon: TagsIcon,
           active: pipe(pathname, S.endsWith('/category/list')),
         },
         {
           visible: true,
           label: 'Laporan Penjualan',
-          path: '/admin/sales',
+          path: '/app/sales',
           icon: ChartNoAxesColumn,
-          active: pathname.endsWith('/sales'),
+          active: pipe(pathname, S.endsWith('/sales')),
         },
       ],
     },
@@ -80,16 +80,16 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
         {
           visible: true,
           label: 'Buat Pengguna',
-          path: '/admin/user/create',
+          path: '/app/user/create',
           icon: UserPlusIcon,
-          active: pathname.endsWith('/user/create'),
+          active: pipe(pathname, S.endsWith('/user/create')),
         },
         {
           visible: true,
           label: 'Daftar Pengguna',
-          path: '/admin/user/list',
+          path: '/app/user/list',
           icon: UsersIcon,
-          active: pathname.endsWith('/user/list'),
+          active: pipe(pathname, S.endsWith('/user/list')),
         },
       ],
     },

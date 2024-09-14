@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
 import { Textarea } from '@/components/ui/textarea'
 
-import { useCreateUser } from '@/app/admin/user/__hooks'
+import { useCreateUser } from '@/app/app/user/__hooks'
 import { isFormPending } from '@/lib/utils'
 
 import { CreateUserRole } from './create-user-role'

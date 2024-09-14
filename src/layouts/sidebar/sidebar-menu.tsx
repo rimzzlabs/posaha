@@ -13,7 +13,7 @@ import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
 import { match } from 'ts-pattern'
 
-export function AdminSidebarMenu() {
+export function SidebarMenu() {
   let pathname = usePathname()
   let menu = getSidebarList(pathname)
 
