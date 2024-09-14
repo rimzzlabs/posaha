@@ -1,1 +1,1 @@
-export * from "./admin-sidebar-container";
+export * from './admin-sidebar-container'

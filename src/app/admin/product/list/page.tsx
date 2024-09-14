@@ -1,23 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { HeadingOne } from "@/components/ui/headings";
-import { ProductDataTable } from "@/modules/product/product-data-table";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { Fragment } from "react";
+import { ProductDataTable } from '@/modules/product/product-data-table'
 
-export default function Page() {
+import { random, sleep } from 'radash'
+import { Suspense } from 'react'
+
+export default async function ProductPage() {
+  await sleep(random(1000, 2000))
+
   return (
-    <Fragment>
-      <div className="flex items-center justify-between">
-        <HeadingOne>Daftar Produk</HeadingOne>
-        <Button className="gap-x-2" asChild>
-          <Link href="/admin/product/create">
-            <PlusIcon size="1em" />
-            Tambah Produk
-          </Link>
-        </Button>
-      </div>
+    <Suspense>
       <ProductDataTable />
-    </Fragment>
-  );
+    </Suspense>
+  )
 }

@@ -1,22 +1,27 @@
 declare global {
   type TPrettify<T> = {
-    [K in keyof T]: T[K];
-  } & {};
+    [K in keyof T]: T[K]
+  } & {}
 
   type TApiErrorResponse = {
-    errors: Array<string>;
-    code: number;
-    status: "error";
-  };
+    errors: Array<string>
+    code: number
+    status: 'error'
+  }
 
   type TApiSuccessResponse<D> = {
-    code: number;
-    errors: Array<never>;
-    status: "success";
-    data: D;
-  };
+    code: number
+    errors: Array<never>
+    status: 'success'
+    data: D
+  }
 
-  type TApiResponse<D> = TPrettify<TApiSuccessResponse<D> | TApiErrorResponse>;
+  type TApiResponse<D> = TPrettify<TApiSuccessResponse<D> | TApiErrorResponse>
+
+  type TTimeStamp = {
+    updatedAt: string
+    createdAt: string
+  }
 }
 
-export {};
+export {}

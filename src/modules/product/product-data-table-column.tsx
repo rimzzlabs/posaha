@@ -1,67 +1,75 @@
-import { formatPrice } from "@/lib/number";
-import { createColumnHelper } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, EyeIcon, PenIcon, Trash2Icon } from "lucide-react";
+import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
-let ch = createColumnHelper<Product>();
+import { formatDate } from '@/lib/dates'
+import { formatPrice } from '@/lib/number'
+
+import { ProductDataTableAction } from './product-data-table-action'
+
+import { N } from '@mobily/ts-belt'
+import { createColumnHelper } from '@tanstack/react-table'
+import { MinusIcon } from 'lucide-react'
+
+let ch = createColumnHelper<Product>()
 
 export const PRODUCT_DATA_TABLE_COLUMN = [
-  ch.accessor("name", { header: "Nama Produk" }),
-  ch.accessor("description", {
-    header: "Deksripsi Produk",
-    cell: (props) => (
-      <p className="whitespace-pre-wrap max-w-md text-balance">
-        {props.getValue()}
-      </p>
-    ),
-  }),
-  ch.accessor("price", {
-    header: "Harga Produk",
-    cell: (props) => formatPrice(props.getValue()),
-  }),
-  ch.accessor("stock.available", { header: "Stok Tersedia" }),
-  ch.accessor("stock.sold", { header: "Stok Terjual" }),
   ch.display({
-    id: "action",
-    header: "Aksi",
-    cell: () => {
+    header: 'No.',
+    id: 'Numeric',
+    cell: (props) => N.add(props.row.index, 1),
+  }),
+  ch.accessor('sku', {
+    header: 'SKU Produk',
+  }),
+  ch.accessor('name', {
+    header: 'Nama Produk',
+  }),
+  ch.accessor('price', {
+    header: 'Harga produk',
+    cell: (p) => formatPrice(p.getValue()),
+  }),
+  ch.accessor('description', {
+    header: 'Deksripsi Produk',
+    cell: (props) =>
+      props.getValue() || (
+        <Tooltip delayDuration={250}>
+          <TooltipTrigger className='text-muted-foreground'>
+            <MinusIcon size='1rem' />
+            <span className='sr-only'>Tidak ada deskripsi produk</span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className='text-sm font-medium'>Produk ini belum mempunyai deskripsi</p>
+          </TooltipContent>
+        </Tooltip>
+      ),
+  }),
+  ch.accessor('stock.available', {
+    header: 'Stok Tersedia',
+  }),
+  ch.accessor('stock.sold', {
+    header: 'Stok Terjual',
+  }),
+  ch.accessor('category.name', {
+    header: 'Kategori Produk',
+    cell: (props) => {
+      let backgroundColor = props.row.original.category.color
+
       return (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-x-2">
-              Menu
-              <ChevronDownIcon size="1em" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Menu Aksi</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <EyeIcon size="1em" />
-              Lihat Produk
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <PenIcon size="1em" />
-              Perbarui Produk
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Trash2Icon size="1em" />
-              Hapus Produk
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+        <Badge variant='secondary' className='text-neutral-800' style={{ backgroundColor }}>
+          {props.getValue()}
+        </Badge>
+      )
     },
   }),
-];
+  ch.accessor('updatedAt', {
+    header: 'Terakhir Diperbarui',
+    cell: (props) => formatDate(props.getValue(), 'EEEE, dd MMM, yyyy. HH:mm:ss'),
+  }),
+  ch.display({
+    id: 'action',
+    header: 'Aksi',
+    cell: (props) => {
+      return <ProductDataTableAction {...props.row.original} />
+    },
+  }),
+]

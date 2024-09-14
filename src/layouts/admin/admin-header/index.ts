@@ -1,1 +1,1 @@
-export * from "./admin-header-container";
+export * from './admin-header-container'
