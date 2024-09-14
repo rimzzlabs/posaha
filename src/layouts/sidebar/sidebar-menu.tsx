@@ -5,7 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { For } from '@/components/ui/for'
 
 import { getSidebarList } from '@/lib/constant'
-import { profileAtom } from '@/states/profile'
+import { sessionAtom } from '@/states/session'
 
 import { F } from '@mobily/ts-belt'
 import { useAtomValue } from 'jotai'
@@ -17,8 +17,8 @@ import { match } from 'ts-pattern'
 
 export function SidebarMenu() {
   let pathname = usePathname()
-  let profile = useAtomValue(profileAtom)
-  let menu = getSidebarList(pathname, profile?.role)
+  let session = useAtomValue(sessionAtom)
+  let menu = getSidebarList(pathname, session?.role)
 
   return (
     <nav className='flex flex-col gap-2'>
