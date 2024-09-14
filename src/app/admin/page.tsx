@@ -29,7 +29,7 @@ export default async function AdminDashboardPage() {
         <DashboardDatePicker />
       </div>
 
-      <div className='grid grid-cols-4 gap-3 pt-8'>
+      <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-2 pt-8'>
         <For each={cardsData}>
           {(item, index) => (
             <DashboardCard
@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
         </For>
       </div>
 
-      <div className='pt-3 grid grid-cols-[minmax(484px,896px)_minmax(240px,1fr)] gap-3'>
+      <div className='pt-2 grid xl:grid-cols-[minmax(484px,896px)_minmax(400px,1fr)] gap-2'>
         <DashboardChart data={chartData} />
         <DashboardTransaction data={latestTrx} />
       </div>

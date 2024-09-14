@@ -1,5 +1,7 @@
 'use client'
 
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+
 import { useUserProfileList } from '@/app/admin/user/__hooks'
 
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
@@ -19,22 +21,25 @@ export function UserDataTable() {
   let paginatedData = data.slice(offset, offset + limit)
 
   return (
-    <section>
-      <DataTableHeader
-        search={{
-          label: 'Cari pengguna',
-          placeholder: 'Cari: nama, nik, role, alamat',
-        }}
-        button={{ href: '/admin/user/create', label: 'Tambah Pengguna' }}
-      />
-
-      <DataTableUI
-        data={paginatedData}
-        page={page}
-        total={totalPage}
-        columns={USER_DATA_TABLE_COLUMN}
-        emptyState={{ description: 'Tidak ada data pengguna' }}
-      />
-    </section>
+    <Card>
+      <CardHeader>
+        <DataTableHeader
+          search={{
+            label: 'Cari pengguna',
+            placeholder: 'Cari: nama, nik, role, alamat',
+          }}
+          button={{ href: '/admin/user/create', label: 'Tambah Pengguna' }}
+        />
+      </CardHeader>
+      <CardContent>
+        <DataTableUI
+          data={paginatedData}
+          page={page}
+          total={totalPage}
+          columns={USER_DATA_TABLE_COLUMN}
+          emptyState={{ description: 'Tidak ada data pengguna' }}
+        />
+      </CardContent>
+    </Card>
   )
 }

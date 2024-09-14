@@ -11,9 +11,9 @@ import * as React from 'react'
 import { match, P } from 'ts-pattern'
 
 type TDataTableHeader = {
-  search: {
-    label: string
-    placeholder: string
+  search?: {
+    label?: string
+    placeholder?: string
     /**
      * @default 500 millisecond
      */
@@ -23,7 +23,7 @@ type TDataTableHeader = {
      */
     onValueChange?: ((value: string) => void) | ((value: string) => Promise<void>)
   }
-  button: { label: string; href: string }
+  button?: { label?: string; href?: string }
 }
 
 export function DataTableHeader(props: TDataTableHeader) {
@@ -61,7 +61,7 @@ export function DataTableHeader(props: TDataTableHeader) {
   }
 
   return (
-    <div className='flex px-1 pt-1 pb-6 gap-x-4'>
+    <div className='flex max-lg:flex-col-reverse px-1 pt-1 pb-6 gap-4'>
       <div className='space-y-1'>
         <Label htmlFor={id} hidden>
           {label}
@@ -72,7 +72,7 @@ export function DataTableHeader(props: TDataTableHeader) {
             onChange={onChangeInput}
             id={id}
             aria-label={label}
-            className='pl-10 w-96 peer'
+            className='pl-10 peer'
             placeholder={placeholder}
           />
           <SearchIcon

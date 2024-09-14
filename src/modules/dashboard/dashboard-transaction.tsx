@@ -53,7 +53,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
     <Card>
       <CardHeader className='flex-row space-y-0 justify-between'>
         <div>
-          <CardTitle>Transaki Terakhir</CardTitle>
+          <CardTitle>Transaksi Terakhir</CardTitle>
           <CardDescription>10 Transaksi terakhir akan muncul disini.</CardDescription>
         </div>
 

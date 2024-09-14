@@ -24,7 +24,7 @@ export function AdminSidebarMenu() {
           if (!group.visible) return <Fragment />
 
           return (
-            <div className='px-10 pt-6'>
+            <div className='px-2.5 lg:px-4 pt-6'>
               {group.label && (
                 <p className='text-muted-foreground select-none text-sm font-semibold mb-2'>
                   {group.label}

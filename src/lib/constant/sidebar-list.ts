@@ -44,20 +44,6 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
           icon: LayoutGridIcon,
           active: pathname === '/admin',
         },
-        {
-          visible: true,
-          label: 'Daftar Produk',
-          path: '/admin/product/list',
-          icon: PackageIcon,
-          active: false,
-        },
-        {
-          visible: true,
-          label: 'Daftar Pengguna',
-          path: '/admin/user/list',
-          icon: UsersIcon,
-          active: false,
-        },
       ],
     },
     {
@@ -73,7 +59,7 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
         },
         {
           visible: true,
-          label: 'Daftar Produk Kategori',
+          label: 'Produk Kategori',
           path: '/admin/product/category/list',
           icon: TagsIcon,
           active: pipe(pathname, S.endsWith('/category/list')),

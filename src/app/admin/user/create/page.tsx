@@ -1,14 +1,17 @@
-import { HeadingOne } from '@/components/ui/headings'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { CreateUserForm } from '@/modules/user/create-user'
 
-import { Fragment } from 'react'
-
 export default function CreateUserPage() {
   return (
-    <Fragment>
-      <HeadingOne>Tambah Penguna Baru</HeadingOne>
-      <CreateUserForm />
-    </Fragment>
+    <Card>
+      <CardHeader>
+        <CardTitle className='text-xl lg:text-2xl'>Buat Pengguna Baru</CardTitle>
+        <CardDescription>Anda dapat membuat pengguna baru disini</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <CreateUserForm />
+      </CardContent>
+    </Card>
   )
 }

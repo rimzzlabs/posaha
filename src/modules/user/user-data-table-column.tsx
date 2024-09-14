@@ -22,7 +22,7 @@ export const USER_DATA_TABLE_COLUMN = [
     cell: (props) => {
       let backgroundColor = props.row.original.role.color
       return (
-        <Badge style={{ backgroundColor }} variant='secondary'>
+        <Badge style={{ backgroundColor }} className='text-neutral-900' variant='secondary'>
           {props.getValue()}
         </Badge>
       )

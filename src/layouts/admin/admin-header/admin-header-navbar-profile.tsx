@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { CogIcon, LogOutIcon, UserIcon } from 'lucide-react'
+import { LogOutIcon, UserIcon } from 'lucide-react'
 
 export function AdminHeaderNavbarProfile() {
   return (
@@ -25,10 +25,6 @@ export function AdminHeaderNavbarProfile() {
         <DropdownMenuItem className='w-40 gap-x-2'>
           <UserIcon size='1em' />
           Akun Saya
-        </DropdownMenuItem>
-        <DropdownMenuItem className='w-40 gap-x-2'>
-          <CogIcon size='1em' />
-          Pengaturan
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className='w-40 gap-x-2'>

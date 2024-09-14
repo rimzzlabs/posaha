@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout(props: PropsWithChildren) {
   return (
-    <html lang='id' suppressHydrationWarning>
+    <html lang='id' translate='no' suppressHydrationWarning>
       <body className={pjs.variable}>
         <Provider>
           <Toaster />

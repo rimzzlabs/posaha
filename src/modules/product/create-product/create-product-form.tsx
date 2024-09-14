@@ -37,7 +37,7 @@ export function CreateProductForm() {
     <Form {...createProduct.form}>
       <form
         onSubmit={createProduct.onSubmit}
-        className='grid grid-cols-2 gap-x-4 gap-y-3 px-1 pt-10 max-w-7xl'
+        className='grid lg:grid-cols-2 gap-x-4 gap-y-3 px-1 pt-10'
       >
         <FormField
           name='name'
@@ -152,7 +152,7 @@ export function CreateProductForm() {
           )}
         />
 
-        <div className='flex xl:col-span-2 justify-end pt-3'>
+        <div className='flex lg:col-span-2 justify-end pt-3'>
           <Button size='lg' type='submit' className='gap-x-2' disabled={disabledInteractive}>
             Kirim
             {submitIcon}

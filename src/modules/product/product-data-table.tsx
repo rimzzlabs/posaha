@@ -1,5 +1,7 @@
 'use client'
 
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+
 import { useProductList } from '@/app/admin/product/__hooks'
 
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
@@ -19,21 +21,26 @@ export function ProductDataTable() {
   let paginatedData = data.slice(offset, offset + limit)
 
   return (
-    <section>
-      <DataTableHeader
-        search={{
-          label: 'Cari produk',
-          placeholder: 'Cari: minyak sayur, gula pasir',
-        }}
-        button={{ href: '/admin/product/create', label: 'Tambah Produk' }}
-      />
-      <DataTableUI
-        page={page}
-        total={totalPage}
-        data={paginatedData}
-        isPending={false}
-        columns={PRODUCT_DATA_TABLE_COLUMN}
-      />
-    </section>
+    <Card>
+      <CardHeader>
+        <DataTableHeader
+          search={{
+            label: 'Cari produk',
+            placeholder: 'Cari: minyak sayur, gula pasir',
+          }}
+          button={{ href: '/admin/product/create', label: 'Tambah Produk' }}
+        />
+      </CardHeader>
+
+      <CardContent>
+        <DataTableUI
+          page={page}
+          total={totalPage}
+          data={paginatedData}
+          isPending={false}
+          columns={PRODUCT_DATA_TABLE_COLUMN}
+        />
+      </CardContent>
+    </Card>
   )
 }

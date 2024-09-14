@@ -54,7 +54,7 @@ export function DataTableUI<D>(props: TDataTableUI<D>) {
 
   return (
     <Fragment>
-      <ScrollArea className={cn('h-[calc(100vh-21.75rem)]', props.className)}>
+      <ScrollArea className={cn('h-[calc(100vh-20.4rem)]', props.className)}>
         <Table>
           <TableHeader>
             <For each={headerGroups}>
