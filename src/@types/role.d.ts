@@ -1,6 +1,6 @@
 type UserRole = {
   id: string
-  name: 'admin' | 'cashier'
+  name: 'super-admin' | 'admin' | 'cashier'
   label: string
   color: string
 }

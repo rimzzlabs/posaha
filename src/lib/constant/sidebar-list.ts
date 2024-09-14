@@ -1,4 +1,4 @@
-import { F, S, pipe } from '@mobily/ts-belt'
+import { B, F, Option, S, pipe } from '@mobily/ts-belt'
 import {
   LayoutGridIcon,
   type LucideIcon,
@@ -7,6 +7,7 @@ import {
   UsersIcon,
   UserPlusIcon,
   TagsIcon,
+  DollarSignIcon,
 } from 'lucide-react'
 
 export type TSidebarSubMenu = {
@@ -31,7 +32,8 @@ type TSidebarGroup = {
   label?: string
   menus: TSidebarMenu[]
 }
-export function getSidebarList(pathname: string): Array<TSidebarGroup> {
+
+export function getSidebarList(pathname: string, role?: Option<string>): Array<TSidebarGroup> {
   return [
     {
       label: 'Akses Cepat',
@@ -47,25 +49,48 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
       ],
     },
     {
-      label: 'Produk & Penjualan',
-      visible: true,
+      label: 'Transaksi Produk',
+      visible: pipe(role, F.equals('cashier')),
       menus: [
         {
           visible: true,
+          label: 'Transaksi (Pembelian)',
+          path: '/transaction/buy',
+          icon: DollarSignIcon,
+          active: pipe(pathname, S.endsWith('/transaction/buy')),
+        },
+      ],
+    },
+    {
+      label: 'Produk & Penjualan',
+      visible: pipe(
+        role,
+        F.equals('super-admin'),
+        B.or(F.equals(role)('admin')),
+        B.or(F.equals(role)('cashier')),
+      ),
+      menus: [
+        {
+          visible: pipe(
+            role,
+            F.equals('super-admin'),
+            B.or(F.equals(role)('admin')),
+            B.or(F.equals(role)('cashier')),
+          ),
           label: 'Daftar Produk',
           path: '/app/product/list',
           icon: PackageIcon,
           active: pipe(pathname, S.endsWith('/product/list')),
         },
         {
-          visible: true,
+          visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
           label: 'Produk Kategori',
           path: '/app/product/category/list',
           icon: TagsIcon,
           active: pipe(pathname, S.endsWith('/category/list')),
         },
         {
-          visible: true,
+          visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
           label: 'Laporan Penjualan',
           path: '/app/sales',
           icon: ChartNoAxesColumn,
@@ -75,7 +100,7 @@ export function getSidebarList(pathname: string): Array<TSidebarGroup> {
     },
     {
       label: 'Pengguna',
-      visible: true,
+      visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
       menus: [
         {
           visible: true,
