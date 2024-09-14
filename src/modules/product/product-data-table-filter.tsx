@@ -32,7 +32,7 @@ export function ProductDataTableFilter() {
       </div>
 
       <Button className='gap-x-2 ml-auto' asChild>
-        <Link href='/admin/product/create'>
+        <Link href='/app/product/create'>
           <PlusIcon size='1em' />
           Tambah Produk
         </Link>
