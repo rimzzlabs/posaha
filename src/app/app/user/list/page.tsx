@@ -1,3 +1,4 @@
+import { SpinnerCard } from '@/modules/shared/spinner-card'
 import { UserDataTable } from '@/modules/user'
 
 import { random, sleep } from 'radash'
@@ -7,7 +8,7 @@ export default async function ListUserPage() {
   await sleep(random(800, 1000))
 
   return (
-    <Suspense>
+    <Suspense fallback={<SpinnerCard />}>
       <UserDataTable />
     </Suspense>
   )
