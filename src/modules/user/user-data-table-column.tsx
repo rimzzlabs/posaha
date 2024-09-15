@@ -1,13 +1,16 @@
+'use client'
+
 import { Badge } from '@/components/ui/badge'
 
 import { formatDate } from '@/lib/dates'
+import { getRoleColor } from '@/lib/utils'
 
 import { UserDataTableAction } from './user-data-table-action'
 
 import { N } from '@mobily/ts-belt'
 import { createColumnHelper } from '@tanstack/react-table'
 
-const ch = createColumnHelper<UserProfile>()
+const ch = createColumnHelper<TUser>()
 
 export const USER_DATA_TABLE_COLUMN = [
   ch.display({
@@ -15,12 +18,13 @@ export const USER_DATA_TABLE_COLUMN = [
     id: 'Numeric',
     cell: (props) => N.add(props.row.index, 1),
   }),
-  ch.accessor('fullName', { header: 'Nama Lengkap' }),
+  ch.accessor('name', { header: 'Nama Lengkap' }),
   ch.accessor('email', { header: 'Email' }),
-  ch.accessor('role.label', {
+  ch.accessor('role', {
     header: 'Role',
     cell: (props) => {
-      let backgroundColor = props.row.original.role.color
+      let backgroundColor = getRoleColor(props.getValue())
+
       return (
         <Badge style={{ backgroundColor }} className='text-neutral-900' variant='secondary'>
           {props.getValue()}

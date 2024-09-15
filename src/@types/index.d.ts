@@ -22,6 +22,13 @@ declare global {
     updatedAt: string
     createdAt: string
   }
+
+  type TPromiseReturn<D> = Awaited<ReturnType<D>>
+
+  type TPageProps = {
+    params: Record<string, any>
+    searchParams: Record<string, string>
+  }
 }
 
 export {}

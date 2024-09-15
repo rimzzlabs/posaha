@@ -6,5 +6,5 @@ export let sessionAtom = atom<Profile | null>({
   email: 'rimzzlabs@proton.me',
   createdAt: '1/1/2024',
   updatedAt: '1/1/2024',
-  role: 'admin',
+  role: 'super-admin',
 })

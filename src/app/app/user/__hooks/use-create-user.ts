@@ -1,66 +1,56 @@
-import { USER_ROLES } from '@/lib/constant'
-import { userListAtom } from '@/states/user'
-
+import { createUserAction } from '../__actions'
 import { createUserSchema } from '../__schema/user-schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { A, F, pipe } from '@mobily/ts-belt'
-import { useSetAtom } from 'jotai'
-import { useRouter } from 'next-nprogress-bar'
-import { random, sleep, uid } from 'radash'
+import { pipe, S } from '@mobily/ts-belt'
+import { useRouter } from 'next/navigation'
+import { tryit } from 'radash'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 export function useCreateUser() {
-  let updateUserList = useSetAtom(userListAtom)
   let router = useRouter()
 
   let form = useForm<z.infer<typeof createUserSchema>>({
-    defaultValues: { nik: '', fullName: '', address: '', email: '', password: '', role: '' },
+    defaultValues: {
+      ktp: '',
+      name: '',
+      address: '',
+      email: '',
+      password: '',
+      role: '' as TRole,
+    },
     resolver: zodResolver(createUserSchema),
   })
 
   let onSubmit = form.handleSubmit(async (value) => {
     toast.dismiss()
     toast.loading('Memproses permintaan, harap tunggu...')
-    await sleep(random(800, 1200))
 
-    let timestamp = new Date().toISOString()
+    const [error, res] = await tryit(createUserAction)(value)
+    toast.dismiss()
+    let showErrorToast = () => toast.error('Terjadi kesalahan server')
 
-    let role = pipe(
-      USER_ROLES,
-      A.getBy((role) => role.id === value.role),
-    )
-    if (!role) {
-      toast.dismiss()
-      toast.error('Terjadi kesalahan, harap ulangi beberapa saat lagi')
+    if (error) {
+      showErrorToast()
       return
     }
 
-    let roleName = match(role.name)
-      .with('admin', F.identity)
-      .otherwise(() => 'cashier' as const)
-    let newUser: UserProfile = {
-      id: uid(16),
-      userId: uid(32),
-      email: value.email,
-      fullName: value.fullName,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      address: value.address,
-      avatar: null,
-      role: {
-        ...role,
-        name: roleName,
-      },
+    if (!res?.data) {
+      showErrorToast()
+      return
     }
 
-    updateUserList((prev) => [newUser].concat(prev))
-    toast.dismiss()
-    toast.success('Berhasil menambhkan pengguna baru!')
+    if (!res.data.ok) {
+      let description = pipe('Kode tehnikal: ', S.append(res.data.error))
+      toast.error('Terjadi kesalahan', { description })
+      return
+    }
+
+    toast.success('Berhasil menambahkan pengguna baru!')
     router.push('/app/user/list')
+    router.refresh()
   })
 
   return { form, onSubmit }

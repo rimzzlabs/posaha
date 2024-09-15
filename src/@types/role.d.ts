@@ -4,3 +4,5 @@ type UserRole = {
   label: string
   color: string
 }
+
+type TRole = 'super-admin' | 'admin' | 'cashier'

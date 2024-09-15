@@ -1,8 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { CreateUserForm } from '@/modules/user/create-user'
+import { auth } from '@/server/next-auth'
 
-export default function CreateUserPage() {
+export default async function CreateUserPage() {
+  let session = await auth()
+
   return (
     <Card>
       <CardHeader>
@@ -10,7 +13,7 @@ export default function CreateUserPage() {
         <CardDescription>Anda dapat membuat pengguna baru disini</CardDescription>
       </CardHeader>
       <CardContent>
-        <CreateUserForm />
+        <CreateUserForm session={session} />
       </CardContent>
     </Card>
   )
