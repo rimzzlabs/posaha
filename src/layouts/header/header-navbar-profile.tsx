@@ -1,6 +1,5 @@
 'use client'
 
-import { popModal, pushModal } from '@/components/modals'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,33 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { signOutAction } from '@/app/auth/__actions'
+import { useSignOut } from '@/app/auth/__hooks'
 
 import { LogOutIcon, UserIcon } from 'lucide-react'
-import { useAction } from 'next-safe-action/hooks'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
 
 export function HeaderNavbarProfile() {
-  let router = useRouter()
-  let { executeAsync } = useAction(signOutAction)
+  let onClickSignOut = useSignOut()
 
-  let onClickSignOut = () => {
-    pushModal('ModalConfirmation', {
-      title: 'Yakin Akhiri Sesi?',
-      description:
-        'Apakah anda yakin ingin mengakhiri sesi?. Anda perlu memasukkan alamat surel dan kata sandi anda lagi nanti',
-      onAction: async () => {
-        toast.dismiss()
-        toast.loading('Memproses permintaan, harap tunggu...')
-        await executeAsync()
-        popModal('ModalConfirmation')
-        toast.dismiss()
-        toast.success('Berhasil mengakhiri sesi!')
-        router.push('/auth/signin')
-      },
-    })
-  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
