@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { For } from '@/components/ui/for'
 import {
@@ -13,34 +15,29 @@ import { Select, SelectContent, SelectItem } from '@/components/ui/select'
 import { createUserSchema } from '@/app/app/user/__schema/user-schema'
 import { USER_ROLES } from '@/lib/constant'
 import { cn } from '@/lib/utils'
-import { sessionAtom } from '@/states/session'
 
-import { A, F, O, pipe } from '@mobily/ts-belt'
+import { A, F, O, Option, pipe } from '@mobily/ts-belt'
 import { SelectTrigger } from '@radix-ui/react-select'
-import { useAtomValue } from 'jotai'
 import { ChevronDownIcon } from 'lucide-react'
+import { Session } from 'next-auth/'
 import { useFormContext } from 'react-hook-form'
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
-export function CreateUserRole() {
+export function CreateUserRole({ session }: { session: Option<Session> }) {
   let form = useFormContext<z.infer<typeof createUserSchema>>()
-  let session = useAtomValue(sessionAtom)
 
-  let roles = match([session?.role, USER_ROLES])
-    .with(['super-admin', P.select()], F.identity)
-    .with(['admin', P.select()], (value) =>
-      pipe(
-        value,
-        A.filter((role) => role.name === 'cashier'),
-      ),
-    )
+  let role = pipe(session?.user?.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
+
+  let roles = match([role, USER_ROLES] as const)
+    .with(['super-admin', P.select()], (rs) => A.filter(rs, (role) => role.value !== 'super-admin'))
+    .with(['admin', P.select()], (rs) => A.filter(rs, (role) => role.value === 'cashier'))
     .otherwise(() => [])
 
   let getFieldValueLabelAndBgColor = (value: string) => {
     return pipe(
       USER_ROLES,
-      A.getBy((role) => role.id === value),
+      A.getBy((role) => role.value === value),
       O.mapNullable((value) => ({ backgroundColor: value.color, label: value.label })),
       O.getWithDefault({ backgroundColor: 'hsl(var(--primary))', label: 'Pilih role pengguna' }),
     )
@@ -50,6 +47,7 @@ export function CreateUserRole() {
     <FormField
       name='role'
       control={form.control}
+      disabled={!session}
       render={({ field }) => {
         let { backgroundColor, label } = getFieldValueLabelAndBgColor(field.value)
 
@@ -57,7 +55,7 @@ export function CreateUserRole() {
           <FormItem>
             <FormLabel asterisk>Role</FormLabel>
             <Select defaultValue={field.value} onValueChange={field.onChange}>
-              <SelectTrigger asChild>
+              <SelectTrigger asChild disabled={field.disabled}>
                 <FormControl>
                   <Button
                     variant='outline'
@@ -75,8 +73,8 @@ export function CreateUserRole() {
 
               <SelectContent>
                 <For each={roles}>
-                  {({ id, label }) => (
-                    <SelectItem className='flex items-center flex-row gap-x-2' value={id}>
+                  {({ value, label }) => (
+                    <SelectItem className='flex items-center flex-row gap-x-2' value={value}>
                       {label}
                     </SelectItem>
                   )}

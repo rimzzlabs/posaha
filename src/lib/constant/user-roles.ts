@@ -1,4 +1,7 @@
+import { getRoleColor } from '../utils'
+
 export const USER_ROLES = [
-  { id: 'pos-admin-x4a1', name: 'admin', label: 'Administrator', color: '#A7F3D0' },
-  { id: 'pos-cashier-x4a2', name: 'cashier', label: 'Kasir', color: '#FDE68A' },
+  { value: 'super-admin', label: 'Super Administrator', color: getRoleColor('super-admin') },
+  { value: 'admin', label: 'Administrator', color: getRoleColor('admin') },
+  { value: 'cashier', label: 'Petugas Kasir', color: getRoleColor('cashier') },
 ]

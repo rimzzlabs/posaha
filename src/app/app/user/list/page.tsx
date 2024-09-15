@@ -1,15 +1,21 @@
-import { SpinnerCard } from '@/modules/shared/spinner-card'
+import { getUserList } from '@/database/query/user'
 import { UserDataTable } from '@/modules/user'
+import { auth } from '@/server/next-auth'
 
-import { random, sleep } from 'radash'
-import { Suspense } from 'react'
+import { D, F, O, pipe } from '@mobily/ts-belt'
+import { toInt } from 'radash'
+import { match } from 'ts-pattern'
 
-export default async function ListUserPage() {
-  await sleep(random(800, 1000))
+export default async function ListUserPage(props: TPageProps) {
+  let session = await auth()
+  let page = pipe(props.searchParams, D.getUnsafe('page'), O.mapWithDefault('1', F.identity), toInt)
 
-  return (
-    <Suspense fallback={<SpinnerCard />}>
-      <UserDataTable />
-    </Suspense>
-  )
+  let role = pipe(session?.user.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
+  let userList = await getUserList(page, role)(10)
+
+  let res = match(userList)
+    .with({ ok: true }, (value) => D.deleteKey(value, 'ok'))
+    .otherwise(() => ({ meta: { page: 1, total: 0 }, data: [] }))
+
+  return <UserDataTable data={res.data} page={res.meta.page} total={res.meta.total} />
 }

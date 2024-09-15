@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "boolean" integer DEFAULT 0 NOT NULL;

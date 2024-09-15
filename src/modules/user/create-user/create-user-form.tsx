@@ -19,10 +19,11 @@ import { isFormPending } from '@/lib/utils'
 
 import { CreateUserRole } from './create-user-role'
 
-import { B } from '@mobily/ts-belt'
+import { B, Option } from '@mobily/ts-belt'
 import { Loader2Icon, SendHorizonalIcon } from 'lucide-react'
+import { Session } from 'next-auth'
 
-export function CreateUserForm() {
+export function CreateUserForm({ session }: { session: Option<Session> }) {
   let createUser = useCreateUser()
 
   let disableInteractive = isFormPending(createUser.form.formState)
@@ -39,7 +40,7 @@ export function CreateUserForm() {
         className='grid lg:grid-cols-2 gap-x-4 gap-y-3 px-1 pt-10'
       >
         <FormField
-          name='nik'
+          name='ktp'
           control={createUser.form.control}
           disabled={disableInteractive}
           render={({ field }) => (
@@ -65,7 +66,7 @@ export function CreateUserForm() {
         />
 
         <FormField
-          name='fullName'
+          name='name'
           control={createUser.form.control}
           disabled={disableInteractive}
           render={({ field }) => (
@@ -118,7 +119,7 @@ export function CreateUserForm() {
           )}
         />
 
-        <CreateUserRole />
+        <CreateUserRole session={session} />
 
         <FormField
           name='address'

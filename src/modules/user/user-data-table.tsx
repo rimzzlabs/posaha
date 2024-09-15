@@ -1,25 +1,11 @@
-'use client'
-
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-
-import { useUserProfileList } from '@/app/app/user/__hooks'
 
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { USER_DATA_TABLE_COLUMN } from './user-data-table-column'
 
-import { useSearchParams } from 'next/navigation'
-import { toInt } from 'radash'
+type TUserDataTable = { data: Array<TUser>; page: number; total: number }
 
-export function UserDataTable() {
-  let search = useSearchParams()
-  let data = useUserProfileList()
-  let page = toInt(search.get('page'), 1)
-
-  let limit = 10
-  let offset = (page - 1) * limit
-  let totalPage = Math.ceil(data.length / limit) || 1
-  let paginatedData = data.slice(offset, offset + limit)
-
+export function UserDataTable(props: TUserDataTable) {
   return (
     <Card>
       <CardHeader>
@@ -31,11 +17,10 @@ export function UserDataTable() {
           button={{ href: '/app/user/create', label: 'Tambah Pengguna' }}
         />
       </CardHeader>
+
       <CardContent>
         <DataTableUI
-          data={paginatedData}
-          page={page}
-          total={totalPage}
+          {...props}
           columns={USER_DATA_TABLE_COLUMN}
           emptyState={{ description: 'Tidak ada data pengguna' }}
         />

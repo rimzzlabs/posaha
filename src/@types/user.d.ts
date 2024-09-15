@@ -1,18 +1,10 @@
-type User = TPrettify<
-  {
-    id: string
-    email: string
-    password: string
-  } & TTimeStamp
->
-
-type UserProfile = TPrettify<
-  {
-    id: string
-    avatar?: string | null
-    userId: string
-    fullName: string
-    address: string
-    role: UserRole
-  } & Omit<User, 'password' | 'id'>
->
+type TUser = {
+  id: string
+  name: string
+  email: string
+  role: TRole
+  address: string
+  image: string | null
+  createdAt: string
+  updatedAt: string
+}
