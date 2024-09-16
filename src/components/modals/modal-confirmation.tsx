@@ -16,7 +16,6 @@ type TModalConfirmation = {
   title: string
   description: string
   labelAction?: string
-  isPending?: boolean
   onAction: (() => Promise<void>) | (() => void)
 }
 

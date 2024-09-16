@@ -93,3 +93,16 @@ export async function deleteUser(payload: z.infer<typeof deleteUserSchema>) {
   if (!user) return pipe('User does not exist' as const, dbQueryReturn('error'))
   return pipe(user, dbQueryReturn('success'))
 }
+
+export async function updateUser(
+  payload: Partial<typeof USER_SCHEMA.$inferInsert> & { id: string },
+) {
+  let [user] = await DB.update(USER_SCHEMA)
+    .set(omit(payload, ['id']))
+    .where(eq(USER_SCHEMA.id, payload.id))
+    .returning({ id: USER_SCHEMA.id })
+
+  if (!user) return pipe('User not found' as const, dbQueryReturn('error'))
+
+  return pipe(user, dbQueryReturn('success'))
+}

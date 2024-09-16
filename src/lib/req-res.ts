@@ -1,3 +1,6 @@
+import { A, F, O, pipe, S } from '@mobily/ts-belt'
+import { match } from 'ts-pattern'
+
 type TWithoutOk<T> = T extends { ok: any } ? never : T
 type TMetaPagination = { page: number; limit: number; total: number; rows: number }
 
@@ -30,4 +33,19 @@ export function actionReturn<T extends 'success' | 'error'>(type: T): TActionRet
     return (<D>(data: D = {} as D) => ({ ...data, ok: true })) as TActionReturn<T>
   }
   return (<E extends string>(error: E) => ({ ok: false, error })) as TActionReturn<T>
+}
+
+export function extractDatabaseError(message: string) {
+  return match(
+    pipe(
+      message,
+      S.split(' '),
+      A.last,
+      O.mapWithDefault('Server error', F.identity),
+      S.replaceAll('"', ''),
+    ),
+  )
+    .with('user_ktp_unique', () => 'Ktp Unique' as const)
+    .with('user_email_unique', () => 'Email Unique' as const)
+    .otherwise(() => 'Server Error' as const)
 }

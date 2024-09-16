@@ -33,7 +33,7 @@ type TSidebarGroup = {
   menus: TSidebarMenu[]
 }
 
-export function getSidebarList(pathname: string, role?: Option<string>): Array<TSidebarGroup> {
+export function getSidebarList(pathname: string, role?: Option<TRole>): Array<TSidebarGroup> {
   return [
     {
       label: 'Akses Cepat',

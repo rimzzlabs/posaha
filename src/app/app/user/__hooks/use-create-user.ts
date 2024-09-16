@@ -2,11 +2,10 @@ import { createUserAction } from '../__actions'
 import { createUserSchema } from '../__schema/user-schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { pipe, S } from '@mobily/ts-belt'
 import { useRouter } from 'next/navigation'
-import { tryit } from 'radash'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 export function useCreateUser() {
@@ -28,23 +27,28 @@ export function useCreateUser() {
     toast.dismiss()
     toast.loading('Memproses permintaan, harap tunggu...')
 
-    const [error, res] = await tryit(createUserAction)(value)
+    let res = await createUserAction(value)
     toast.dismiss()
-    let showErrorToast = () => toast.error('Terjadi kesalahan server')
-
-    if (error) {
-      showErrorToast()
-      return
-    }
 
     if (!res?.data) {
-      showErrorToast()
+      toast.error('Terjadi kesalahan server')
       return
     }
 
     if (!res.data.ok) {
-      let description = pipe('Kode tehnikal: ', S.append(res.data.error))
-      toast.error('Terjadi kesalahan', { description })
+      let error = res.data.error
+      let message = match(error)
+        .with('Email Unique', () => 'Pengguna dengan Alamat Surel ini suda ada')
+        .with('Ktp Unique', () => 'Pengguna dengan Nomor KTP ini suda ada')
+        .otherwise(() => 'Tidak dapat memenuhi permintaan, harap coba lagi nanti')
+
+      let isConflictEmail = error === 'Email Unique'
+      let isConflictKtp = error === 'Ktp Unique'
+      if (isConflictEmail) form.setError('email', { message })
+      if (isConflictKtp) form.setError('ktp', { message })
+
+      toast.error(message, { closeButton: true })
+
       return
     }
 
