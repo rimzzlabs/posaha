@@ -5,20 +5,20 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { For } from '@/components/ui/for'
 
 import { getSidebarList } from '@/lib/constant'
-import { sessionAtom } from '@/states/session'
 
-import { F } from '@mobily/ts-belt'
-import { useAtomValue } from 'jotai'
+import { F, O, pipe } from '@mobily/ts-belt'
 import { ArrowUpRight, ChevronDownIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
 import { match } from 'ts-pattern'
 
-export function SidebarMenu() {
+export function SidebarMenu({ session }: TWithSession) {
   let pathname = usePathname()
-  let session = useAtomValue(sessionAtom)
-  let menu = getSidebarList(pathname, session?.role)
+
+  let role = pipe(session?.user.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
+  console.info(role)
+  let menu = getSidebarList(pathname, role)
 
   return (
     <nav className='flex flex-col gap-2'>
