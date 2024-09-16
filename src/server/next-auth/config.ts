@@ -39,7 +39,9 @@ export const NEXT_AUTH_CONFIG = {
         return args.session
       }
       if (!res.ok) return args.session
+      args.session.user.image = res.data.image
       args.session.user.role = res.data.role
+      args.session.user.name = res.data.name
       return args.session
     },
   },

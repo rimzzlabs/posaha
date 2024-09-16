@@ -3,13 +3,13 @@ import { popModal, pushModal } from '@/components/modals'
 import { signOutAction } from '../__actions'
 
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import * as R from 'react'
 import { toast } from 'sonner'
 
 export function useSignOut() {
   let router = useRouter()
 
-  return useCallback(() => {
+  return R.useCallback(() => {
     pushModal('ModalConfirmation', {
       title: 'Yakin Akhiri Sesi?',
       description:

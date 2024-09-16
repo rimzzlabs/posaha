@@ -1,7 +1,7 @@
 'use server'
 
 import { createUser } from '@/database/query/user'
-import { actionReturn } from '@/lib/req-res'
+import { actionReturn, extractDatabaseError } from '@/lib/req-res'
 
 import { createUserSchema } from '../__schema/user-schema'
 
@@ -14,7 +14,11 @@ export let createUserAction = createSafeActionClient()
   .schema(createUserSchema)
   .action(async ({ parsedInput: payload }) => {
     const [error, res] = await tryit(createUser)(payload)
-    if (error) return pipe('Server is not working', actionReturn('error'))
+    if (error) {
+      console.info('createUserAction error: ', error.message)
+      let errorMessage = extractDatabaseError(error.message)
+      return pipe(errorMessage, actionReturn('error'))
+    }
 
     if (!res.ok) return pipe(res.error, actionReturn('error'))
 

@@ -1,3 +1,6 @@
+import type { Option } from '@mobily/ts-belt'
+import type { Session } from 'next-auth'
+
 declare global {
   type TPrettify<T> = {
     [K in keyof T]: T[K]
@@ -29,6 +32,8 @@ declare global {
     params: Record<string, any>
     searchParams: Record<string, string>
   }
+
+  type TWithSession = { session: Option<Session> }
 }
 
 export {}
