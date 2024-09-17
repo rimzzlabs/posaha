@@ -1,11 +1,10 @@
 import { productListAtom } from '@/states/product'
-import { productCategoryAtom } from '@/states/product-category'
 
 import { createProductSchema } from '../__schema/product-schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { A, F, pipe, S } from '@mobily/ts-belt'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { random, sleep, uid } from 'radash'
 import { useForm } from 'react-hook-form'
@@ -15,7 +14,6 @@ import { z } from 'zod'
 export function useCreateProduct() {
   let router = useRouter()
   let updateProductList = useSetAtom(productListAtom)
-  let productCategoryList = useAtomValue(productCategoryAtom)
 
   let form = useForm<z.infer<typeof createProductSchema>>({
     defaultValues: {
@@ -36,16 +34,6 @@ export function useCreateProduct() {
     })
     await sleep(random(50, 800))
     let timestamp = new Date().toISOString()
-    let category = pipe(
-      productCategoryList,
-      A.getBy((category) => S.includes(values.category)(category.id)),
-    )
-
-    if (!category) {
-      toast.dismiss()
-      toast.error('Kategori produk tidak valid')
-      return
-    }
 
     let sku = pipe(
       values.sku,
@@ -79,7 +67,7 @@ export function useCreateProduct() {
       updatedAt: timestamp,
       price: values.price,
       sku,
-      category,
+      category: { color: '', createdAt: timestamp, id: '', name: '', updatedAt: timestamp },
       stock,
     }
     updateProductList((prev) => prev.concat([newProduct]))

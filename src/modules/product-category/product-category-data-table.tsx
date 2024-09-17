@@ -2,24 +2,13 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-import { useProductCategoryList } from '@/app/app/product/__hooks'
-
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { PRODUCT_CATEGORY_DATA_TABLE_COLUMN } from './product-category-data-table-column'
 
-import { useSearchParams } from 'next/navigation'
-import { toFloat } from 'radash'
+type TProductCategoryDataTable = { data: Array<ProductCategory>; page: number; total: number }
 
-export function ProductCategoryDataTable() {
-  let search = useSearchParams()
-  let data = useProductCategoryList()
-  let page = toFloat(search.get('page'), 1)
-
-  let limit = 10
-  let offset = (page - 1) * limit
-  let totalPage = Math.ceil(data.length / limit) || 1
-  let paginatedData = data.slice(offset, offset + limit)
-
+export function ProductCategoryDataTable(props: TProductCategoryDataTable) {
+  console.info(props)
   return (
     <Card>
       <CardHeader>
@@ -34,9 +23,9 @@ export function ProductCategoryDataTable() {
 
       <CardContent>
         <DataTableUI
-          page={page}
-          total={totalPage}
-          data={paginatedData}
+          page={props.page}
+          total={props.total}
+          data={props.data}
           isPending={false}
           emptyState={{
             description: 'Tidak ada kategori yang tersedia',

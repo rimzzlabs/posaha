@@ -1,15 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
-import { For } from '@/components/ui/for'
+import { Command, CommandEmpty, CommandInput, CommandList } from '@/components/ui/command'
 import {
   FormControl,
   FormDescription,
@@ -22,18 +14,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { createProductSchema } from '@/app/app/product/__schema'
 import { cn } from '@/lib/utils'
-import { productCategoryAtom } from '@/states/product-category'
 
-import { A, D, F, O, pipe, S } from '@mobily/ts-belt'
-import { useAtomValue } from 'jotai'
-import { CheckIcon, ChevronsUpDown } from 'lucide-react'
+import { ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 import { useFormContext } from 'react-hook-form'
-import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
 export function CreateProductCategory() {
-  let productCategoryList = useAtomValue(productCategoryAtom)
   let [open, setOpen] = React.useState(false)
   let form = useFormContext<z.infer<typeof createProductSchema>>()
 
@@ -42,18 +29,6 @@ export function CreateProductCategory() {
       name='category'
       control={form.control}
       render={({ field }) => {
-        let fieldValue = match(field.value)
-          .with(P.string.minLength(1), (value) => {
-            return pipe(
-              productCategoryList,
-              A.getBy((category) => S.includes(value)(category.id)),
-              O.getWithDefault({ id: '', name: '', color: '', updatedAt: '', createdAt: '' }),
-              D.getUnsafe('name'),
-              F.defaultTo('Pilih Kategori Produk'),
-            )
-          })
-          .otherwise(() => 'Pilih Kategori Produk')
-
         return (
           <FormItem>
             <FormLabel asterisk>Kategori Produk</FormLabel>
@@ -65,7 +40,7 @@ export function CreateProductCategory() {
                     role='combobox'
                     className={cn('w-full', !field.value && 'text-muted-foreground')}
                   >
-                    {fieldValue}
+                    {field.value || 'Pilih Produk kategori'}
                     <ChevronsUpDown className='ml-auto shrink-0' size='1em' />
                   </Button>
                 </FormControl>
@@ -80,7 +55,7 @@ export function CreateProductCategory() {
                         Kategori tidak ditemukan
                       </p>
                     </CommandEmpty>
-
+                    {/* 
                     <CommandGroup>
                       <For each={productCategoryList}>
                         {(category) => (
@@ -104,7 +79,7 @@ export function CreateProductCategory() {
                           </CommandItem>
                         )}
                       </For>
-                    </CommandGroup>
+                    </CommandGroup> */}
                   </CommandList>
                 </Command>
               </PopoverContent>

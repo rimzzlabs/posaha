@@ -8,6 +8,7 @@ import { LockIcon } from 'lucide-react'
 import { Fragment } from 'react'
 
 export default function SigninPage() {
+  console.info(crypto.randomUUID())
   return (
     <Fragment>
       <PublicHeaderContainer />

@@ -10,7 +10,7 @@ import {
 import { HeadingThree } from '@/components/ui/headings'
 import { Input } from '@/components/ui/input'
 
-import { useCreateProductCategory } from '@/app/app/product/__hooks'
+import { useCreateCategory } from '@/app/app/product/__hooks'
 import { isFormPending } from '@/lib/utils'
 
 import { CreateProductCategoryColorPicker } from './create-product-category-color-picker'
@@ -19,7 +19,7 @@ import { B } from '@mobily/ts-belt'
 import { Loader2Icon, SendHorizonalIcon } from 'lucide-react'
 
 export function CreateProductCategoryForm() {
-  let createProductCategory = useCreateProductCategory()
+  let createProductCategory = useCreateCategory()
   let disabledInteractive = isFormPending(createProductCategory.form.formState)
   let submitIcon = B.ifElse(
     disabledInteractive,
@@ -33,7 +33,7 @@ export function CreateProductCategoryForm() {
         <HeadingThree>Informasi Kategori Produk</HeadingThree>
 
         <FormField
-          name='label'
+          name='name'
           disabled={disabledInteractive}
           control={createProductCategory.form.control}
           render={({ field }) => (

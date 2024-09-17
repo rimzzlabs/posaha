@@ -1,4 +1,4 @@
-import { timestamp, pgTable, text, varchar, date, integer } from 'drizzle-orm/pg-core'
+import { timestamp, pgTable, text, varchar, integer } from 'drizzle-orm/pg-core'
 
 export const USER_SCHEMA = pgTable('user', {
   id: text('id')
@@ -18,6 +18,6 @@ export const USER_SCHEMA = pgTable('user', {
 
   deleted: integer('boolean').default(0).notNull(),
 
-  createdAt: date('created_at').defaultNow().notNull(),
-  updatedAt: date('updated_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 })
