@@ -9,18 +9,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { productCategoryAtom } from '@/states/product-category'
+import { deleteCategoryAction } from '@/app/app/product/__actions'
 
-import { A, F, pipe } from '@mobily/ts-belt'
-import { useSetAtom } from 'jotai'
 import { ChevronDownIcon, PenIcon, Trash2Icon } from 'lucide-react'
-import { random, sleep } from 'radash'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export function ProductCategoryDataTableAction(props: ProductCategory) {
-  let updateProductCategory = useSetAtom(productCategoryAtom)
+  let router = useRouter()
 
-  let onClickDelete = () => {
+  let onClickDelete = (id: string) => () => {
     let title = 'Hapus kategori produk ini?'
     let description = 'Apakah anda yakin ingin menghapus kategori produk yang dipilih?'
     let labelAction = 'Hapus Kategori Produk'
@@ -31,17 +29,19 @@ export function ProductCategoryDataTableAction(props: ProductCategory) {
       labelAction,
       onAction: async () => {
         toast.dismiss()
-        let toastId = toast.loading('Memproses permintaan, harap tunggu')
-        await sleep(random(50, 800))
-        updateProductCategory((product) => {
-          return pipe(
-            product,
-            A.filter((product) => product.id !== props.id),
-            F.toMutable,
-          )
-        })
+        toast.loading('Memproses permintaan, harap tunggu')
+        let res = await deleteCategoryAction({ id })
+        toast.dismiss()
         popModal('ModalConfirmation')
-        toast.dismiss(toastId)
+        if (!res?.data) {
+          toast.error('Terjadi kesalahan pada server')
+          return
+        }
+        if (!res.data.ok) {
+          toast.error(res.data.error)
+          return
+        }
+        router.refresh()
         toast.success('Berhasil menghapus kategori produk')
       },
     })
@@ -66,7 +66,7 @@ export function ProductCategoryDataTableAction(props: ProductCategory) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={onClickDelete}>
+        <DropdownMenuItem onClick={onClickDelete(props.id)}>
           <Trash2Icon size='1em' />
           Hapus Kategori
         </DropdownMenuItem>

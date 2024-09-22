@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 import { id } from 'date-fns/locale'
 
 /**
@@ -8,6 +9,7 @@ import { id } from 'date-fns/locale'
  * @default token "EEEE, dd MMM, yyyy - HH:mm"
  * @returns
  */
-export function formatDate(date: string | number | Date, token = 'EEEE, dd MMM, yyyy - HH:mm') {
-  return format(date, token, { locale: id })
+export function formatDate(date: string | number | Date, token = 'EEEE, dd MMM, yyyy - hh:mm') {
+  const zonedTime = toZonedTime(date, 'Asia/Jakarta', { timeZone: 'GMT' })
+  return format(zonedTime, token, { locale: id })
 }

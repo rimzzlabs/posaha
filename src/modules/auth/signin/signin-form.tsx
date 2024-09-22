@@ -34,7 +34,6 @@ export function SignInForm() {
         <FormField
           name='email'
           control={signIn.form.control}
-          disabled={disabledInteractive}
           render={({ field }) => (
             <FormItem className='w-full flex-1'>
               <FormLabel>Alamat surel</FormLabel>
@@ -44,6 +43,7 @@ export function SignInForm() {
                   type='email'
                   autoComplete='email'
                   placeholder='Alamat surel anda'
+                  disabled={disabledInteractive}
                 />
               </FormControl>
               <FormMessage />
@@ -54,15 +54,15 @@ export function SignInForm() {
         <FormField
           name='password'
           control={signIn.form.control}
-          disabled={disabledInteractive}
           render={({ field }) => (
             <FormItem className='w-full flex-1'>
               <FormLabel>Kata sandi</FormLabel>
               <FormControl>
                 <InputPassword
                   {...field}
-                  autoComplete='current-password'
                   placeholder='Kata sandi anda '
+                  autoComplete='current-password'
+                  disabled={disabledInteractive}
                 />
               </FormControl>
               <FormMessage />

@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-import { F } from '@mobily/ts-belt'
+import { F, pipe, S } from '@mobily/ts-belt'
 import { PlusIcon, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import * as R from 'react'
 import { match, P } from 'ts-pattern'
 
@@ -28,7 +29,10 @@ type TDataTableHeader = {
 
 export function DataTableHeader(props: TDataTableHeader) {
   let id = R.useId()
-  let [inputValue, setInputValue] = R.useState('')
+  let router = useRouter()
+  let pathname = usePathname()
+  let searchParams = useSearchParams()
+  let [inputValue, setInputValue] = R.useState(searchParams.get('search') || '')
 
   let label = match(props?.search?.label)
     .with(P.string, F.identity)
@@ -45,9 +49,23 @@ export function DataTableHeader(props: TDataTableHeader) {
   let delay = match(props?.search?.delay)
     .with(P.number.positive(), F.identity)
     .otherwise(F.always(500))
-  let onSearchChange = match(props?.search?.onValueChange)
-    .with(P.instanceOf(Function), F.identity)
-    .otherwise(F.always(F.ignore))
+  let onSearchChange = R.useCallback(
+    (value: string) => {
+      let params = new URLSearchParams(searchParams)
+      let synthesizedValue = pipe(value, S.replaceByRe(/s+/g, ''))
+
+      if (synthesizedValue) {
+        params.set('search', synthesizedValue)
+      } else {
+        params.delete('search')
+      }
+
+      let options = { scroll: false }
+      let url = `${pathname}?${params.toString()}`
+      router.push(url, options)
+    },
+    [searchParams, pathname],
+  )
 
   let onChangeDebounced = R.useMemo(
     () => F.debounce(onSearchChange, delay),
@@ -61,12 +79,12 @@ export function DataTableHeader(props: TDataTableHeader) {
   }
 
   return (
-    <div className='flex max-lg:flex-col-reverse px-1 pt-1 pb-6 gap-4'>
+    <div className='flex max-md:flex-col-reverse px-1 pt-1 pb-6 gap-4'>
       <div className='space-y-1'>
         <Label htmlFor={id} hidden>
           {label}
         </Label>
-        <div className='relative'>
+        <div className='relative w-full md:w-72'>
           <Input
             value={inputValue}
             onChange={onChangeInput}

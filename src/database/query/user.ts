@@ -3,44 +3,38 @@ import { dbQueryReturn } from '@/lib/req-res'
 
 import { DB } from '../config'
 import { USER_SCHEMA } from '../schema'
+import { getSearchClause, getTableCount } from '../utils'
 
-import { D, pipe, S } from '@mobily/ts-belt'
+import { A, D, F, pipe, S } from '@mobily/ts-belt'
 import bcrypt from 'bcryptjs'
-import { and, desc, eq, like, or, sql } from 'drizzle-orm'
+import { and, desc, eq, or, type SQL } from 'drizzle-orm'
 import { omit } from 'radash'
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
 const SALT = 10
 
-export async function getUserByEmail(email: string) {
-  let user = await DB.query.USER_SCHEMA.findFirst({ where: eq(USER_SCHEMA.email, email) })
-  return match(user)
-    .with(P.nullish, () => dbQueryReturn('error')('user does not exist' as const))
-    .otherwise(dbQueryReturn('success'))
-}
-
 export function getUserList(page: number, role: TRole) {
   return async (limit = 10, search = '') => {
     let offset = (page - 1) * limit
     let searchTerm = S.toLowerCase(search)
 
-    let whereConditions = []
-
-    if (role === 'super-admin') {
-      whereConditions.push(or(eq(USER_SCHEMA.role, `admin`), eq(USER_SCHEMA.role, `cashier`)))
-    }
-
-    if (role === 'admin') {
-      whereConditions.push(eq(USER_SCHEMA.role, `cashier`))
-    }
-
-    whereConditions.push(
-      or(like(USER_SCHEMA.email, `%${searchTerm}%`), like(USER_SCHEMA.name, `%${searchTerm}%`)),
+    let where = pipe(
+      [] as Array<SQL>,
+      F.ifElse(
+        () => role === 'super-admin',
+        A.append(or(eq(USER_SCHEMA.role, `admin`), eq(USER_SCHEMA.role, `cashier`))),
+        F.identity,
+      ),
+      F.toMutable,
+      F.ifElse(() => role === 'admin', A.append(eq(USER_SCHEMA.role, `cashier`)), F.identity),
+      F.toMutable,
+      A.append(
+        pipe(searchTerm, getSearchClause(USER_SCHEMA.name, USER_SCHEMA.email, USER_SCHEMA.address)),
+      ),
+      F.toMutable,
+      (clauses) => and(...clauses),
     )
-    whereConditions.push(eq(USER_SCHEMA.deleted, 0))
-
-    let where = and(...whereConditions)
 
     const data = await DB.select({
       id: USER_SCHEMA.id,
@@ -57,16 +51,19 @@ export function getUserList(page: number, role: TRole) {
       .limit(limit)
       .offset(offset)
       .orderBy(desc(USER_SCHEMA.updatedAt))
-    let [res] = await DB.select({ rows: sql`count(*)`.mapWith(Number) })
-      .from(USER_SCHEMA)
-      .where(where)
 
-    if (!res) return dbQueryReturn('error')('Something went wrong')
-    let rows = res.rows
+    let rows = await pipe(USER_SCHEMA, getTableCount(where))
     let total = Math.ceil(rows / limit)
 
     return dbQueryReturn('success-paginate')(data, { page, limit, rows, total })
   }
+}
+
+export async function getUserByEmail(email: string) {
+  let user = await DB.query.USER_SCHEMA.findFirst({ where: eq(USER_SCHEMA.email, email) })
+  return match(user)
+    .with(P.nullish, () => dbQueryReturn('error')('user does not exist' as const))
+    .otherwise(dbQueryReturn('success'))
 }
 
 export async function createUser(payload: z.infer<typeof createUserSchema>) {
@@ -85,8 +82,7 @@ export async function createUser(payload: z.infer<typeof createUserSchema>) {
 }
 
 export async function deleteUser(payload: z.infer<typeof deleteUserSchema>) {
-  let [user] = await DB.update(USER_SCHEMA)
-    .set({ deleted: 1 })
+  let [user] = await DB.delete(USER_SCHEMA)
     .where(eq(USER_SCHEMA.id, payload.id))
     .returning({ id: USER_SCHEMA.id })
 

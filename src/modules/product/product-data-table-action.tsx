@@ -1,3 +1,5 @@
+'use client'
+
 import { popModal, pushModal } from '@/components/modals'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,34 +31,39 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
+import { deleteProductAction } from '@/app/app/product/__actions/delete-product'
 import { updateStockProductSchema } from '@/app/app/product/__schema'
 import { isFormPending } from '@/lib/utils'
-import { productListAtom } from '@/states/product'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { A, B, F, N, pipe, S } from '@mobily/ts-belt'
-import { useSetAtom } from 'jotai'
+import { B, N, pipe, S } from '@mobily/ts-belt'
 import {
   ChevronDownIcon,
-  EyeIcon,
   Loader2,
   MinusIcon,
   PackagePlusIcon,
   PlusIcon,
+  RefreshCcwIcon,
   SendHorizonalIcon,
   Trash2Icon,
 } from 'lucide-react'
+import Link from 'next/link'
 import { random, sleep, toInt } from 'radash'
 import * as R from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+const TOAST_SERVER_ERROR = 'Terjadi kesalahan pada server'
+const TOAST_VALIDATION_ERROR = 'Terjadi kesalahan, harap refresh halaman'
+const TOAST_SUCCESS = 'Produk berhasil dihapus'
+
 export function ProductDataTableAction(props: Product) {
   let [dialogOpen, setDialogOpen] = R.useState(false)
-  let setProductList = useSetAtom(productListAtom)
 
-  let onClickDelete = () => {
+  let urlUpdate = pipe(props.id, S.prepend('/app/product/update/'))
+
+  let onClickDelete = (id: string) => () => {
     let title = 'Hapus produk ini?'
     let description = 'Apakah anda yakin ingin menghapus produk yang dipilih?'
     let labelAction = 'Hapus Produk'
@@ -67,12 +74,23 @@ export function ProductDataTableAction(props: Product) {
       labelAction,
       onAction: async () => {
         toast.dismiss()
-        let toastId = toast.loading('Memproses permintaan, harap tunggu')
-        await sleep(random(50, 1000))
-        setProductList((product) => product.filter((p) => p.id !== props.id))
+        toast.loading('Memproses permintaan, harap tunggu')
+        let res = await deleteProductAction({ id })
+        toast.dismiss()
+        if (res?.serverError || !res?.data) {
+          toast.error(TOAST_SERVER_ERROR)
+          return
+        }
+        if (res?.validationErrors) {
+          toast.error(TOAST_VALIDATION_ERROR)
+          return
+        }
+        if (!res.data.ok) {
+          toast.error(res.data.error)
+          return
+        }
         popModal('ModalConfirmation')
-        toast.dismiss(toastId)
-        toast.success('Berhasil menghapus produk')
+        toast.success(TOAST_SUCCESS)
       },
     })
   }
@@ -91,13 +109,15 @@ export function ProductDataTableAction(props: Product) {
           <DropdownMenuLabel>Menu Aksi</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem>
-            <EyeIcon size='1em' />
-            Lihat Produk
+          <DropdownMenuItem asChild>
+            <Link href={urlUpdate}>
+              <RefreshCcwIcon size='1em' />
+              Perbarui Produk
+            </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild>
-            <DialogTrigger>
+            <DialogTrigger className='w-full'>
               <PackagePlusIcon size='1em' />
               Perbarui Stok
             </DialogTrigger>
@@ -105,7 +125,7 @@ export function ProductDataTableAction(props: Product) {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem onClick={onClickDelete}>
+          <DropdownMenuItem onClick={onClickDelete(props.id)}>
             <Trash2Icon size='1em' />
             Hapus Produk
           </DropdownMenuItem>
@@ -115,19 +135,18 @@ export function ProductDataTableAction(props: Product) {
       <UpdateStockDropdownItem
         id={props.id}
         setDialogOpen={setDialogOpen}
-        initialValue={props.stock.available}
+        initialValue={props.stock}
       />
     </Dialog>
   )
 }
 
-function UpdateStockDropdownItem(props: {
-  initialValue: number
+type TUpdateStockDropdownItem = {
   id: string
+  initialValue: number
   setDialogOpen: (open: boolean) => void
-}) {
-  let updateProductList = useSetAtom(productListAtom)
-
+}
+function UpdateStockDropdownItem(props: TUpdateStockDropdownItem) {
   let form = useForm<z.infer<typeof updateStockProductSchema>>({
     defaultValues: { stock: props.initialValue, remarks: '' },
     resolver: zodResolver(updateStockProductSchema),
@@ -142,34 +161,14 @@ function UpdateStockDropdownItem(props: {
 
   let onSubmit = form.handleSubmit(async (value) => {
     toast.dismiss()
-    let toastId = toast.loading('Memproses, harap tunggu...')
+    toast.loading('Memproses, harap tunggu...')
     await sleep(random(800, 1200))
-    let timestamp = new Date().toISOString()
-    console.log(
-      pipe(
-        'Admin memperbarui stok menjadi ',
-        S.append(String(value.stock)),
-        S.append(' pada timestamp: '),
-        S.append(timestamp),
-        S.append(' alasan: '),
-        S.append(String(value.remarks)),
-      ),
-    ) // transaction column
-    updateProductList((prev) => {
-      let productIndex = A.getIndexBy(prev, (product) => product.id === props.id)
-      if (!productIndex) return prev
-      let product = A.at(prev, productIndex)
-      if (!product) return prev
-      let newProduct: Product = { ...product, stock: { ...product.stock, available: value.stock } }
-      return pipe(prev, A.replaceAt(productIndex, newProduct), F.toMutable)
-    })
-    toast.dismiss(toastId)
+    toast.dismiss()
     toast.success('Berhasil memberbarui stok produk!')
     props.setDialogOpen(false)
+    form.reset()
   })
-  let onCloseEvent = (e: Event) => {
-    if (disableInteraction) e.preventDefault()
-  }
+  let onCloseEvent = (e: Event) => disableInteraction && e.preventDefault()
 
   return (
     <DialogContent
@@ -191,7 +190,6 @@ function UpdateStockDropdownItem(props: {
           <FormField
             name='stock'
             control={form.control}
-            disabled={disableInteraction}
             render={({ field }) => {
               let incomingPrevValue = B.ifElse(
                 field.value === 1,
@@ -207,25 +205,27 @@ function UpdateStockDropdownItem(props: {
                     <Button
                       variant='outline'
                       className='px-0 w-9'
-                      disabled={field.value < 2}
+                      disabled={field.value < 2 || disableInteraction}
                       onClick={() => field.onChange(incomingPrevValue)}
                     >
                       <MinusIcon size='1rem' />
                     </Button>
                     <FormControl>
                       <Input
-                        className='max-w-16'
                         {...field}
-                        type='number'
-                        inputMode='numeric'
-                        autoComplete='off'
-                        placeholder='1'
                         min={1}
+                        type='number'
+                        placeholder='1'
+                        autoComplete='off'
+                        inputMode='numeric'
+                        className='max-w-16'
+                        disabled={disableInteraction}
                       />
                     </FormControl>
                     <Button
                       variant='outline'
                       className='px-0 w-9'
+                      disabled={disableInteraction}
                       onClick={() => field.onChange(incomingNextValue)}
                     >
                       <PlusIcon size='1rem' />
@@ -240,12 +240,15 @@ function UpdateStockDropdownItem(props: {
           <FormField
             name='remarks'
             control={form.control}
-            disabled={disableInteraction}
             render={({ field }) => (
               <FormItem className='pt-3'>
                 <FormLabel>Catatan (opsional)</FormLabel>
                 <FormControl>
-                  <Textarea {...field} placeholder='Catatan perubahan, maks: 1000 karakter' />
+                  <Textarea
+                    {...field}
+                    disabled={disableInteraction}
+                    placeholder='Catatan perubahan, maks: 1000 karakter'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

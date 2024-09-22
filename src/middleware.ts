@@ -24,7 +24,7 @@ export default middleware(async (req) => {
 
   if (isApiAuthRoute) {
     if (!session) return NextResponse.redirect(new URL(AUTH_SIGNIN_URL, url), redirectStatus)
-    return NextResponse.redirect(new URL(AUTH_SIGNED, url), redirectStatus)
+    return NextResponse.next()
   }
 
   if (isAuthRoutes) {

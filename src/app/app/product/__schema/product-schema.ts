@@ -12,6 +12,7 @@ const MAX_REMARKS_TRANSACTION_STOCK = toInt(
 export let createProductSchema = z.object({
   name: z.string().min(1, 'Harap isi bagian ini'),
   description: z.string().optional(),
+  image: z.string().optional().nullable().default(null),
   category: z.string().min(1, 'Harap pilih kategori produk'),
   sku: z.string().min(1, 'Harap isi bagian ini').max(20, 'SKU tidak boleh lebih dari 30 karakter'),
 
@@ -33,6 +34,30 @@ export let createProductSchema = z.object({
         MIN_PRODUCT_STOCK,
         pipe('Minimal stok produk adalah ', S.append(String(MIN_PRODUCT_STOCK))),
       ),
+  ),
+})
+
+export let updateProductSchema = z.object({
+  id: z.string().min(1, 'Id produk tidak ada'),
+  name: z.string().min(1, 'Harap isi bagian ini'),
+  description: z.string().optional(),
+  image: z.string().optional().nullable().default(null),
+  category: z.string().min(1, 'Harap pilih kategori produk'),
+  sku: z.string().min(1, 'Harap isi bagian ini').max(20, 'SKU tidak boleh lebih dari 30 karakter'),
+
+  price: z.preprocess(
+    (a) => toInt(a, 0),
+    z
+      .number({ invalid_type_error: 'Harap isi bagian ini' })
+      .min(
+        MIN_PRODUCT_PRICE,
+        pipe('Minimal harga produk adalah ', S.append(String(MIN_PRODUCT_PRICE))),
+      ),
+  ),
+
+  stock: z.preprocess(
+    (a) => toInt(a, 0),
+    z.number({ invalid_type_error: 'Harap isi bagian ini' }).optional().default(0),
   ),
 })
 

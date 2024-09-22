@@ -11,7 +11,8 @@ import { Input } from '@/components/ui/input'
 import { createProductSchema } from '@/app/app/product/__schema'
 import { isFormPending } from '@/lib/utils'
 
-import { A, F, pipe, S } from '@mobily/ts-belt'
+import { A, pipe, S } from '@mobily/ts-belt'
+import { omit } from 'radash'
 import { useFormContext } from 'react-hook-form'
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
@@ -26,30 +27,32 @@ export function CreateProductSKU() {
       let isFromClipboard =
         'inputType' in nativeEvent && nativeEvent.inputType === 'insertFromPaste'
 
-      let valueFromEvent = pipe(
-        event.target.value,
-        S.toUpperCase,
-        S.replaceByRe(/\s+/g, '-'),
-        F.ifElse(S.startsWith('-'), S.sliceToEnd(1), F.identity),
-        (value) => {
-          const match = /-+$/.exec(value)
-          if (match && match[0].length > 1) {
-            return value.slice(0, -match[0].length) + '-'
-          }
-          return value
-        },
-      )
+      let processValue = (value: string): string =>
+        pipe(
+          value,
+          S.toUpperCase,
+          S.replaceByRe(/\s+/g, '-'),
+          S.replaceByRe(/[^a-zA-Z0-9\s-]/g, ''),
+          (v) => (S.startsWith(v, '-') ? v.slice(1) : v),
+          (v) => {
+            let match = /-+$/.exec(v)
+            if (match && S.length(match[0]) > 1) {
+              return S.slice(v, 0, -S.length(match[0])) + '-'
+            }
+            return v
+          },
+        )
 
-      let valueFromPasteEvent = pipe(
-        valueFromEvent,
-        S.split('-'),
-        A.filter((value) => S.length(value) > 0),
-        A.join('-'),
-      )
+      let nextValue = match([isFromClipboard, event.target.value])
+        .with([true, P.select()], (value) =>
+          pipe(value, processValue, S.split('-'), A.filter(S.isNotEmpty), A.join('-')),
+        )
+        .otherwise(([, value]) => processValue(value))
 
-      let nextValue = match([isFromClipboard, valueFromEvent, valueFromPasteEvent] as const)
-        .with([true, P._, P.select()], F.identity)
-        .otherwise(([_1, valueFromEvent]) => valueFromEvent)
+      // If the last character is '-', don't update
+      if (S.endsWith(event.target.value, '-') && !S.endsWith(nextValue, '-')) {
+        return
+      }
 
       onChange(nextValue)
     }
@@ -59,7 +62,6 @@ export function CreateProductSKU() {
     <FormField
       name='sku'
       control={form.control}
-      disabled={disabledInteractive}
       render={({ field }) => (
         <FormItem>
           <FormLabel asterisk>Produk SKU</FormLabel>
@@ -69,10 +71,10 @@ export function CreateProductSKU() {
             </p>
             <FormControl>
               <Input
-                {...field}
+                {...omit(field, ['onChange'])}
                 className='pl-[2.875rem]'
-                autoComplete='off'
                 placeholder='MINYAK-500ML'
+                disabled={disabledInteractive}
                 onChange={synthesizedOnChange(field.onChange)}
               />
             </FormControl>

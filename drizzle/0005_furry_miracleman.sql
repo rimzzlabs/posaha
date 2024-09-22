@@ -1,0 +1,1 @@
+ALTER TABLE "product_category" DROP CONSTRAINT "product_category_color_unique";

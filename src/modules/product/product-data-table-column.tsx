@@ -1,3 +1,5 @@
+'use client'
+
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -6,9 +8,11 @@ import { formatPrice } from '@/lib/number'
 
 import { ProductDataTableAction } from './product-data-table-action'
 
-import { N } from '@mobily/ts-belt'
+import { F, N, pipe, S } from '@mobily/ts-belt'
 import { createColumnHelper } from '@tanstack/react-table'
 import { MinusIcon } from 'lucide-react'
+import Image from 'next/image'
+import { match, P } from 'ts-pattern'
 
 let ch = createColumnHelper<Product>()
 
@@ -18,8 +22,36 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
     id: 'Numeric',
     cell: (props) => N.add(props.row.index, 1),
   }),
+  ch.accessor('image', {
+    header: 'Foto Produk',
+    cell: (props) => {
+      return match(props.getValue())
+        .with(P.nullish, () => (
+          <Tooltip delayDuration={250}>
+            <TooltipTrigger className='text-muted-foreground'>
+              <MinusIcon size='1rem' />
+              <span className='sr-only'>Tidak ada foto produk</span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className='text-sm font-medium'>Produk ini belum mempunyai foto</p>
+            </TooltipContent>
+          </Tooltip>
+        ))
+        .otherwise((url) => (
+          <Image
+            src={url}
+            alt={props.row.original.name}
+            width={48}
+            height={48}
+            loading='lazy'
+            className='rounded-lg'
+          />
+        ))
+    },
+  }),
   ch.accessor('sku', {
     header: 'SKU Produk',
+    cell: (props) => pipe(props.getValue(), S.prepend('POS-')),
   }),
   ch.accessor('name', {
     header: 'Nama Produk',
@@ -30,23 +62,26 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
   }),
   ch.accessor('description', {
     header: 'Deksripsi Produk',
-    cell: (props) =>
-      props.getValue() || (
-        <Tooltip delayDuration={250}>
-          <TooltipTrigger className='text-muted-foreground'>
-            <MinusIcon size='1rem' />
-            <span className='sr-only'>Tidak ada deskripsi produk</span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className='text-sm font-medium'>Produk ini belum mempunyai deskripsi</p>
-          </TooltipContent>
-        </Tooltip>
-      ),
+    cell: (props) => {
+      return match(props.getValue())
+        .with(P.not(P.nullish).and(P.string.minLength(1)), F.identity)
+        .otherwise(() => (
+          <Tooltip delayDuration={250}>
+            <TooltipTrigger className='text-muted-foreground'>
+              <MinusIcon size='1rem' />
+              <span className='sr-only'>Tidak ada deskripsi produk</span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className='text-sm font-medium'>Produk ini belum mempunyai deskripsi</p>
+            </TooltipContent>
+          </Tooltip>
+        ))
+    },
   }),
-  ch.accessor('stock.available', {
+  ch.accessor('stock', {
     header: 'Stok Tersedia',
   }),
-  ch.accessor('stock.sold', {
+  ch.accessor('sold', {
     header: 'Stok Terjual',
   }),
   ch.accessor('category.name', {
@@ -55,7 +90,11 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
       let backgroundColor = props.row.original.category.color
 
       return (
-        <Badge variant='secondary' className='text-neutral-800' style={{ backgroundColor }}>
+        <Badge
+          variant='secondary'
+          className='text-neutral-800 max-w-max'
+          style={{ backgroundColor }}
+        >
           {props.getValue()}
         </Badge>
       )

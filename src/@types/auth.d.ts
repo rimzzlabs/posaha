@@ -7,6 +7,7 @@ declare module 'next-auth' {
       name: string
       role: TRole
       email: string
+      deactivated?: boolean
     } & DefaultSession['user']
   }
 }

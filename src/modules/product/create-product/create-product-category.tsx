@@ -22,50 +22,70 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { createProductSchema } from '@/app/app/product/__schema'
 import { cn } from '@/lib/utils'
-import { productCategoryAtom } from '@/states/product-category'
 
-import { A, D, F, O, pipe, S } from '@mobily/ts-belt'
-import { useAtomValue } from 'jotai'
+import { A, D, F, O, pipe, type Option } from '@mobily/ts-belt'
 import { CheckIcon, ChevronsUpDown } from 'lucide-react'
-import * as React from 'react'
+import * as R from 'react'
 import { useFormContext } from 'react-hook-form'
-import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
-export function CreateProductCategory() {
-  let productCategoryList = useAtomValue(productCategoryAtom)
-  let [open, setOpen] = React.useState(false)
+type TCreateProductCategory = {
+  categoryList: Array<{
+    id: string
+    name: string
+    createdAt: string
+    updatedAt: string
+    color: string
+  }>
+}
+
+const DEFAULT_LABEL = 'Pilih kategori' as string
+
+export function CreateProductCategory(props: TCreateProductCategory) {
+  let [open, setOpen] = R.useState(false)
   let form = useFormContext<z.infer<typeof createProductSchema>>()
+
+  let getFieldValue = (fieldValue: Option<string>) => {
+    return pipe(fieldValue, O.fromNullable, O.mapWithDefault('', F.identity))
+  }
+
+  let getFieldLabel = (fieldValue: Option<string>) => {
+    return pipe(
+      props.categoryList,
+      A.getBy((category) => category.id === getFieldValue(fieldValue)),
+      O.mapWithDefault(DEFAULT_LABEL, D.get('name')),
+      O.getWithDefault(DEFAULT_LABEL),
+    )
+  }
+
+  let getCategoryColor = (fieldValue: Option<string>) => {
+    return pipe(
+      props.categoryList,
+      A.getBy((category) => category.id === getFieldValue(fieldValue)),
+      O.mapWithDefault(<div className='w-4 h-4 rounded bg-stone-600' />, (category) => (
+        <div className='w-4 h-4 rounded' style={{ backgroundColor: category.color }} />
+      )),
+    )
+  }
 
   return (
     <FormField
       name='category'
       control={form.control}
       render={({ field }) => {
-        let fieldValue = match(field.value)
-          .with(P.string.minLength(1), (value) => {
-            return pipe(
-              productCategoryList,
-              A.getBy((category) => S.includes(value)(category.id)),
-              O.getWithDefault({ id: '', name: '', color: '', updatedAt: '', createdAt: '' }),
-              D.getUnsafe('name'),
-              F.defaultTo('Pilih Kategori Produk'),
-            )
-          })
-          .otherwise(() => 'Pilih Kategori Produk')
-
         return (
           <FormItem>
             <FormLabel asterisk>Kategori Produk</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
+              <PopoverTrigger ref={field.ref} asChild>
                 <FormControl>
                   <Button
                     variant='outline'
                     role='combobox'
-                    className={cn('w-full', !field.value && 'text-muted-foreground')}
+                    className={cn('w-full gap-x-2', !field.value && 'text-muted-foreground')}
                   >
-                    {fieldValue}
+                    {getCategoryColor(field.value)}
+                    {getFieldLabel(field.value)}
                     <ChevronsUpDown className='ml-auto shrink-0' size='1em' />
                   </Button>
                 </FormControl>
@@ -82,9 +102,10 @@ export function CreateProductCategory() {
                     </CommandEmpty>
 
                     <CommandGroup>
-                      <For each={productCategoryList}>
+                      <For each={props.categoryList}>
                         {(category) => (
                           <CommandItem
+                            key={category.id}
                             value={category.id}
                             onSelect={() => {
                               field.onChange(category.id)

@@ -1,25 +1,14 @@
-'use client'
-
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-
-import { useProductList } from '@/app/app/product/__hooks'
 
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { PRODUCT_DATA_TABLE_COLUMN } from './product-data-table-column'
 
-import { useSearchParams } from 'next/navigation'
-import { toFloat } from 'radash'
-
-export function ProductDataTable() {
-  let search = useSearchParams()
-  let data = useProductList()
-  let page = toFloat(search.get('page'), 1)
-
-  let limit = 10
-  let offset = (page - 1) * limit
-  let totalPage = Math.ceil(data.length / limit) || 1
-  let paginatedData = data.slice(offset, offset + limit)
-
+type TProductDataTable = {
+  data: Array<Product>
+  page: number
+  total: number
+}
+export function ProductDataTable(props: TProductDataTable) {
   return (
     <Card>
       <CardHeader>
@@ -34,10 +23,9 @@ export function ProductDataTable() {
 
       <CardContent>
         <DataTableUI
-          page={page}
-          total={totalPage}
-          data={paginatedData}
-          isPending={false}
+          page={props.page}
+          total={props.total}
+          data={props.data}
           columns={PRODUCT_DATA_TABLE_COLUMN}
         />
       </CardContent>

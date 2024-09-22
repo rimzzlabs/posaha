@@ -41,8 +41,8 @@ export const PRODUCT_CATEGORY_DATA_TABLE_COLUMN = [
       )
     },
   }),
-  ch.accessor('updatedAt', {
-    header: 'Terakhir Diperbarui',
+  ch.accessor('createdAt', {
+    header: 'Dibuat pada',
     cell: (props) => formatDate(props.getValue(), 'EEEE, dd MMM, yyyy. HH:mm:ss'),
   }),
   ch.display({

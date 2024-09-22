@@ -8,6 +8,7 @@ import {
   DashboardFilter,
   DashboardTransaction,
 } from '@/modules/dashboard'
+import { auth } from '@/server/next-auth'
 
 import { A, B, F, N, O, pipe } from '@mobily/ts-belt'
 import { DollarSignIcon, PackageCheckIcon, PackagePlusIcon, UsersIcon } from 'lucide-react'
@@ -15,11 +16,15 @@ import { draw, random, sleep, toFloat, uid } from 'radash'
 import { Fragment } from 'react'
 
 export default async function AdminDashboardPage() {
-  let [cardsData, chartData, latestTrx] = await Promise.all([
+  let [session, cardsData, chartData, latestTrx] = await Promise.all([
+    auth(),
     getCardsData(),
     getChartData(),
     getLatestTransaction(),
   ])
+
+  let role = pipe(session?.user?.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
+  let isUserAdmin = role !== 'cashier'
 
   return (
     <Fragment>
@@ -29,24 +34,36 @@ export default async function AdminDashboardPage() {
         <DashboardFilter />
       </div>
 
-      <div className='grid sm:grid-cols-2 2xl:grid-cols-4 gap-2 pt-6'>
-        <For each={cardsData}>
-          {(item, index) => (
-            <DashboardCard
-              formatter={index === 0 ? formatPrice : undefined}
-              percentage={item.percentage}
-              label={item.label}
-              icon={item.icon}
-              value={item.value}
-            />
-          )}
-        </For>
-      </div>
+      {B.ifElse(
+        isUserAdmin,
+        () => (
+          <div className='grid sm:grid-cols-2 2xl:grid-cols-4 gap-2 pt-6'>
+            <For each={cardsData}>
+              {(item, index) => (
+                <DashboardCard
+                  formatter={index === 0 ? formatPrice : undefined}
+                  percentage={item.percentage}
+                  label={item.label}
+                  icon={item.icon}
+                  value={item.value}
+                />
+              )}
+            </For>
+          </div>
+        ),
+        () => null,
+      )}
 
-      <div className='pt-2 grid xl:grid-cols-[minmax(484px,896px)_minmax(400px,1fr)] gap-2'>
-        <DashboardChart data={chartData} />
-        <DashboardTransaction data={latestTrx} />
-      </div>
+      {B.ifElse(
+        isUserAdmin,
+        () => (
+          <div className='pt-2 grid xl:grid-cols-[minmax(484px,896px)_minmax(400px,1fr)] gap-2'>
+            <DashboardChart data={chartData} />
+            <DashboardTransaction data={latestTrx} />
+          </div>
+        ),
+        () => null,
+      )}
     </Fragment>
   )
 }

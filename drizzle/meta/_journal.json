@@ -22,6 +22,76 @@
       "when": 1726397219166,
       "tag": "0002_perfect_madelyne_pryor",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1726563219195,
+      "tag": "0003_wide_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1726564376495,
+      "tag": "0004_nebulous_hairball",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1726570334710,
+      "tag": "0005_furry_miracleman",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1726587035623,
+      "tag": "0006_foamy_nitro",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1726587080288,
+      "tag": "0007_lying_sunspot",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1726587334040,
+      "tag": "0008_mysterious_terror",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1726588139802,
+      "tag": "0009_grey_black_widow",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1726905267377,
+      "tag": "0010_bitter_charles_xavier",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1726905387780,
+      "tag": "0011_quick_richard_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1726905528304,
+      "tag": "0012_careful_aqueduct",
+      "breakpoints": true
     }
   ]
 }
