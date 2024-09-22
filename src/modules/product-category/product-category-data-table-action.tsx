@@ -1,3 +1,5 @@
+'use client'
+
 import { popModal, pushModal } from '@/components/modals'
 import { Button } from '@/components/ui/button'
 import {
