@@ -15,17 +15,10 @@ type TDataTableHeader = {
   search?: {
     label?: string
     placeholder?: string
-    /**
-     * @default 500 millisecond
-     */
-    delay?: number
-    /**
-     * you can fetch, filter, anything based on available value string
-     */
-    onValueChange?: ((value: string) => void) | ((value: string) => Promise<void>)
   }
   button?: { label?: string; href?: string }
 }
+const DELAY = 500
 
 export function DataTableHeader(props: TDataTableHeader) {
   let id = R.useId()
@@ -46,9 +39,6 @@ export function DataTableHeader(props: TDataTableHeader) {
   let buttonLabel = match(props?.button?.label)
     .with(P.string, F.identity)
     .otherwise(() => 'Tambah sesuatu')
-  let delay = match(props?.search?.delay)
-    .with(P.number.positive(), F.identity)
-    .otherwise(F.always(500))
   let onSearchChange = R.useCallback(
     (value: string) => {
       let params = new URLSearchParams(searchParams)
@@ -67,10 +57,7 @@ export function DataTableHeader(props: TDataTableHeader) {
     [searchParams, pathname],
   )
 
-  let onChangeDebounced = R.useMemo(
-    () => F.debounce(onSearchChange, delay),
-    [delay, onSearchChange],
-  )
+  let onChangeDebounced = R.useMemo(() => F.debounce(onSearchChange, DELAY), [onSearchChange])
 
   let onChangeInput = (e: R.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -79,7 +66,7 @@ export function DataTableHeader(props: TDataTableHeader) {
   }
 
   return (
-    <div className='flex max-md:flex-col-reverse px-1 pt-1 pb-6 gap-4'>
+    <div className='flex gap-4 px-1 pb-6 pt-1 max-md:flex-col-reverse'>
       <div className='space-y-1'>
         <Label htmlFor={id} hidden>
           {label}
@@ -90,17 +77,17 @@ export function DataTableHeader(props: TDataTableHeader) {
             onChange={onChangeInput}
             id={id}
             aria-label={label}
-            className='pl-10 peer'
+            className='peer pl-10'
             placeholder={placeholder}
           />
           <SearchIcon
             size='1rem'
-            className='absolute stroke-muted-foreground peer-focus:stroke-foreground left-3.5 top-2.5'
+            className='absolute left-3.5 top-2.5 stroke-muted-foreground peer-focus:stroke-foreground'
           />
         </div>
       </div>
 
-      <Button className='gap-x-2 ml-auto' asChild>
+      <Button className='ml-auto gap-x-2' asChild>
         <Link href={href}>
           <PlusIcon size='1em' />
           {buttonLabel}

@@ -125,7 +125,7 @@ export function CreateProductForm(props: TCreateProductForm) {
                     <div className='grid grid-cols-[repeat(3,minmax(0,max-content))] gap-2'>
                       <Button
                         variant='outline'
-                        className='px-0 w-9'
+                        className='w-9 px-0'
                         disabled={field.value < 2 || disabledInteractive}
                         onClick={() => field.onChange(incomingPrevValue)}
                       >
@@ -145,7 +145,7 @@ export function CreateProductForm(props: TCreateProductForm) {
                       </FormControl>
                       <Button
                         variant='outline'
-                        className='px-0 w-9'
+                        className='w-9 px-0'
                         disabled={disabledInteractive}
                         onClick={() => field.onChange(incomingNextValue)}
                       >
@@ -178,7 +178,7 @@ export function CreateProductForm(props: TCreateProductForm) {
             />
           </div>
 
-          <div className='flex lg:col-span-2 justify-end pt-3'>
+          <div className='flex justify-end pt-3 lg:col-span-2'>
             <Button size='lg' type='submit' className='gap-x-2' disabled={disabledInteractive}>
               Kirim
               {submitIcon}

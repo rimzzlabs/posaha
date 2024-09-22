@@ -7,11 +7,11 @@ import Link from 'next/link'
 
 export default function NotFoundPage() {
   return (
-    <PublicWrapper className='min-h-screen py-20 text-center flex flex-col items-center justify-center'>
-      <h1 className='text-4xl text-center xl:text-5xl 2xl:text-6xl font-bold'>
+    <PublicWrapper className='flex min-h-screen flex-col items-center justify-center py-20 text-center'>
+      <h1 className='text-center text-4xl font-bold xl:text-5xl 2xl:text-6xl'>
         Kontent tidak ditemukan
       </h1>
-      <p className='xl:text-lg font-medium mt-2 text-balance'>
+      <p className='mt-2 text-balance font-medium xl:text-lg'>
         Sayangnya, konten yang anda cari tidak dapat ditemukan, jika ini merupakan kesalahan, harap
         beri tahu kami.
       </p>

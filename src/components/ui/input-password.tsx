@@ -35,7 +35,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
           onClick={togglePassword}
           variant='outline'
           size='icon'
-          className='absolute right-1 top-1 border-none h-8 w-8'
+          className='absolute right-1 top-1 h-8 w-8 border-none'
         >
           {type === 'text' && <EyeIcon size='0.875rem' />}
           {type === 'password' && <EyeOffIcon size='0.875rem' />}

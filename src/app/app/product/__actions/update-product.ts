@@ -16,7 +16,7 @@ export let updateProductAction = createSafeActionClient()
   .action(async ({ parsedInput: payload }) => {
     const [error] = await tryit(updateProduct)(payload)
     if (error) {
-      console.info('(LOG ERR) updateProducAction err: ', error.message)
+      console.info('(LOG ERR) updateProducAction error: ', error.message)
 
       let message = match(S.toLowerCase(error.message))
         .with(P.string.includes('product_sku_unique'), () => 'kode SKU Ini Sudah Ada' as const)

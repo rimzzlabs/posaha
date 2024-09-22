@@ -34,6 +34,11 @@ declare global {
   }
 
   type TWithSession = { session: Option<Session> }
+
+  type TQueryArg = { page: number; limit?: number; search?: string }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type TAny = any
 }
 
 export {}

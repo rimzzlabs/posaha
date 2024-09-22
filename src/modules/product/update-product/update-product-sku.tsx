@@ -8,14 +8,14 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { createProductSchema } from '@/app/app/product/__schema'
+import type { createProductSchema } from '@/app/app/product/__schema'
 import { isFormPending } from '@/lib/utils'
 
 import { A, pipe, S } from '@mobily/ts-belt'
 import { omit } from 'radash'
 import { useFormContext } from 'react-hook-form'
 import { match, P } from 'ts-pattern'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export function UpdateProductSKU() {
   let form = useFormContext<z.infer<typeof createProductSchema>>()
@@ -66,7 +66,7 @@ export function UpdateProductSKU() {
         <FormItem>
           <FormLabel asterisk>Produk SKU</FormLabel>
           <div className='relative'>
-            <p className='leading-none text-sm tracking-tight text-foreground absolute left-3 top-[0.6875rem]'>
+            <p className='absolute left-3 top-[0.6875rem] text-sm leading-none tracking-tight text-foreground'>
               POS-
             </p>
             <FormControl>

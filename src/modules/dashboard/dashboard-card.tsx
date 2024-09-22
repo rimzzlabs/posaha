@@ -25,11 +25,11 @@ export function DashboardCard(props: TDashboardCard) {
   return (
     <Card>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='font-medium text-sm'>{props.label}</CardTitle>
+        <CardTitle className='text-sm font-medium'>{props.label}</CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
-        <p className='text-2xl font-bold mb-2'>{formatter(toFloat(props.value, 1))}</p>
+        <p className='mb-2 text-2xl font-bold'>{formatter(toFloat(props.value, 1))}</p>
         <p className='text-xs text-muted-foreground'>{props.percentage}% dari bulan lalu</p>
       </CardContent>
     </Card>

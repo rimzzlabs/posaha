@@ -1,4 +1,5 @@
-import { B, F, Option, S, pipe } from '@mobily/ts-belt'
+import type { Option } from '@mobily/ts-belt'
+import { B, F, S, pipe } from '@mobily/ts-belt'
 import {
   LayoutGridIcon,
   type LucideIcon,

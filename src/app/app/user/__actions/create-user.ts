@@ -20,9 +20,8 @@ export let createUserAction = createSafeActionClient()
       return pipe(errorMessage, actionReturn('error'))
     }
 
-    if (!res.ok) return pipe(res.error, actionReturn('error'))
+    if (!res.data) return pipe('Terjadi kesalahan pada server', actionReturn('error'))
 
     revalidatePath('/app/user/list')
-
-    return pipe(res.data, actionReturn('success'))
+    return pipe(new Map(), actionReturn('success'))
   })

@@ -43,7 +43,7 @@ export function DashboardFilter() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' className='gap-2 justify-normal w-52'>
+        <Button variant='outline' className='w-52 justify-normal gap-2'>
           <FilterIcon size='1em' />
           {filterLabel}
           <ChevronsUpDownIcon size='1em' className='ml-auto text-muted-foreground' />
@@ -57,7 +57,7 @@ export function DashboardFilter() {
               <CheckIcon
                 size='1em'
                 className={cn(
-                  'transition opacity-0 invisible',
+                  'invisible opacity-0 transition',
                   filterValue.includes(value) && 'visible opacity-100',
                 )}
               />

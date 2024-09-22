@@ -8,7 +8,7 @@ export async function HeaderNavbar() {
   let session = await auth()
 
   return (
-    <nav className='inline-flex items-center gap-x-2 ml-auto'>
+    <nav className='ml-auto inline-flex items-center gap-x-2'>
       <ToggleTheme />
       <HeaderNavbarProfile session={session} />
     </nav>

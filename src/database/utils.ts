@@ -40,3 +40,12 @@ export function getTableCount(where: SQL | undefined) {
 export function getTotalPageByLimit(limit = 10) {
   return (rows = 1) => Math.ceil(rows / limit)
 }
+
+export function queryReturn<D>(data: D) {
+  return { data, message: 'success' }
+}
+
+type TMetaPagination = { page: number; limit: number; total: number; rows: number }
+export function queryReturnPagination(meta: TMetaPagination) {
+  return <D>(data: Array<D>) => ({ meta, data, message: 'sucess' })
+}

@@ -52,7 +52,7 @@ import { random, sleep, toInt } from 'radash'
 import * as R from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 const TOAST_SERVER_ERROR = 'Terjadi kesalahan pada server'
 const TOAST_VALIDATION_ERROR = 'Terjadi kesalahan, harap refresh halaman'
@@ -159,7 +159,7 @@ function UpdateStockDropdownItem(props: TUpdateStockDropdownItem) {
     () => <SendHorizonalIcon size='1em' />,
   )
 
-  let onSubmit = form.handleSubmit(async (value) => {
+  let onSubmit = form.handleSubmit(async () => {
     toast.dismiss()
     toast.loading('Memproses, harap tunggu...')
     await sleep(random(800, 1200))
@@ -204,7 +204,7 @@ function UpdateStockDropdownItem(props: TUpdateStockDropdownItem) {
                   <div className='grid grid-cols-[repeat(3,minmax(0,max-content))] gap-2'>
                     <Button
                       variant='outline'
-                      className='px-0 w-9'
+                      className='w-9 px-0'
                       disabled={field.value < 2 || disableInteraction}
                       onClick={() => field.onChange(incomingPrevValue)}
                     >
@@ -224,7 +224,7 @@ function UpdateStockDropdownItem(props: TUpdateStockDropdownItem) {
                     </FormControl>
                     <Button
                       variant='outline'
-                      className='px-0 w-9'
+                      className='w-9 px-0'
                       disabled={disableInteraction}
                       onClick={() => field.onChange(incomingNextValue)}
                     >

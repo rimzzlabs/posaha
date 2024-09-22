@@ -37,7 +37,7 @@ export default async function AdminDashboardPage() {
       {B.ifElse(
         isUserAdmin,
         () => (
-          <div className='grid sm:grid-cols-2 2xl:grid-cols-4 gap-2 pt-6'>
+          <div className='grid gap-2 pt-6 sm:grid-cols-2 2xl:grid-cols-4'>
             <For each={cardsData}>
               {(item, index) => (
                 <DashboardCard
@@ -57,7 +57,7 @@ export default async function AdminDashboardPage() {
       {B.ifElse(
         isUserAdmin,
         () => (
-          <div className='pt-2 grid xl:grid-cols-[minmax(484px,896px)_minmax(400px,1fr)] gap-2'>
+          <div className='grid gap-2 pt-2 xl:grid-cols-[minmax(484px,896px)_minmax(400px,1fr)]'>
             <DashboardChart data={chartData} />
             <DashboardTransaction data={latestTrx} />
           </div>

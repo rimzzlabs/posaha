@@ -20,14 +20,14 @@ import {
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-import { createProductSchema } from '@/app/app/product/__schema'
+import type { createProductSchema } from '@/app/app/product/__schema'
 import { cn } from '@/lib/utils'
 
 import { A, D, F, O, pipe, type Option } from '@mobily/ts-belt'
 import { CheckIcon, ChevronsUpDown } from 'lucide-react'
 import * as R from 'react'
 import { useFormContext } from 'react-hook-form'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 type TCreateProductCategory = {
   categoryList: Array<{
@@ -62,8 +62,8 @@ export function CreateProductCategory(props: TCreateProductCategory) {
     return pipe(
       props.categoryList,
       A.getBy((category) => category.id === getFieldValue(fieldValue)),
-      O.mapWithDefault(<div className='w-4 h-4 rounded bg-stone-600' />, (category) => (
-        <div className='w-4 h-4 rounded' style={{ backgroundColor: category.color }} />
+      O.mapWithDefault(<div className='h-4 w-4 rounded bg-stone-600' />, (category) => (
+        <div className='h-4 w-4 rounded' style={{ backgroundColor: category.color }} />
       )),
     )
   }
@@ -118,7 +118,7 @@ export function CreateProductCategory(props: TCreateProductCategory) {
                               )}
                             />
                             <span
-                              className='w-5 mr-2 h-5 rounded'
+                              className='mr-2 h-5 w-5 rounded'
                               style={{ backgroundColor: category.color }}
                             />
                             {category.name}{' '}

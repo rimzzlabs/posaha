@@ -4,7 +4,7 @@ import { getUserByEmail } from '@/database/query/user'
 import { verifyCredentials } from '../auth'
 
 import { D, pipe } from '@mobily/ts-belt'
-import { NextAuthConfig } from 'next-auth'
+import type { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { tryit } from 'radash'
 
@@ -37,11 +37,11 @@ export const NEXT_AUTH_CONFIG = {
     session: async (args) => {
       const [error, res] = await tryit(getUserByEmail)(args.session.user.email)
       if (error) {
-        console.info('(LOG ERR) auth.callback.session() err: ', error.message)
+        console.info('(LOG ERR) auth.callback.session() error: ', error.message)
         return args.session
       }
-      if (!res.ok) {
-        console.info('(LOG ERR) auth.callback.session() err not ok: ', res.error)
+      if (!res.data) {
+        console.info('(LOG ERR) auth.callback.session() err not ok: user not found')
         args.session.user.deactivated = true
         return args.session
       }

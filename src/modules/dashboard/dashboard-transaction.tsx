@@ -15,7 +15,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatPrice } from '@/lib/number'
 import { cn } from '@/lib/utils'
 
-import { B, O, Option, pipe } from '@mobily/ts-belt'
+import type { Option } from '@mobily/ts-belt'
+import { B, O, pipe } from '@mobily/ts-belt'
 import { ArrowRight, EyeIcon, InboxIcon, Package, RefreshCwIcon } from 'lucide-react'
 import { random, sleep } from 'radash'
 import * as R from 'react'
@@ -51,7 +52,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
 
   return (
     <Card>
-      <CardHeader className='flex-row space-y-0 justify-between'>
+      <CardHeader className='flex-row justify-between space-y-0'>
         <div>
           <CardTitle>Transaksi Terakhir</CardTitle>
           <CardDescription>10 Transaksi terakhir akan muncul disini.</CardDescription>
@@ -81,7 +82,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
                       <Card key={trx.id} className='flex items-end shadow-none'>
                         <CardHeader className='p-4'>
                           <CardTitle className='relative'>{trx.name}</CardTitle>
-                          <CardDescription className='text-emerald-500 font-semibold'>
+                          <CardDescription className='font-semibold text-emerald-500'>
                             {formatPrice(trx.total)}
                           </CardDescription>
                           <CardDescription>
@@ -93,7 +94,7 @@ export function DashboardTransaction(props: TDashboardTransaction) {
                           </CardDescription>
                         </CardHeader>
 
-                        <CardFooter className='p-4 gap-1 flex-col items-end ml-auto'>
+                        <CardFooter className='ml-auto flex-col items-end gap-1 p-4'>
                           <Button className='gap-x-1' size='sm' variant='ghost'>
                             <Package size='1em' />
                             Lihat Produk
@@ -107,13 +108,13 @@ export function DashboardTransaction(props: TDashboardTransaction) {
                     )}
                   </For>
 
-                  <Button variant='ghost' className='gap-x-2 max-w-max mx-auto'>
+                  <Button variant='ghost' className='mx-auto max-w-max gap-x-2'>
                     Semua Transaksi <ArrowRight size='1em' />
                   </Button>
                 </R.Fragment>
               ),
               () => (
-                <div className='h-96 flex flex-col items-center justify-center gap-2'>
+                <div className='flex h-96 flex-col items-center justify-center gap-2'>
                   <InboxIcon size='2.25rem' className='stroke-muted-foreground' />
                   <p className='text-sm font-medium text-muted-foreground'>Belum ada transaksi</p>
                 </div>

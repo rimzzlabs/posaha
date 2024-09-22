@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { match } from 'ts-pattern'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export function useCreateUser() {
   let router = useRouter()

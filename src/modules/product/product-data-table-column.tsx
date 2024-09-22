@@ -92,7 +92,7 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
       return (
         <Badge
           variant='secondary'
-          className='text-neutral-800 max-w-max'
+          className='max-w-max text-neutral-800'
           style={{ backgroundColor }}
         >
           {props.getValue()}

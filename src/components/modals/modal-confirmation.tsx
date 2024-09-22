@@ -33,7 +33,7 @@ export function ModalConfirmation(props: TModalConfirmation) {
   }
 
   let preventCloseEvent = (e: Event | KeyboardEvent) => {
-    isPending && e.preventDefault()
+    if (isPending) e.preventDefault()
   }
 
   return (

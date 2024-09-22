@@ -16,7 +16,7 @@ export function verifyCredentials(email: string) {
     const [error, res] = await tryit(getUserByEmail)(email)
 
     if (error) return actionReturn('error')('Server Error')
-    if (!res.ok) return actionReturn('error')('Server Error')
+    if (!res.data) return actionReturn('error')('Deactivated Error')
 
     let isMatch = await verifyPassword(password)(res.data.password)
     if (isMatch) {

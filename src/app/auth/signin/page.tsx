@@ -11,7 +11,7 @@ export default function SigninPage() {
   return (
     <Fragment>
       <PublicHeaderContainer />
-      <PublicWrapper className='min-h-[calc(100vh-4rem)] flex items-center justify-center'>
+      <PublicWrapper className='flex min-h-[calc(100vh-4rem)] items-center justify-center'>
         <Card className='max-w-xl'>
           <CardHeader>
             <CardTitle>

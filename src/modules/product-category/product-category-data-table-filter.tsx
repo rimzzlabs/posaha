@@ -12,7 +12,7 @@ export function ProductCategoryDataTableFilter() {
   let id = useId()
 
   return (
-    <div className='flex px-1 pt-1 pb-6 gap-x-4'>
+    <div className='flex gap-x-4 px-1 pb-6 pt-1'>
       <div className='space-y-1'>
         <Label htmlFor={id} hidden>
           Cari kategori
@@ -21,17 +21,17 @@ export function ProductCategoryDataTableFilter() {
           <Input
             id={id}
             aria-label='Cari kategori'
-            className='pl-10 w-96 peer'
+            className='peer w-96 pl-10'
             placeholder='Cari: Makanan, Minuman ...'
           />
           <SearchIcon
             size='1rem'
-            className='absolute stroke-muted-foreground peer-focus:stroke-foreground left-3.5 top-2.5'
+            className='absolute left-3.5 top-2.5 stroke-muted-foreground peer-focus:stroke-foreground'
           />
         </div>
       </div>
 
-      <Button className='gap-x-2 ml-auto' asChild>
+      <Button className='ml-auto gap-x-2' asChild>
         <Link href='/app/product/category/create'>
           <PlusIcon size='1em' />
           Tambah Kategori

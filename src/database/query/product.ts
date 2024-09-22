@@ -1,6 +1,4 @@
-import { createProductSchema, updateProductSchema } from '@/app/app/product/__schema'
-import { deleteImage, getPublicId } from '@/lib/configs/cloudinary'
-import { dbQueryReturn } from '@/lib/req-res'
+import type { createProductSchema, updateProductSchema } from '@/app/app/product/__schema'
 
 import { DB } from '../config'
 import { PRODUCT_SCHEMA } from '../schema/product'
@@ -10,55 +8,57 @@ import {
   getTableCount,
   getTotalPageByLimit,
   mergeClauseWithAnd,
+  queryReturn,
+  queryReturnPagination,
 } from '../utils'
 
-import { A, F, O, pipe, S } from '@mobily/ts-belt'
+import { A, F, pipe, S } from '@mobily/ts-belt'
 import { desc, eq, sql, type SQL } from 'drizzle-orm'
-import { isString } from 'radash'
-import { z } from 'zod'
-
-export function getProductList(page: number) {
-  return async (limit = 10, search = '') => {
-    let offset = pipe(page, getOffsetClause(limit))
-    let searchTerm = pipe(search, S.toLowerCase)
-
-    let where = pipe(
-      [] as Array<SQL>,
-      A.append(
-        pipe(
-          searchTerm,
-          getSearchClause(PRODUCT_SCHEMA.name, PRODUCT_SCHEMA.sku, PRODUCT_SCHEMA.description),
-        ),
-      ),
-      F.toMutable,
-      mergeClauseWithAnd,
-    )
-
-    const data = await DB.query.PRODUCT_SCHEMA.findMany({
-      where,
-      limit,
-      offset,
-      with: { category: true },
-      orderBy: desc(PRODUCT_SCHEMA.updatedAt),
-    })
-
-    let rows = await pipe(PRODUCT_SCHEMA, getTableCount(where))
-
-    let total = pipe(rows, getTotalPageByLimit(limit))
-
-    return dbQueryReturn('success-paginate')(data, { page, limit, rows, total })
-  }
-}
+import type { z } from 'zod'
 
 export async function getProductById(id: string) {
-  return await DB.query.PRODUCT_SCHEMA.findFirst({
+  let product = await DB.query.PRODUCT_SCHEMA.findFirst({
     where: eq(PRODUCT_SCHEMA.id, id),
     with: { category: true },
   })
+
+  return queryReturn(product)
+}
+
+export async function getProductList({ page, limit = 10, search = '' }: TQueryArg) {
+  let offset = pipe(page, getOffsetClause(limit))
+  let searchTerm = pipe(search, S.toLowerCase)
+
+  let where = pipe(
+    [] as Array<SQL>,
+    A.append(
+      pipe(
+        searchTerm,
+        getSearchClause(PRODUCT_SCHEMA.name, PRODUCT_SCHEMA.sku, PRODUCT_SCHEMA.description),
+      ),
+    ),
+    F.toMutable,
+    A.append(eq(PRODUCT_SCHEMA.deleted, false)),
+    mergeClauseWithAnd,
+  )
+
+  const data = await DB.query.PRODUCT_SCHEMA.findMany({
+    where,
+    limit,
+    offset,
+    with: { category: true },
+    orderBy: desc(PRODUCT_SCHEMA.updatedAt),
+  })
+
+  let rows = await pipe(PRODUCT_SCHEMA, getTableCount(where))
+
+  let total = pipe(rows, getTotalPageByLimit(limit))
+
+  return pipe(data, queryReturnPagination({ limit, page, rows, total }))
 }
 
 export async function createProduct(payload: z.infer<typeof createProductSchema>) {
-  return await DB.insert(PRODUCT_SCHEMA)
+  let [product] = await DB.insert(PRODUCT_SCHEMA)
     .values({
       name: payload.name,
       price: payload.price,
@@ -69,10 +69,12 @@ export async function createProduct(payload: z.infer<typeof createProductSchema>
       description: payload.description,
     })
     .returning({ id: PRODUCT_SCHEMA.id })
+
+  return queryReturn(product)
 }
 
 export async function updateProduct(payload: z.infer<typeof updateProductSchema>) {
-  return await DB.update(PRODUCT_SCHEMA)
+  let [product] = await DB.update(PRODUCT_SCHEMA)
     .set({
       name: payload.name,
       price: payload.price,
@@ -85,26 +87,18 @@ export async function updateProduct(payload: z.infer<typeof updateProductSchema>
     })
     .where(eq(PRODUCT_SCHEMA.id, payload.id))
     .returning({ id: PRODUCT_SCHEMA.id })
+
+  return queryReturn(product)
 }
 
 export async function deleteProduct(id: string) {
   let product = await DB.query.PRODUCT_SCHEMA.findFirst({ where: eq(PRODUCT_SCHEMA.id, id) })
   if (!product) throw new Error('Product is not found with this id')
 
-  if (product.image) {
-    let res = await deleteImage(getPublicId(product.image))
-    if (isString(res)) {
-      console.info('(LOG ERR) image deletion when deleting produc error, reaseon: ', res)
-    }
-  }
-
-  let [res] = await DB.delete(PRODUCT_SCHEMA)
+  let [data] = await DB.update(PRODUCT_SCHEMA)
+    .set({ deleted: true, deletedAt: new Date() })
     .where(eq(PRODUCT_SCHEMA.id, id))
     .returning({ id: PRODUCT_SCHEMA.id })
 
-  return pipe(
-    res?.id,
-    O.fromNullable,
-    O.mapWithDefault({ id }, (productId) => ({ id: productId })),
-  )
+  return queryReturn(data)
 }

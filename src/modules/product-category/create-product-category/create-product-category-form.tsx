@@ -29,7 +29,7 @@ export function CreateProductCategoryForm() {
 
   return (
     <Form {...createProductCategory.form}>
-      <form onSubmit={createProductCategory.onSubmit} className='pt-10 px-px max-w-xl'>
+      <form onSubmit={createProductCategory.onSubmit} className='max-w-xl px-px pt-10'>
         <HeadingThree>Informasi Kategori Produk</HeadingThree>
 
         <FormField
