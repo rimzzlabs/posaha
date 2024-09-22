@@ -27,9 +27,9 @@ export async function AccountPersonalInfo() {
     O.mapWithDefault('rimzzlabs@proton.me', F.identity),
     getUserByEmail,
   )
-  if (!res.ok) throw new Error('Unauthorized')
+  let user = pipe(res, D.get('data'))
+  if (!user) throw new Error('Unauthorized')
 
-  let user = pipe(res, D.getUnsafe('data'))
   let labels = ['No. KTP', 'Nama Lengkap']
   let values = [user.ktp, user.name]
 
@@ -52,20 +52,20 @@ export async function AccountPersonalInfo() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className='text-2xl xl:text-2xl font-bold'>Informasi Data Diri</CardTitle>
+        <CardTitle className='text-2xl font-bold xl:text-2xl'>Informasi Data Diri</CardTitle>
         <CardDescription>Berikut adalah informasi lengkap data diri anda</CardDescription>
       </CardHeader>
 
       <CardContent className='grid gap-4'>
-        <div className='flex flex-col md:flex-row items-start gap-3'>
+        <div className='flex flex-col items-start gap-3 md:flex-row'>
           <AccountPersonalInfoAvatar id={user.id} name={user.name} image={user.image} />
 
-          <div className='flex-1 flex flex-col gap-4 w-full'>
+          <div className='flex w-full flex-1 flex-col gap-4'>
             <For each={userInformations}>
               {(args) => (
                 <div className='flex flex-col gap-1'>
                   <p className='text-sm font-semibold text-muted-foreground'>{args.label}</p>
-                  <div className='bg-background text-foreground border py-2.5 px-4 rounded-lg text-sm font-medium'>
+                  <div className='rounded-lg border bg-background px-4 py-2.5 text-sm font-medium text-foreground'>
                     {args.value}
                   </div>
                 </div>
@@ -74,18 +74,18 @@ export async function AccountPersonalInfo() {
           </div>
         </div>
 
-        <div className='grid md:grid-cols-[minmax(218px,220px)_minmax(0,1fr)] gap-4'>
+        <div className='grid gap-4 md:grid-cols-[minmax(218px,220px)_minmax(0,1fr)]'>
           <div className='max-h-max'>
-            <p className='text-sm font-semibold mb-1'>Peran/Role</p>
-            <div className='p-4 rounded-lg bg-background text-foreground border whitespace-pre-wrap flex items-center gap-x-2 text-sm font-medium'>
+            <p className='mb-1 text-sm font-semibold'>Peran/Role</p>
+            <div className='flex items-center gap-x-2 whitespace-pre-wrap rounded-lg border bg-background p-4 text-sm font-medium text-foreground'>
               <div className='size-4 rounded' style={{ backgroundColor: roleInformation.color }} />
               <span>{roleInformation.label}</span>
             </div>
           </div>
 
           <div>
-            <p className='text-sm font-semibold mb-1'>Alamat Lengkap</p>
-            <div className='p-4 rounded-lg bg-background text-foreground border whitespace-pre-wrap text-balance text-sm font-medium'>
+            <p className='mb-1 text-sm font-semibold'>Alamat Lengkap</p>
+            <div className='whitespace-pre-wrap text-balance rounded-lg border bg-background p-4 text-sm font-medium text-foreground'>
               {address}
             </div>
           </div>

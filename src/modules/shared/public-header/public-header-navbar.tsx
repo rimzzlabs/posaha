@@ -2,7 +2,7 @@ import { PublicHeaderNavbarItem } from './public-header-navbar-item'
 
 export function PublicHeaderNavbar() {
   return (
-    <nav className='inline-flex items-center gap-x-2 ml-auto'>
+    <nav className='ml-auto inline-flex items-center gap-x-2'>
       <PublicHeaderNavbarItem href='/auth/signin'>Masuk</PublicHeaderNavbarItem>
     </nav>
   )

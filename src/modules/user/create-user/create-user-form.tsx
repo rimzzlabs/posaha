@@ -36,7 +36,7 @@ export function CreateUserForm() {
     <Form {...createUser.form}>
       <form
         onSubmit={createUser.onSubmit}
-        className='grid lg:grid-cols-2 gap-x-4 gap-y-3 px-1 pt-10'
+        className='grid gap-x-4 gap-y-3 px-1 pt-10 lg:grid-cols-2'
       >
         <FormField
           name='ktp'
@@ -147,7 +147,7 @@ export function CreateUserForm() {
           )}
         />
 
-        <div className='lg:col-span-2 flex justify-end'>
+        <div className='flex justify-end lg:col-span-2'>
           <Button type='submit' disabled={disableInteractive} className='gap-x-2'>
             Kirim
             {submitIcon}

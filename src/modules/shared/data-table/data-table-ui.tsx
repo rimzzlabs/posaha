@@ -14,17 +14,19 @@ import {
 import { cn } from '@/lib/utils'
 
 import { DataTablePagination } from './data-table-pagination'
-import { TUseDataTablePagination } from './hooks/use-data-table-pagination'
+import type { TUseDataTablePagination } from './hooks/use-data-table-pagination'
 
-import { B, F, N, O, Option, pipe } from '@mobily/ts-belt'
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import type { Option } from '@mobily/ts-belt'
+import { B, F, N, O, pipe } from '@mobily/ts-belt'
+import type { ColumnDef } from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { InboxIcon, Loader2 } from 'lucide-react'
 import { Fragment } from 'react'
 
 type TDataTableUI<D> = TPrettify<
   TUseDataTablePagination & {
     data: Option<Array<D>>
-    columns: Array<ColumnDef<D, any>>
+    columns: Array<ColumnDef<D, TAny>>
 
     className?: string
 
@@ -80,8 +82,8 @@ export function DataTableUI<D>(props: TDataTableUI<D>) {
               () => (
                 <TableRow>
                   <TableCell colSpan={table.getLeafHeaders().length}>
-                    <div className='h-[calc(100vh-26.875rem)] flex flex-col items-center justify-center gap-2 tracking-tight'>
-                      <Loader2 size='2rem' className='text-muted-foreground animate-spin' />
+                    <div className='flex h-[calc(100vh-26.875rem)] flex-col items-center justify-center gap-2 tracking-tight'>
+                      <Loader2 size='2rem' className='animate-spin text-muted-foreground' />
                       <p className='text-sm font-semibold text-muted-foreground'>
                         Memproses permintaan
                       </p>
@@ -97,7 +99,7 @@ export function DataTableUI<D>(props: TDataTableUI<D>) {
               () => (
                 <TableRow>
                   <TableCell colSpan={table.getLeafHeaders().length}>
-                    <div className='h-[calc(100vh-26.875rem)] flex flex-col items-center justify-center gap-2 tracking-tight'>
+                    <div className='flex h-[calc(100vh-26.875rem)] flex-col items-center justify-center gap-2 tracking-tight'>
                       <InboxIcon size='2rem' className='text-muted-foreground' />
                       <p className='text-sm font-semibold text-muted-foreground'>
                         {props.emptyState?.description ?? 'Tidak ada daftar produk'}

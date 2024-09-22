@@ -44,7 +44,7 @@ export const SALES_DATA_TABLE_COLUMN = [
             width={48}
             height={48}
             loading='lazy'
-            className='rounded-lg w-auto h-auto'
+            className='h-auto w-auto rounded-lg'
           />
         ))
     },

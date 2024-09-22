@@ -17,7 +17,8 @@ import {
 
 import { formatPrice } from '@/lib/number'
 
-import { A, D, F, N, O, Option, pipe } from '@mobily/ts-belt'
+import type { Option } from '@mobily/ts-belt'
+import { A, D, F, N, O, pipe } from '@mobily/ts-belt'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
 let chartConfig = {
@@ -49,7 +50,7 @@ export function DashboardChart(props: TDashboardChart) {
         <CardDescription>Data penjualan periode Tahun 2024</CardDescription>
       </CardHeader>
       <CardContent className='w-full'>
-        <ChartContainer config={chartConfig} className='h-32 sm:h-52 md:h-56 xl:h-[31rem] w-full'>
+        <ChartContainer config={chartConfig} className='h-32 w-full sm:h-52 md:h-56 xl:h-[31rem]'>
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis

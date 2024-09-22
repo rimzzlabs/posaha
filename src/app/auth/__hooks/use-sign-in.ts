@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export function useSignIn() {
   let router = useRouter()

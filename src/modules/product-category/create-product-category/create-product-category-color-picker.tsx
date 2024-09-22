@@ -6,14 +6,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
-import { createCategorySchema } from '@/app/app/product/__schema'
+import type { createCategorySchema } from '@/app/app/product/__schema'
 import { PRODUCT_CATEGORY_COLORS } from '@/lib/constant'
 import { isFormPending } from '@/lib/utils'
 
 import { A, B, D, F, G, O, pipe } from '@mobily/ts-belt'
 import { CheckIcon, ChevronDownIcon } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export function CreateProductCategoryColorPicker() {
   let form = useFormContext<z.infer<typeof createCategorySchema>>()
@@ -57,7 +57,7 @@ export function CreateProductCategoryColorPicker() {
             </FormControl>
 
             <PopoverContent>
-              <p className='font-semibold mb-4'>Pilih warna dibawah ini</p>
+              <p className='mb-4 font-semibold'>Pilih warna dibawah ini</p>
               <RadioGroup
                 defaultValue={field.value || 'slate'}
                 onValueChange={field.onChange}
@@ -75,7 +75,7 @@ export function CreateProductCategoryColorPicker() {
                           />
                           <Label
                             htmlFor={color.value}
-                            className='h-14 w-full rounded-lg cursor-pointer flex items-center justify-center border-2 border-transparent peer-focus:border-primary peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-data-[state=checked]:border-primary'
+                            className='flex h-14 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-transparent peer-focus:border-primary peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-data-[state=checked]:border-primary'
                             style={{ backgroundColor: color.value }}
                           >
                             {field.value === color.value && (

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
 import { uploadImageAction } from '@/actions/upload-image'
-import { createProductSchema } from '@/app/app/product/__schema'
+import type { createProductSchema } from '@/app/app/product/__schema'
 import { cn } from '@/lib/utils'
 
 import { A, B, pipe } from '@mobily/ts-belt'
@@ -16,7 +16,7 @@ import { useDropzone } from 'react-dropzone'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { match, P } from 'ts-pattern'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 const UPLOAD_ERROR_MESSAGE = 'Gagal mengupload gambar, harap coba lagi'
 const UPLOAD_SUCCESS_MESSAGE = 'Berhasil mengunggah gambar'
@@ -40,7 +40,7 @@ export function UpdateProductImage() {
 
       let fd = new FormData()
       fd.append('image', file)
-      previousImageURL && fd.append('prevImage', previousImageURL)
+      if (previousImageURL) fd.append('prevImage', previousImageURL)
 
       let res = await uploadImage.executeAsync(fd)
       toast.dismiss()
@@ -102,30 +102,30 @@ export function UpdateProductImage() {
   let renderLabel = match([imageURL, isDragAccept, isDragReject])
     .with([P.string, P._, P._], () => null)
     .with([P.nullish, true, P._], () => (
-      <p className='text-xs text-balance mb-4 font-medium text-muted-foreground'>
+      <p className='mb-4 text-balance text-xs font-medium text-muted-foreground'>
         Lepas file gambar disini untuk mengunggah
       </p>
     ))
     .with([P.nullish, P._, true], () => (
-      <p className='text-xs text-balance mb-4 font-medium text-muted-foreground'>
+      <p className='mb-4 text-balance text-xs font-medium text-muted-foreground'>
         Jenis file gambar ini tidak didukung
       </p>
     ))
     .otherwise(() => (
-      <p className='text-xs text-balance mb-4 font-medium text-muted-foreground'>
+      <p className='mb-4 text-balance text-xs font-medium text-muted-foreground'>
         Seret dan jatuhkan gambar di sini, atau klik untuk memilih gambar
       </p>
     ))
 
   let renderImage = match([imageURL, disableInteraction])
     .with([P._, true], () => (
-      <Loader2Icon className='text-muted-foreground my-auto size-8 md:size-14 xl:size-16 animate-spin-ease' />
+      <Loader2Icon className='my-auto size-8 animate-spin-ease text-muted-foreground md:size-14 xl:size-16' />
     ))
     .with([P.not(P.nullish).select(), false], (image) => (
       <Image src={image} alt='' className='rounded-md' width={240} height={240} />
     ))
     .otherwise(() => (
-      <ImagePlusIcon className='text-muted-foreground my-auto size-8 md:size-14 xl:size-16' />
+      <ImagePlusIcon className='my-auto size-8 text-muted-foreground md:size-14 xl:size-16' />
     ))
 
   return (
@@ -133,24 +133,29 @@ export function UpdateProductImage() {
       name='image'
       control={form.control}
       render={({ field }) => (
-        <FormItem className='md:w-72 lg:w-56 xl:w-80 space-y-1'>
+        <FormItem className='space-y-1 md:w-72 lg:w-56 xl:w-80'>
           <FormLabel hidden>Unggah gambar produk</FormLabel>
           <FormControl>
             <div
               {...getRootProps()}
               className={cn(
-                'flex flex-col transition items-center justify-center text-center border-stone-300 dark:border-stone-700 size-40 md:size-72 lg:size-56 xl:size-80 bg-muted border-4 rounded-lg border-dashed',
+                'flex size-40 flex-col items-center justify-center rounded-lg border-4 border-dashed border-stone-300 bg-muted text-center transition dark:border-stone-700 md:size-72 lg:size-56 xl:size-80',
                 isDragAccept && 'border-emerald-500 dark:border-emerald-500',
                 isDragReject && 'border-red-600 dark:border-red-600',
               )}
             >
               {renderImage}
               {renderLabel}
-              <input disabled={disableInteraction} {...getInputProps()} />
+              <input
+                ref={field.ref}
+                name={field.name}
+                disabled={disableInteraction}
+                {...getInputProps()}
+              />
             </div>
           </FormControl>
 
-          <Button onClick={open} disabled={disableInteraction} className='w-40 md:w-full mt-2'>
+          <Button onClick={open} disabled={disableInteraction} className='mt-2 w-40 md:w-full'>
             Unggah Gambar
           </Button>
           <FormMessage />

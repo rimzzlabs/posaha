@@ -1,6 +1,7 @@
 'use client'
 
-import { Button, ButtonProps } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { For } from '@/components/ui/for'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -28,7 +29,7 @@ export function SidebarMenu() {
       {B.ifElse(
         ['loading', 'unauthenticated'].includes(session.status),
         () => (
-          <div className='flex flex-col px-2.5 lg:px-4 pt-6 gap-4'>
+          <div className='flex flex-col gap-4 px-2.5 pt-6 lg:px-4'>
             <For each={list(8)}>{() => <Skeleton className='h-8 w-full' />}</For>
           </div>
         ),
@@ -38,9 +39,9 @@ export function SidebarMenu() {
               if (!group.visible) return <Fragment />
 
               return (
-                <div className='px-2.5 lg:px-4 pt-6'>
+                <div className='px-2.5 pt-6 lg:px-4'>
                   {group.label && (
-                    <p className='text-muted-foreground select-none text-sm font-semibold mb-2'>
+                    <p className='mb-2 select-none text-sm font-semibold text-muted-foreground'>
                       {group.label}
                     </p>
                   )}
@@ -60,7 +61,7 @@ export function SidebarMenu() {
 
                         if (subMenus.length === 0) {
                           return (
-                            <Button className='gap-x-2 justify-normal' variant={variant} asChild>
+                            <Button className='justify-normal gap-x-2' variant={variant} asChild>
                               <Link href={path}>
                                 <Icon size='1rem' /> {label}
                               </Link>
@@ -71,21 +72,21 @@ export function SidebarMenu() {
                         return (
                           <Collapsible>
                             <CollapsibleTrigger asChild>
-                              <Button variant={variant} className='justify-normal w-full'>
+                              <Button variant={variant} className='w-full justify-normal'>
                                 <Icon size='1rem' className='mr-1' />
                                 {label}
                                 <ChevronDownIcon size='1rem' className='ml-auto' />
                               </Button>
                             </CollapsibleTrigger>
 
-                            <CollapsibleContent className='flex flex-col gap-x-1 pl-3 py-px'>
+                            <CollapsibleContent className='flex flex-col gap-x-1 py-px pl-3'>
                               <For each={subMenus}>
                                 {({ label, path, icon: Icon, newTab }, key) => (
                                   <Button
                                     asChild
                                     key={key}
                                     variant='ghost'
-                                    className='gap-x-2 justify-normal'
+                                    className='justify-normal gap-x-2'
                                   >
                                     <Link
                                       target={newTab ? '_blank' : '_self'}

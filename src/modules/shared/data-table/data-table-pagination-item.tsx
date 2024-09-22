@@ -8,7 +8,7 @@ import {
 
 import { cn } from '@/lib/utils'
 
-import {
+import type {
   TUseDataTablePagination,
   TUseDataTablePaginationReturn,
 } from './hooks/use-data-table-pagination'

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem } from '@/components/ui/select'
 
-import { createUserSchema } from '@/app/app/user/__schema/user-schema'
+import type { createUserSchema } from '@/app/app/user/__schema/user-schema'
 import { USER_ROLES } from '@/lib/constant'
 import { cn, isFormPending } from '@/lib/utils'
 
@@ -22,7 +22,7 @@ import { ChevronDownIcon } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useFormContext } from 'react-hook-form'
 import { match, P } from 'ts-pattern'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export function CreateUserRole() {
   let session = useSession()
@@ -65,13 +65,13 @@ export function CreateUserRole() {
                   <Button
                     variant='outline'
                     className={cn(
-                      'flex gap-x-2 w-full justify-normal max-w-52',
+                      'flex w-full max-w-52 justify-normal gap-x-2',
                       !field.value && 'text-muted-foreground',
                     )}
                   >
-                    <div className='w-4 h-4 shrink-0 rounded' style={{ backgroundColor }} />
+                    <div className='h-4 w-4 shrink-0 rounded' style={{ backgroundColor }} />
                     <span>{label}</span>
-                    <ChevronDownIcon className='shrink-0 ml-auto' size='1em' />
+                    <ChevronDownIcon className='ml-auto shrink-0' size='1em' />
                   </Button>
                 </FormControl>
               </SelectTrigger>
@@ -79,7 +79,7 @@ export function CreateUserRole() {
               <SelectContent>
                 <For each={roles}>
                   {({ value, label }) => (
-                    <SelectItem className='flex items-center flex-row gap-x-2' value={value}>
+                    <SelectItem className='flex flex-row items-center gap-x-2' value={value}>
                       {label}
                     </SelectItem>
                   )}

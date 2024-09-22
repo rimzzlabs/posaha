@@ -21,7 +21,7 @@ export let uploadImageAction = createSafeActionClient()
     const [error, res] = await tryit(uploadImageFromBuffer)(file, payload.prevImage)
 
     if (error) {
-      console.info('(LOG ERR) uploadImageAction err: ', error.message)
+      console.info('(LOG ERR) uploadImageAction error: ', error.message)
       return actionReturn('error')('Tidak dapat mengunggah gambar, harap coba lagi nanti')
     }
 

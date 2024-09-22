@@ -1,4 +1,5 @@
-import { pipe, O, Option } from '@mobily/ts-belt'
+import type { Option } from '@mobily/ts-belt'
+import { pipe, O } from '@mobily/ts-belt'
 
 export function formatPrice(number: Option<number>) {
   let intl = new Intl.NumberFormat('id', {

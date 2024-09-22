@@ -12,13 +12,13 @@ export function AccountSidebar() {
       </CardHeader>
 
       <CardContent>
-        <p className='text-lg font-semibold mb-4'>Akun</p>
+        <p className='mb-4 text-lg font-semibold'>Akun</p>
         <Button variant='secondary' className='w-full justify-normal gap-x-2'>
           <IdCardIcon size='1em' />
           Data Diri
         </Button>
 
-        <Button variant='ghost' className='w-full justify-normal gap-x-2 mt-3'>
+        <Button variant='ghost' className='mt-3 w-full justify-normal gap-x-2'>
           <LockIcon size='1em' />
           Keamanan
         </Button>

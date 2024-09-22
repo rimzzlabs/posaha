@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 
-import { Url } from 'next/dist/shared/lib/router/router'
+import type { Url } from 'next/dist/shared/lib/router/router'
 import Link from 'next/link'
-import { PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 
 export function PublicHeaderNavbarItem(props: PropsWithChildren<{ href: Url }>) {
   return (

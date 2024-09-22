@@ -128,7 +128,7 @@ export function UpdateProductForm(props: TUpdateProductForm) {
                     <div className='grid grid-cols-[repeat(3,minmax(0,max-content))] gap-2'>
                       <Button
                         variant='outline'
-                        className='px-0 w-9'
+                        className='w-9 px-0'
                         disabled={value <= 1 || disabledInteractive}
                         onClick={() => field.onChange(incomingPrevValue)}
                       >
@@ -147,7 +147,7 @@ export function UpdateProductForm(props: TUpdateProductForm) {
                       </FormControl>
                       <Button
                         variant='outline'
-                        className='px-0 w-9'
+                        className='w-9 px-0'
                         disabled={disabledInteractive}
                         onClick={() => field.onChange(incomingNextValue)}
                       >
@@ -184,7 +184,7 @@ export function UpdateProductForm(props: TUpdateProductForm) {
             />
           </div>
 
-          <div className='flex lg:col-span-2 justify-end pt-3'>
+          <div className='flex justify-end pt-3 lg:col-span-2'>
             <Button size='lg' type='submit' className='gap-x-2' disabled={disabledInteractive}>
               Kirim
               {submitIcon}

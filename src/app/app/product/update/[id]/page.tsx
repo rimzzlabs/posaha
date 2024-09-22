@@ -12,7 +12,7 @@ export default async function UpdateProductPage(props: TPageProps) {
   if (!productId) notFound()
 
   let [product, categoryList] = await Promise.all([getProductById(productId), getAllCategoryList()])
-  if (!product) notFound()
+  if (!product.data) notFound()
 
   return (
     <Card>
@@ -22,7 +22,11 @@ export default async function UpdateProductPage(props: TPageProps) {
       </CardHeader>
 
       <CardContent>
-        <UpdateProductForm key={product.id} product={product} categoryList={categoryList} />
+        <UpdateProductForm
+          key={product.data.id}
+          product={product.data}
+          categoryList={categoryList.data}
+        />
       </CardContent>
     </Card>
   )

@@ -4,7 +4,7 @@ import { getAllCategoryList } from '@/database/query/category'
 import { CreateProductForm } from '@/modules/product/create-product'
 
 export default async function AddProductPage() {
-  const categoryList = await getAllCategoryList()
+  const res = await getAllCategoryList()
 
   return (
     <Card>
@@ -14,7 +14,7 @@ export default async function AddProductPage() {
       </CardHeader>
 
       <CardContent>
-        <CreateProductForm categoryList={categoryList} />
+        <CreateProductForm categoryList={res.data} />
       </CardContent>
     </Card>
   )
