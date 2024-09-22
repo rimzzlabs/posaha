@@ -19,11 +19,10 @@ import { isFormPending } from '@/lib/utils'
 
 import { CreateUserRole } from './create-user-role'
 
-import { B, Option } from '@mobily/ts-belt'
+import { B } from '@mobily/ts-belt'
 import { Loader2Icon, SendHorizonalIcon } from 'lucide-react'
-import { Session } from 'next-auth'
 
-export function CreateUserForm({ session }: { session: Option<Session> }) {
+export function CreateUserForm() {
   let createUser = useCreateUser()
 
   let disableInteractive = isFormPending(createUser.form.formState)
@@ -42,7 +41,6 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
         <FormField
           name='ktp'
           control={createUser.form.control}
-          disabled={disableInteractive}
           render={({ field }) => (
             <FormItem>
               <FormLabel asterisk>No NIK/KTP</FormLabel>
@@ -51,6 +49,7 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
                   {...field}
                   inputMode='numeric'
                   placeholder='360123123'
+                  disabled={disableInteractive}
                   onChange={(event) => {
                     let value = event.target.value
                     let re = /^\d*$/
@@ -68,12 +67,16 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
         <FormField
           name='name'
           control={createUser.form.control}
-          disabled={disableInteractive}
           render={({ field }) => (
             <FormItem>
               <FormLabel asterisk>Nama Lengkap</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete='name' placeholder='Arif Abdullah' />
+                <Input
+                  {...field}
+                  autoComplete='name'
+                  placeholder='Jonatan Doe'
+                  disabled={disableInteractive}
+                />
               </FormControl>
               <FormDescription>Nama Lengkap Sesuai KTP</FormDescription>
               <FormMessage />
@@ -84,12 +87,17 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
         <FormField
           name='email'
           control={createUser.form.control}
-          disabled={disableInteractive}
           render={({ field }) => (
             <FormItem>
               <FormLabel asterisk>Alamat surel</FormLabel>
               <FormControl>
-                <Input {...field} autoComplete='email' type='email' placeholder='arif@gmail.com' />
+                <Input
+                  {...field}
+                  type='email'
+                  autoComplete='email'
+                  placeholder='arif@gmail.com'
+                  disabled={disableInteractive}
+                />
               </FormControl>
 
               <FormMessage />
@@ -100,7 +108,6 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
         <FormField
           name='password'
           control={createUser.form.control}
-          disabled={disableInteractive}
           render={({ field }) => (
             <FormItem>
               <FormLabel asterisk>Kata Sandi</FormLabel>
@@ -108,6 +115,7 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
                 <InputPassword
                   {...field}
                   autoComplete='new-password'
+                  disabled={disableInteractive}
                   placeholder='Kata sandi pengguna'
                 />
               </FormControl>
@@ -119,17 +127,20 @@ export function CreateUserForm({ session }: { session: Option<Session> }) {
           )}
         />
 
-        <CreateUserRole session={session} />
+        <CreateUserRole />
 
         <FormField
           name='address'
           control={createUser.form.control}
-          disabled={disableInteractive}
           render={({ field }) => (
             <FormItem>
               <FormLabel asterisk>Alamat Lengkap</FormLabel>
               <FormControl>
-                <Textarea {...field} placeholder='Alamat lengkap pengguna' />
+                <Textarea
+                  {...field}
+                  disabled={disableInteractive}
+                  placeholder='Alamat lengkap pengguna'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

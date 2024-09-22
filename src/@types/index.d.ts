@@ -29,7 +29,7 @@ declare global {
   type TPromiseReturn<D> = Awaited<ReturnType<D>>
 
   type TPageProps = {
-    params: Record<string, any>
+    params: Record<string, string>
     searchParams: Record<string, string>
   }
 

@@ -1,22 +1,21 @@
-import { productListAtom } from '@/states/product'
-
+import { createProductAction } from '../__actions/create-product'
 import { createProductSchema } from '../__schema/product-schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { A, F, pipe, S } from '@mobily/ts-belt'
-import { useSetAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
-import { random, sleep, uid } from 'radash'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+const TOAST_PENDING = 'Membuat Produk Baru, harap tunggu'
+const TOAST_ERROR = 'Tidak dapat membuat produk baru'
+
 export function useCreateProduct() {
   let router = useRouter()
-  let updateProductList = useSetAtom(productListAtom)
 
   let form = useForm<z.infer<typeof createProductSchema>>({
     defaultValues: {
+      image: null,
       name: '',
       stock: 1,
       description: '',
@@ -29,49 +28,21 @@ export function useCreateProduct() {
 
   let onSubmit = form.handleSubmit(async (values: z.infer<typeof createProductSchema>) => {
     toast.dismiss()
-    let toastId = toast.loading('Memproses permintaan', {
-      description: 'Harap tunggu beberapa saat',
-    })
-    await sleep(random(50, 800))
-    let timestamp = new Date().toISOString()
+    toast.loading(TOAST_PENDING)
+    let res = await createProductAction(values)
+    toast.dismiss()
+    if (res?.serverError || res?.validationErrors || !res?.data) {
+      toast.error(TOAST_ERROR, { description: 'Harap coba beberapa saat lagi' })
+      return
+    }
 
-    let sku = pipe(
-      values.sku,
-      S.toUpperCase,
-      S.replaceByRe(/\s+/g, '-'),
-      F.ifElse(S.startsWith('-'), S.sliceToEnd(1), F.identity),
-      (value) => {
-        const match = /-+$/.exec(value)
-        if (match && match[0].length > 1) {
-          return value.slice(0, -match[0].length) + '-'
-        }
-        return value
-      },
-      S.split('-'),
-      A.filter((value) => S.length(value) > 0),
-      A.join('-'),
-      S.prepend('POS-'),
-    )
-    let stock = {
-      sold: 0,
-      id: uid(12),
-      available: values.stock,
-      createdAt: timestamp,
-      updatedAt: timestamp,
+    if (!res.data.ok) {
+      let isDuplicate = res.data.error === 'kode SKU Ini Sudah Ada'
+      if (isDuplicate) form.setError('sku', { message: res.data.error })
+      toast.error(res.data.error)
+      return
     }
-    let newProduct: Product = {
-      id: uid(32),
-      name: values.name,
-      description: values.description,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      price: values.price,
-      sku,
-      category: { color: '', createdAt: timestamp, id: '', name: '', updatedAt: timestamp },
-      stock,
-    }
-    updateProductList((prev) => prev.concat([newProduct]))
-    toast.dismiss(toastId)
+
     toast.success('Berhasil menambahkan produk baru!')
     router.push('/app/product/list')
   })

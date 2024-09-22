@@ -13,7 +13,7 @@ import { match, P } from 'ts-pattern'
 export let createCategoryAction = createSafeActionClient()
   .schema(createCategorySchema)
   .action(async ({ parsedInput: payload }) => {
-    const [error, res] = await tryit(createCategory)(payload)
+    const [error] = await tryit(createCategory)(payload)
     if (error) {
       let message = match(error.message.toLowerCase())
         .with(
@@ -21,10 +21,10 @@ export let createCategoryAction = createSafeActionClient()
           () => 'Kategori Ini Sudah Ada' as const,
         )
         .otherwise(() => 'Terjadi kesalahan pada server' as const)
-      console.info('createCategoryAction error: ', error.message)
+      console.info('(LOG ERR) createCategoryAction error: ', error.message)
       return actionReturn('error')(message)
     }
 
     revalidatePath('/app/product/category/list')
-    return actionReturn('success')({ data: res })
+    return actionReturn('success')({ message: 'success' })
   })

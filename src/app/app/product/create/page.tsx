@@ -1,8 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
+import { getAllCategoryList } from '@/database/query/category'
 import { CreateProductForm } from '@/modules/product/create-product'
 
-export default function AddProductPage() {
+export default async function AddProductPage() {
+  const categoryList = await getAllCategoryList()
+
   return (
     <Card>
       <CardHeader>
@@ -11,7 +14,7 @@ export default function AddProductPage() {
       </CardHeader>
 
       <CardContent>
-        <CreateProductForm />
+        <CreateProductForm categoryList={categoryList} />
       </CardContent>
     </Card>
   )

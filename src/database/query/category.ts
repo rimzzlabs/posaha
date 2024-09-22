@@ -42,6 +42,10 @@ export function getCategoryList(page: number) {
   }
 }
 
+export async function getAllCategoryList() {
+  return await DB.query.CATEGORY_SCHEMA.findMany({ orderBy: desc(CATEGORY_SCHEMA.updatedAt) })
+}
+
 export async function createCategory(payload: z.infer<typeof createCategorySchema>) {
   return await DB.insert(CATEGORY_SCHEMA).values(payload).returning({ id: CATEGORY_SCHEMA.id })
 }

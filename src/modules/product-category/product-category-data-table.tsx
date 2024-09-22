@@ -8,7 +8,6 @@ import { PRODUCT_CATEGORY_DATA_TABLE_COLUMN } from './product-category-data-tabl
 type TProductCategoryDataTable = { data: Array<ProductCategory>; page: number; total: number }
 
 export function ProductCategoryDataTable(props: TProductCategoryDataTable) {
-  console.info(props)
   return (
     <Card>
       <CardHeader>

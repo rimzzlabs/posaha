@@ -1,7 +1,7 @@
 import { DB } from './config'
 
 import { A, F, O, pipe } from '@mobily/ts-belt'
-import { and, type Column, like, or, sql, type Subquery, type SQL } from 'drizzle-orm'
+import { and, type Column, ilike, or, sql, type Subquery, type SQL } from 'drizzle-orm'
 import type { PgTable } from 'drizzle-orm/pg-core'
 import type { PgViewBase } from 'drizzle-orm/pg-core/view-base'
 
@@ -10,9 +10,8 @@ export function getSearchClause(...args: Array<Column>) {
     return pipe(
       args,
       O.match(F.identity, () => [] as typeof args),
-      A.reduce([] as Array<SQL>, (clauses, clause) => {
-        return clauses.concat([like(clause, `%${search}%`)])
-      }),
+      F.toMutable,
+      A.reduce([] as Array<SQL>, (clauses, clause) => [...clauses, ilike(clause, `%${search}%`)]),
       (clauses) => or(...clauses),
     )
   }

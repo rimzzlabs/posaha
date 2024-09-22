@@ -14,21 +14,22 @@ import { Select, SelectContent, SelectItem } from '@/components/ui/select'
 
 import { createUserSchema } from '@/app/app/user/__schema/user-schema'
 import { USER_ROLES } from '@/lib/constant'
-import { cn } from '@/lib/utils'
+import { cn, isFormPending } from '@/lib/utils'
 
-import { A, F, O, Option, pipe } from '@mobily/ts-belt'
+import { A, F, O, pipe } from '@mobily/ts-belt'
 import { SelectTrigger } from '@radix-ui/react-select'
 import { ChevronDownIcon } from 'lucide-react'
-import { Session } from 'next-auth/'
+import { useSession } from 'next-auth/react'
 import { useFormContext } from 'react-hook-form'
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
-export function CreateUserRole({ session }: { session: Option<Session> }) {
+export function CreateUserRole() {
+  let session = useSession()
   let form = useFormContext<z.infer<typeof createUserSchema>>()
 
-  let role = pipe(session?.user?.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
-
+  let disableInteractive = isFormPending(form.formState) || !session.data
+  let role = pipe(session.data?.user?.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
   let roles = match([role, USER_ROLES] as const)
     .with(['super-admin', P.select()], (rs) => A.filter(rs, (role) => role.value !== 'super-admin'))
     .with(['admin', P.select()], (rs) => A.filter(rs, (role) => role.value === 'cashier'))
@@ -54,7 +55,11 @@ export function CreateUserRole({ session }: { session: Option<Session> }) {
         return (
           <FormItem>
             <FormLabel asterisk>Role</FormLabel>
-            <Select defaultValue={field.value} onValueChange={field.onChange}>
+            <Select
+              defaultValue={field.value}
+              disabled={disableInteractive}
+              onValueChange={field.onChange}
+            >
               <SelectTrigger asChild disabled={field.disabled}>
                 <FormControl>
                   <Button

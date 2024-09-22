@@ -33,7 +33,6 @@ export function getUserList(page: number, role: TRole) {
         pipe(searchTerm, getSearchClause(USER_SCHEMA.name, USER_SCHEMA.email, USER_SCHEMA.address)),
       ),
       F.toMutable,
-      A.append(eq(USER_SCHEMA.deleted, 0)),
       (clauses) => and(...clauses),
     )
 
@@ -83,8 +82,7 @@ export async function createUser(payload: z.infer<typeof createUserSchema>) {
 }
 
 export async function deleteUser(payload: z.infer<typeof deleteUserSchema>) {
-  let [user] = await DB.update(USER_SCHEMA)
-    .set({ deleted: 1 })
+  let [user] = await DB.delete(USER_SCHEMA)
     .where(eq(USER_SCHEMA.id, payload.id))
     .returning({ id: USER_SCHEMA.id })
 

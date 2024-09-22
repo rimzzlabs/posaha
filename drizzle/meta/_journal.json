@@ -71,6 +71,27 @@
       "when": 1726588139802,
       "tag": "0009_grey_black_widow",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1726905267377,
+      "tag": "0010_bitter_charles_xavier",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1726905387780,
+      "tag": "0011_quick_richard_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1726905528304,
+      "tag": "0012_careful_aqueduct",
+      "breakpoints": true
     }
   ]
 }

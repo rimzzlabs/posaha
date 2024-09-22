@@ -5,9 +5,10 @@ import { signIn } from '@/server/next-auth'
 
 import { signInSchema } from '../__schema'
 
-import { pipe } from '@mobily/ts-belt'
+import { pipe, S } from '@mobily/ts-belt'
 import { AuthError } from 'next-auth'
 import { createSafeActionClient } from 'next-safe-action'
+import { match } from 'ts-pattern'
 
 export let signInAction = createSafeActionClient()
   .schema(signInSchema)
@@ -21,7 +22,12 @@ export let signInAction = createSafeActionClient()
           case 'CredentialsSignin':
             return pipe('Alamat Surel atau Kata Sandi tidak valid' as const, actionReturn('error'))
           case 'CallbackRouteError':
-            return pipe('Pengguna ini telah dinonaktifkan' as const, actionReturn('error'))
+            return pipe(
+              match(S.toLowerCase(error.message))
+                .with('deactivated error', () => 'Pengguna ini telah dinonaktifkan' as const)
+                .otherwise(() => 'Tidak dapat masuk, periksa koneksi internet anda' as const),
+              actionReturn('error'),
+            )
           default:
             return pipe('Terjadi kesalahan pada server' as const, actionReturn('error'))
         }

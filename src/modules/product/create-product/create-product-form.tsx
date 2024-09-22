@@ -10,35 +10,30 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 
 import { useCreateProduct } from '@/app/app/product/__hooks'
 import { isFormPending } from '@/lib/utils'
 
 import { CreateProductCategory } from './create-product-category'
+import { CreateProductImage } from './create-product-image'
 import { CreateProductSKU } from './create-product-sku'
 
 import { B, N, pipe } from '@mobily/ts-belt'
 import { Loader2Icon, MinusIcon, PlusIcon, SendHorizonalIcon } from 'lucide-react'
-import dynamic from 'next/dynamic'
 import { omit, toFloat } from 'radash'
 import CurrencyInput from 'react-currency-input-field'
 
-const CreateProductImage = dynamic(
-  () => import('./create-product-image').then((m) => ({ default: m.CreateProductImage })),
-  {
-    ssr: false,
-    loading: (props) =>
-      B.ifElse(
-        Boolean(props.isLoading),
-        () => <Skeleton className='md:size-72 lg:size-56 xl:size-80 mb-11' />,
-        () => null,
-      ),
-  },
-)
-
-export function CreateProductForm() {
+type TCreateProductForm = {
+  categoryList: Array<{
+    id: string
+    name: string
+    createdAt: string
+    updatedAt: string
+    color: string
+  }>
+}
+export function CreateProductForm(props: TCreateProductForm) {
   let createProduct = useCreateProduct()
 
   let disabledInteractive = isFormPending(createProduct.form.formState)
@@ -61,12 +56,16 @@ export function CreateProductForm() {
             <FormField
               name='name'
               control={createProduct.form.control}
-              disabled={disabledInteractive}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel asterisk>Nama Produk</FormLabel>
                   <FormControl>
-                    <Input {...field} autoComplete='off' placeholder='Kiripik Jengkol' />
+                    <Input
+                      {...field}
+                      autoComplete='off'
+                      placeholder='Kiripik Jengkol'
+                      disabled={disabledInteractive}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,7 +79,6 @@ export function CreateProductForm() {
             <FormField
               name='price'
               control={createProduct.form.control}
-              disabled={disabledInteractive}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Harga Produk</FormLabel>
@@ -89,14 +87,15 @@ export function CreateProductForm() {
                       step={100}
                       customInput={Input}
                       {...omit(field, ['onChange'])}
-                      autoComplete='off'
                       prefix='Rp '
+                      autoComplete='off'
                       groupSeparator='.'
                       decimalSeparator=','
                       inputMode='numeric'
                       allowDecimals={false}
-                      allowNegativeValue={false}
                       placeholder='Rp 25.000'
+                      allowNegativeValue={false}
+                      disabled={disabledInteractive}
                       onValueChange={(value) => field.onChange(value)}
                     />
                   </FormControl>
@@ -105,7 +104,7 @@ export function CreateProductForm() {
               )}
             />
 
-            <CreateProductCategory />
+            <CreateProductCategory categoryList={props.categoryList} />
           </div>
 
           <div className='grid gap-4 xl:grid-cols-2'>
@@ -127,25 +126,27 @@ export function CreateProductForm() {
                       <Button
                         variant='outline'
                         className='px-0 w-9'
-                        disabled={field.value < 2}
+                        disabled={field.value < 2 || disabledInteractive}
                         onClick={() => field.onChange(incomingPrevValue)}
                       >
                         <MinusIcon size='1rem' />
                       </Button>
                       <FormControl>
                         <Input
-                          className='max-w-16'
                           {...field}
-                          type='number'
-                          inputMode='numeric'
-                          autoComplete='off'
-                          placeholder='1'
                           min={1}
+                          type='number'
+                          placeholder='1'
+                          autoComplete='off'
+                          inputMode='numeric'
+                          className='max-w-16'
+                          disabled={disabledInteractive}
                         />
                       </FormControl>
                       <Button
                         variant='outline'
                         className='px-0 w-9'
+                        disabled={disabledInteractive}
                         onClick={() => field.onChange(incomingNextValue)}
                       >
                         <PlusIcon size='1rem' />
@@ -160,7 +161,6 @@ export function CreateProductForm() {
             <FormField
               name='description'
               control={createProduct.form.control}
-              disabled={disabledInteractive}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Deksripsi Produk (opsional)</FormLabel>
@@ -168,6 +168,7 @@ export function CreateProductForm() {
                     <Textarea
                       {...field}
                       autoComplete='off'
+                      disabled={disabledInteractive}
                       placeholder='Kiripik Jengkol dengan bumbu khas dari Mandalawangi, rasakan kenikmatan dan sensasinya'
                     />
                   </FormControl>

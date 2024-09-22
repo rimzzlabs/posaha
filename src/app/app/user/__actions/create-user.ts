@@ -15,7 +15,7 @@ export let createUserAction = createSafeActionClient()
   .action(async ({ parsedInput: payload }) => {
     const [error, res] = await tryit(createUser)(payload)
     if (error) {
-      console.info('createUserAction error: ', error.message)
+      console.info('(LOG ERR) createUserAction error: ', error.message)
       let errorMessage = extractDatabaseError(error.message)
       return pipe(errorMessage, actionReturn('error'))
     }

@@ -34,13 +34,16 @@ export function CreateProductCategoryForm() {
 
         <FormField
           name='name'
-          disabled={disabledInteractive}
           control={createProductCategory.form.control}
           render={({ field }) => (
             <FormItem className='pt-3'>
               <FormLabel asterisk>Label Kategori Produk</FormLabel>
               <FormControl>
-                <Input {...field} placeholder='Contoh: Makanan, Minuman, Bahan Masakan.' />
+                <Input
+                  {...field}
+                  disabled={disabledInteractive}
+                  placeholder='Contoh: Makanan, Minuman, Bahan Masakan.'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

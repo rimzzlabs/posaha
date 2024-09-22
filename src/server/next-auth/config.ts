@@ -22,7 +22,9 @@ export const NEXT_AUTH_CONFIG = {
         let payload = parsedCredentials.data
         let res = await pipe(payload.password, verifyCredentials(payload.email))
         if (!res.ok) {
-          if (res.error === 'Deactivated Error') throw new Error('deactivated user')
+          console.info('(LOG ERR) auth.authorize() err not ok: ', res.error)
+          if (res.error === 'Deactivated Error') throw new Error('Deactivated user')
+          if (res.error === 'Server Error') throw new Error('Server Error')
           return null
         }
 
@@ -35,13 +37,18 @@ export const NEXT_AUTH_CONFIG = {
     session: async (args) => {
       const [error, res] = await tryit(getUserByEmail)(args.session.user.email)
       if (error) {
-        console.info('auth.callback.session() err: ', error.message)
+        console.info('(LOG ERR) auth.callback.session() err: ', error.message)
         return args.session
       }
-      if (!res.ok) return args.session
+      if (!res.ok) {
+        console.info('(LOG ERR) auth.callback.session() err not ok: ', res.error)
+        args.session.user.deactivated = true
+        return args.session
+      }
       args.session.user.image = res.data.image
       args.session.user.role = res.data.role
       args.session.user.name = res.data.name
+      args.session.user.deactivated = false
       return args.session
     },
   },

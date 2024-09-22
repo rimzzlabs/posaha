@@ -13,9 +13,14 @@ import {
   TUseDataTablePaginationReturn,
 } from './hooks/use-data-table-pagination'
 
+import { useSearchParams } from 'next/navigation'
+
 type TDataTablePaginationItem = TPrettify<TUseDataTablePagination & TUseDataTablePaginationReturn>
 
 export function DataTablePaginationItem(props: TDataTablePaginationItem) {
+  let searchParams = useSearchParams()
+  let query = Object.fromEntries(searchParams.entries())
+
   if (props.type === 'hidden') return null
 
   if (props.type === 'elipsis') {
@@ -32,7 +37,7 @@ export function DataTablePaginationItem(props: TDataTablePaginationItem) {
       <PaginationItem>
         <PaginationPrevious
           className={cn(isFirstPage && 'pointer-events-none')}
-          href={{ query: { page: isFirstPage ? 1 : props.page - 1 } }}
+          href={{ query: { ...query, page: isFirstPage ? 1 : props.page - 1 } }}
         />
       </PaginationItem>
     )
@@ -45,7 +50,7 @@ export function DataTablePaginationItem(props: TDataTablePaginationItem) {
       <PaginationItem>
         <PaginationNext
           className={cn(isLastPage && 'pointer-events-none')}
-          href={{ query: { page: isLastPage ? props.page : props.page + 1 } }}
+          href={{ query: { ...query, page: isLastPage ? props.page : props.page + 1 } }}
         />
       </PaginationItem>
     )
@@ -53,7 +58,10 @@ export function DataTablePaginationItem(props: TDataTablePaginationItem) {
 
   return (
     <PaginationItem>
-      <PaginationLink isActive={props.page === props.value} href={{ query: { page: props.value } }}>
+      <PaginationLink
+        isActive={props.page === props.value}
+        href={{ query: { ...query, page: props.value } }}
+      >
         {props.value}
       </PaginationLink>
     </PaginationItem>

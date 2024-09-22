@@ -1,29 +1,13 @@
-type ProductStock = TPrettify<
-  {
-    id: string
-    available: number
-    sold: number
-  } & TTimeStamp
->
-
-type ProductImage = TPrettify<
-  {
-    id: string
-    url: string
-  } & TTimeStamp
->
-
-type Product = TPrettify<
-  {
-    id: string
-    name: string
-    price: number
-    stock: ProductStock
-    sku: string
-    category: ProductCategory
-
-    banner?: ProductImage
-    images?: Array<ProductImage>
-    description?: string | null
-  } & TTimeStamp
->
+type Product = {
+  id: string
+  name: string
+  image: string | null
+  createdAt: string
+  updatedAt: string
+  description: string | null
+  sku: string
+  price: number
+  stock: number
+  sold: number
+  category: ProductCategory
+}

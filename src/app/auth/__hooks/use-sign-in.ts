@@ -2,6 +2,7 @@ import { signInAction } from '../__actions'
 import { signInSchema } from '../__schema'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -9,6 +10,7 @@ import { z } from 'zod'
 
 export function useSignIn() {
   let router = useRouter()
+  let session = useSession()
 
   let form = useForm<z.infer<typeof signInSchema>>({
     defaultValues: { email: '', password: '' },
@@ -16,10 +18,11 @@ export function useSignIn() {
   })
 
   let onSubmit = form.handleSubmit(async (values) => {
-    let toastId = toast.loading('Memproses, harap tunggu...')
-
+    toast.dismiss()
+    toast.loading('Memproses, harap tunggu...')
     let res = await signInAction(values)
-    toast.dismiss(toastId)
+    await session.update()
+    toast.dismiss()
 
     if (res?.data && 'ok' in res.data && !res.data.ok) {
       toast.error(res.data.error)

@@ -23,13 +23,12 @@ export function CreateProductCategoryColorPicker() {
     <FormField
       name='color'
       control={form.control}
-      disabled={disabledInteractive}
       render={({ field }) => (
         <FormItem className='pt-3'>
           <FormLabel asterisk>Warna Label Kategori Produk</FormLabel>
           <Popover>
             <FormControl>
-              <PopoverTrigger disabled={field.disabled} ref={field.ref} asChild>
+              <PopoverTrigger disabled={disabledInteractive} ref={field.ref} asChild>
                 <Button
                   variant='outline'
                   className='w-full justify-normal aria-[invalid="true"]:border-destructive'
@@ -67,22 +66,24 @@ export function CreateProductCategoryColorPicker() {
                 <For each={PRODUCT_CATEGORY_COLORS}>
                   {(color) => (
                     <Tooltip delayDuration={150}>
-                      <TooltipTrigger>
-                        <RadioGroupItem
-                          value={color.value}
-                          id={color.value}
-                          className='peer sr-only'
-                        />
-                        <Label
-                          htmlFor={color.value}
-                          className='h-14 w-full rounded-lg cursor-pointer flex items-center justify-center border-2 border-transparent peer-focus:border-primary peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-data-[state=checked]:border-primary'
-                          style={{ backgroundColor: color.value }}
-                        >
-                          {field.value === color.value && (
-                            <CheckIcon className='text-primary-foreground' size='1.5rem' />
-                          )}
-                          <span className='sr-only'>{color.value}</span>
-                        </Label>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <RadioGroupItem
+                            value={color.value}
+                            id={color.value}
+                            className='peer sr-only'
+                          />
+                          <Label
+                            htmlFor={color.value}
+                            className='h-14 w-full rounded-lg cursor-pointer flex items-center justify-center border-2 border-transparent peer-focus:border-primary peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 peer-data-[state=checked]:border-primary'
+                            style={{ backgroundColor: color.value }}
+                          >
+                            {field.value === color.value && (
+                              <CheckIcon className='text-primary-foreground' size='1.5rem' />
+                            )}
+                            <span className='sr-only'>{color.value}</span>
+                          </Label>
+                        </div>
                       </TooltipTrigger>
 
                       <TooltipContent sideOffset={8}>
