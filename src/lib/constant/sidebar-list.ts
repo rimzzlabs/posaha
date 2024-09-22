@@ -9,6 +9,7 @@ import {
   UserPlusIcon,
   TagsIcon,
   DollarSignIcon,
+  ListOrderedIcon,
 } from 'lucide-react'
 
 export type TSidebarSubMenu = {
@@ -55,10 +56,17 @@ export function getSidebarList(pathname: string, role?: Option<TRole>): Array<TS
       menus: [
         {
           visible: true,
-          label: 'Transaksi (Pembelian)',
-          path: '/transaction/buy',
+          label: 'Daftar Pembelian',
+          path: '/app/transaction/list',
+          icon: ListOrderedIcon,
+          active: pipe(pathname, S.endsWith('/app/transaction/list')),
+        },
+        {
+          visible: true,
+          label: 'Transaksi Pembelian',
+          path: '/app/transaction/cashier',
           icon: DollarSignIcon,
-          active: pipe(pathname, S.endsWith('/transaction/buy')),
+          active: pipe(pathname, S.endsWith('/app/transaction/cashier')),
         },
       ],
     },
