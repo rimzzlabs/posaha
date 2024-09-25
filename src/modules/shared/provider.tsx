@@ -9,18 +9,20 @@ import { getReactQueryConfig } from '@/lib/configs/react-query'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Provider as JotaiProvider } from 'jotai'
+import type { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import { useRef } from 'react'
 
-export function Provider(props: React.PropsWithChildren) {
+type TProvider = React.PropsWithChildren<{ session: Session | null }>
+export function Provider(props: TProvider) {
   let qcRef = useRef<QueryClient | null>(null)
   if (!qcRef.current) {
     qcRef.current = new QueryClient(getReactQueryConfig())
   }
 
   return (
-    <SessionProvider refetchOnWindowFocus>
+    <SessionProvider session={props.session} refetchOnWindowFocus>
       <JotaiProvider>
         <QueryClientProvider client={qcRef.current}>
           <ThemeProvider

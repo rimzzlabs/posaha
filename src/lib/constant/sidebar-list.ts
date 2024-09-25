@@ -72,20 +72,10 @@ export function getSidebarList(pathname: string, role?: Option<TRole>): Array<TS
     },
     {
       label: 'Produk & Penjualan',
-      visible: pipe(
-        role,
-        F.equals('super-admin'),
-        B.or(F.equals(role)('admin')),
-        B.or(F.equals(role)('cashier')),
-      ),
+      visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
       menus: [
         {
-          visible: pipe(
-            role,
-            F.equals('super-admin'),
-            B.or(F.equals(role)('admin')),
-            B.or(F.equals(role)('cashier')),
-          ),
+          visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
           label: 'Daftar Produk',
           path: '/app/product/list',
           icon: PackageIcon,

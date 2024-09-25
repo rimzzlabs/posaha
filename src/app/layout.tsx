@@ -1,6 +1,7 @@
 import { Toaster } from '@/components/ui/sonner'
 
 import { Provider } from '@/modules/shared/provider'
+import { auth } from '@/server/next-auth'
 
 import './globals.css'
 
@@ -38,10 +39,12 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout(props: PropsWithChildren) {
+  let session = await auth()
+
   return (
     <html lang='id' translate='no' suppressHydrationWarning>
       <body className={pjs.variable}>
-        <Provider>
+        <Provider session={session}>
           <Toaster />
           {props.children}
         </Provider>

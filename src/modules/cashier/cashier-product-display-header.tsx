@@ -5,9 +5,14 @@ import { CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-import { useMutateSearchParams } from '@/hooks/useMutateSearchParams'
+import { useMutateSearchParams } from '@/hooks/use-mutate-search-params'
+
+import { sidebarCartAtom } from '@/states/storage'
+
+import { CashierProductDisplayHeaderRefresh } from './cashier-product-display-header-refresh'
 
 import { F, pipe, S } from '@mobily/ts-belt'
+import { useSetAtom } from 'jotai'
 import { SearchIcon, ShoppingBasketIcon } from 'lucide-react'
 import * as R from 'react'
 
@@ -16,9 +21,11 @@ const PLACEHOLDER = 'Cari: Minyak sayur, gula pasir, kopi'
 
 export function CashierProductDisplayHeader() {
   let id = R.useId()
+  let toggleSidebarCart = useSetAtom(sidebarCartAtom)
   let { getParams, setParams, unsetParams } = useMutateSearchParams()
   let [searchValue, setSearchValue] = R.useState(getParams('search') || '')
 
+  let onToggleSidebar = R.useCallback(() => toggleSidebarCart(), [])
   let onSearchChange = R.useCallback((value: string) => {
     let synthesizedValue = pipe(value, S.replaceByRe(/s+/g, ''))
 
@@ -64,10 +71,11 @@ export function CashierProductDisplayHeader() {
         </div>
       </div>
 
-      <div className='inline-flex items-center justify-between'>
+      <div className='inline-flex items-center justify-between gap-2'>
         <CardTitle className='mb-4 md:hidden'>Produk yang tersedia</CardTitle>
 
-        <Button variant='secondary' className='gap-x-2 max-md:ml-auto max-md:max-w-max'>
+        <CashierProductDisplayHeaderRefresh />
+        <Button variant='secondary' onClick={onToggleSidebar} className='gap-x-2max-md:max-w-max'>
           <ShoppingBasketIcon size='1rem' />
           Keranjang
         </Button>

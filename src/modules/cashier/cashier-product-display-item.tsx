@@ -4,64 +4,60 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
-import { B } from '@mobily/ts-belt'
-import { Loader2Icon, PlusIcon } from 'lucide-react'
+import { formatPrice } from '@/lib/number'
+import { appendProductToCart } from '@/states/storage'
+
+import { useSetAtom } from 'jotai'
+import { PlusIcon } from 'lucide-react'
 import Image from 'next/image'
-import { random, sleep } from 'radash'
-import * as R from 'react'
 import { toast } from 'sonner'
+import { match, P } from 'ts-pattern'
 
-type TCashierProductDisplayItem = {
-  id: string
-  name: string
-  image: string
-  description: string
-  stock: number
-  price: string
-  category: {
-    name: string
-  }
-}
+export function CashierProductDisplayItem(props: Product) {
+  let addProductToCart = useSetAtom(appendProductToCart)
 
-export function CashierProductDisplayItem(props: TCashierProductDisplayItem) {
-  let [isPending, setIsPending] = R.useState(false)
+  let price = formatPrice(props.price)
+  let image = match(props.image)
+    .with(P.not(P.nullish), (image) => (
+      <Image
+        fill
+        alt={props.name}
+        src={image}
+        loading='lazy'
+        sizes='(max-width: 768px) 240px, 100vw'
+        className='shrink-0 grow-0 object-cover brightness-75 transition hover:brightness-100'
+      />
+    ))
+    .otherwise(() => null)
 
-  let buttonIcon = B.ifElse(
-    isPending,
-    () => <Loader2Icon size='1em' className='animate-spin-ease' />,
-    () => <PlusIcon size='1em' />,
-  )
-
-  let addToCart = async () => {
+  let onClickAddToCart = (product: Product) => () => {
     toast.dismiss()
-    setIsPending(true)
-    await sleep(random(1200, 2000))
+    addProductToCart(product)
     toast.success('Berhasil menambahkan produk ke keranjang belanja')
-    setIsPending(false)
   }
 
   return (
     <Card>
-      <Image
-        src={props.image}
-        alt={props.name}
-        width={265}
-        height={148}
-        loading='lazy'
-        className='shrink-0 grow-0'
-      />
+      <div className='relative h-32 md:h-36 lg:h-40 xl:h-48'>
+        {image}
+        <Badge
+          variant='secondary'
+          className='absolute bottom-2 right-2 max-w-max dark:text-stone-950'
+          style={{ backgroundColor: props.category.color }}
+        >
+          {props.category.name}
+        </Badge>
+      </div>
       <CardHeader className='p-4'>
         <CardTitle className='sr-only'>{props.name}</CardTitle>
         <CardDescription>{props.name}</CardDescription>
 
-        <p className='font-bold'>{props.price}</p>
-        <Badge variant='secondary' className='max-w-max'>
-          {props.category.name}
-        </Badge>
+        <p className='font-bold'>{price}</p>
+        <p className='text-sm font-medium text-muted-foreground'>Stok Tersedia: {props.stock}</p>
       </CardHeader>
-      <CardFooter className='p-4 pb-3 pt-0'>
-        <Button disabled={isPending} onClick={addToCart} size='sm' className='gap-x-2'>
-          {buttonIcon}
+      <CardFooter className='justify-end p-4 pb-3 pt-0'>
+        <Button onClick={onClickAddToCart(props)} size='sm' className='gap-x-2'>
+          <PlusIcon size='1em' />
           Keranjang
         </Button>
       </CardFooter>

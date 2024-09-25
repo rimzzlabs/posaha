@@ -10,19 +10,23 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 
+import { cn } from '@/lib/utils'
+
 import { DataTablePaginationItem } from './data-table-pagination-item'
 import type { TUseDataTablePagination } from './hooks/use-data-table-pagination'
 import { useDataTablePagination } from './hooks/use-data-table-pagination'
 
 import { Fragment } from 'react'
 
-type TDataTablePagination = TPrettify<TUseDataTablePagination & { isPending?: boolean }>
+type TDataTablePagination = TPrettify<
+  TUseDataTablePagination & { isPending?: boolean; className?: string }
+>
 
 export function DataTablePagination(props: TDataTablePagination) {
   let pages = useDataTablePagination(props)
 
   return (
-    <Pagination className='justify-start pt-6'>
+    <Pagination className={cn('justify-start pt-6', props.className)}>
       <PaginationContent>
         {props.isPending && (
           <Fragment>
