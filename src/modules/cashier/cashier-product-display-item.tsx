@@ -1,21 +1,14 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { formatPrice } from '@/lib/number'
-import { appendProductToCart } from '@/states/storage'
 
-import { useSetAtom } from 'jotai'
-import { PlusIcon } from 'lucide-react'
+import { CashierProductDisplayItemButton } from './cashier-product-display-item-button'
+
 import Image from 'next/image'
-import { toast } from 'sonner'
 import { match, P } from 'ts-pattern'
 
 export function CashierProductDisplayItem(props: Product) {
-  let addProductToCart = useSetAtom(appendProductToCart)
-
   let price = formatPrice(props.price)
   let image = match(props.image)
     .with(P.not(P.nullish), (image) => (
@@ -29,12 +22,6 @@ export function CashierProductDisplayItem(props: Product) {
       />
     ))
     .otherwise(() => null)
-
-  let onClickAddToCart = (product: Product) => () => {
-    toast.dismiss()
-    addProductToCart(product)
-    toast.success('Berhasil menambahkan produk ke keranjang belanja')
-  }
 
   return (
     <Card>
@@ -56,10 +43,7 @@ export function CashierProductDisplayItem(props: Product) {
         <p className='text-sm font-medium text-muted-foreground'>Stok Tersedia: {props.stock}</p>
       </CardHeader>
       <CardFooter className='justify-end p-4 pb-3 pt-0'>
-        <Button onClick={onClickAddToCart(props)} size='sm' className='gap-x-2'>
-          <PlusIcon size='1em' />
-          Keranjang
-        </Button>
+        <CashierProductDisplayItemButton productId={props.id} />
       </CardFooter>
     </Card>
   )

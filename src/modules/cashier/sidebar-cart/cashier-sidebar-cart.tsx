@@ -1,8 +1,7 @@
-'use client'
-
 import { Card, CardContent } from '@/components/ui/card'
 
-import { sidebarCartAtom } from '@/states/storage'
+import { getCartItemsByUserId } from '@/database/query/cart'
+import { auth } from '@/server/next-auth'
 
 import { CashierSidebarCartEmpty } from './cashier-sidebar-cart-empty'
 import { CashierSidebarCartHeader } from './cashier-sidebar-cart-header'
@@ -10,21 +9,20 @@ import { CashierSidebarCartProductList } from './cashier-sidebar-cart-product-li
 import { CashierSidebarCartTotals } from './cashier-sidebar-cart-totals'
 import { SidebarCartFooter } from './sidebar-cart-footer'
 
-import { useAtomValue } from 'jotai'
+export async function CashierSidebarCart() {
+  let session = await auth()
+  if (!session) return null
 
-export function CashierSidebarCart() {
-  let isSidebarOpen = useAtomValue(sidebarCartAtom)
-
-  if (!isSidebarOpen) return null
+  let cartItems = await getCartItemsByUserId(session.user.id)
 
   return (
     <Card>
       <CashierSidebarCartHeader />
 
       <CardContent>
-        <CashierSidebarCartEmpty />
-        <CashierSidebarCartProductList />
-        <CashierSidebarCartTotals />
+        <CashierSidebarCartEmpty cartItems={cartItems} />
+        <CashierSidebarCartProductList cartItems={cartItems} />
+        <CashierSidebarCartTotals cartItems={cartItems} />
       </CardContent>
 
       <SidebarCartFooter />

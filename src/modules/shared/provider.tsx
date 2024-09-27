@@ -4,7 +4,7 @@ import { ModalProvider } from '@/components/modals'
 import { ProgressBar } from '@/components/ui/progress-bar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
-import { getReactQueryConfig } from '@/lib/configs/react-query'
+import { QUERY_CLIENT_CONFIG } from '@/lib/configs/react-query'
 
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -15,10 +15,11 @@ import { ThemeProvider } from 'next-themes'
 import { useRef } from 'react'
 
 type TProvider = React.PropsWithChildren<{ session: Session | null }>
+
 export function Provider(props: TProvider) {
   let qcRef = useRef<QueryClient | null>(null)
   if (!qcRef.current) {
-    qcRef.current = new QueryClient(getReactQueryConfig())
+    qcRef.current = new QueryClient(QUERY_CLIENT_CONFIG)
   }
 
   return (

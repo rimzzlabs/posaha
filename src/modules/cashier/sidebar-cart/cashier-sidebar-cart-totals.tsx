@@ -1,33 +1,28 @@
-'use client'
-
 import { NEXT_PUBLIC_TAX_FEE } from '@/lib/configs/environment-client'
 import { formatPrice } from '@/lib/number'
-import { sidebarCartProductItemsAtom } from '@/states/storage'
 
-import { A, N, pipe } from '@mobily/ts-belt'
-import { useAtomValue } from 'jotai'
+import { A, F, N, O, pipe } from '@mobily/ts-belt'
 import { toFloat } from 'radash'
 
 const TAX = toFloat(NEXT_PUBLIC_TAX_FEE, 0)
 
-export function CashierSidebarCartTotals() {
-  let productItems = useAtomValue(sidebarCartProductItemsAtom)
-
+export function CashierSidebarCartTotals(props: { cartItems: Array<TCartProductItem> }) {
+  let cartItems = pipe(props?.cartItems, O.fromNullable, O.mapWithDefault([], F.identity))
   let taxPercentage = pipe(TAX, N.multiply(100))
   let productQtys = pipe(
-    productItems,
-    A.reduce(0, (value, product) => N.add(value, product.qty)),
+    cartItems,
+    A.reduce(0, (qty, { quantity }) => N.add(qty, quantity)),
   )
   let productSubTotals = pipe(
-    productItems,
-    A.reduce(0, (subTotal, product) =>
-      pipe(subTotal, N.add(pipe(product.price, N.multiply(product.qty)))),
+    cartItems,
+    A.reduce(0, (subTotal, { quantity, product }) =>
+      pipe(subTotal, N.add(pipe(product.price, N.multiply(quantity)))),
     ),
   )
   let productTotals = pipe(
-    productItems,
-    A.map((product) =>
-      pipe(product.price, N.multiply(product.qty), (subtotal) =>
+    cartItems,
+    A.map(({ quantity, product }) =>
+      pipe(product.price, N.multiply(quantity), (subtotal) =>
         N.add(subtotal, N.multiply(subtotal, TAX)),
       ),
     ),

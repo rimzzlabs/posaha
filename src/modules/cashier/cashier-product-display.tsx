@@ -1,19 +1,13 @@
-'use client'
-
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { For } from '@/components/ui/for'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
-
-import { cn } from '@/lib/utils'
-import { sidebarCartAtom } from '@/states/storage'
 
 import { DataTablePagination } from '../shared/data-table/data-table-pagination'
 import { CashierProductDisplayHeader } from './cashier-product-display-header'
 import { CashierProductDisplayItem } from './cashier-product-display-item'
 
 import { A, B, N, pipe, S } from '@mobily/ts-belt'
-import { useAtomValue } from 'jotai'
 import { InboxIcon, TextSearchIcon } from 'lucide-react'
 import { Suspense } from 'react'
 
@@ -30,8 +24,6 @@ export function CashierProductDisplay({
   total,
   search = '',
 }: TCashierProductDisplay) {
-  let isSidebarOpen = useAtomValue(sidebarCartAtom)
-
   let isSearching = pipe(search, S.replaceByRe(/s+/g, ''), S.length, N.gt(0))
   let isProductEmpty = pipe(products, A.length, N.lt(1))
   let isProductAvailable = pipe(isProductEmpty, B.inverse)
@@ -48,12 +40,7 @@ export function CashierProductDisplay({
           isProductAvailable,
           () => (
             <ScrollArea className='h-[calc(100vh-20rem)]'>
-              <div
-                className={cn(
-                  'grid grid-cols-2 sm:grid-cols-3 xl:gap-2.5 2xl:gap-4 3xl:grid-cols-4',
-                  !isSidebarOpen && 'lg:grid-cols-5',
-                )}
-              >
+              <div className='grid grid-cols-2 gap-1.5 sm:grid-cols-3 xl:gap-2.5 2xl:gap-4 3xl:grid-cols-4'>
                 <For each={products}>
                   {(product) => <CashierProductDisplayItem {...product} key={product.id} />}
                 </For>

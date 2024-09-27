@@ -1,5 +1,4 @@
 import { getProductList } from '@/database/query/product'
-import { CashierWrapper } from '@/layouts/wrappers/cashier-wrapper'
 import { CashierProductDisplay, CashierSidebarCart } from '@/modules/cashier'
 import { auth } from '@/server/next-auth'
 
@@ -25,7 +24,7 @@ export default async function TransactionCashierPage(props: TPageProps) {
   let products = await getProductList({ page, search, limit: 20 })
 
   return (
-    <CashierWrapper>
+    <div className='grid gap-2.5 xl:grid-cols-[minmax(480px,768px)_minmax(324px,1fr)] 3xl:grid-cols-[minmax(768px,1196px)_minmax(440px,1fr)]'>
       <CashierProductDisplay
         search={search}
         products={products.data}
@@ -33,7 +32,9 @@ export default async function TransactionCashierPage(props: TPageProps) {
         total={products.meta.total}
       />
 
-      <CashierSidebarCart />
-    </CashierWrapper>
+      <div className='max-md:hidden'>
+        <CashierSidebarCart />
+      </div>
+    </div>
   )
 }

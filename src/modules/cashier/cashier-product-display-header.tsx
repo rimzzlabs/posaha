@@ -47,14 +47,14 @@ export function CashierProductDisplayHeader() {
   )
 
   return (
-    <CardHeader className='flex-col-reverse gap-2.5 space-y-0 md:flex-row md:items-end md:justify-between'>
+    <CardHeader className='flex-col-reverse gap-2.5 space-y-0 lg:flex-row lg:items-end lg:justify-between'>
       <div>
-        <CardTitle className='mb-4 max-md:hidden'>Produk yang tersedia</CardTitle>
+        <CardTitle className='mb-4 max-lg:hidden'>Produk yang tersedia</CardTitle>
         <div className='space-y-1'>
           <Label htmlFor={id} hidden>
             {LABEL}
           </Label>
-          <div className='relative w-full md:w-72'>
+          <div className='relative w-full lg:w-72'>
             <Input
               id={id}
               aria-label={LABEL}
@@ -75,7 +75,11 @@ export function CashierProductDisplayHeader() {
         <CardTitle className='mb-4 md:hidden'>Produk yang tersedia</CardTitle>
 
         <CashierProductDisplayHeaderRefresh />
-        <Button variant='secondary' onClick={onToggleSidebar} className='gap-x-2max-md:max-w-max'>
+        <Button
+          variant='secondary'
+          onClick={onToggleSidebar}
+          className='gap-x-2 xl:hidden xl:max-w-max'
+        >
           <ShoppingBasketIcon size='1rem' />
           Keranjang
         </Button>

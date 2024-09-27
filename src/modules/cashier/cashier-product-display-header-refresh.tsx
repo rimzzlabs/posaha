@@ -25,7 +25,7 @@ export function CashierProductDisplayHeaderRefresh() {
       variant='ghost'
       disabled={isRefreshing}
       onClick={onClickRefresh}
-      className='h-9 w-9 gap-x-2 p-0 max-md:ml-auto'
+      className='h-9 w-9 gap-x-2 p-0 max-xl:ml-auto'
     >
       {B.ifElse(
         isRefreshing,

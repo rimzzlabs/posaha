@@ -1,27 +1,26 @@
-'use client'
-
 import { For } from '@/components/ui/for'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-import { sidebarCartProductItemsAtom } from '@/states/storage'
-
 import { CashierSidebarCartProductListItem } from './cashier-sidebar-cart-product-list-item'
 
-import { A, N, pipe } from '@mobily/ts-belt'
-import { useAtomValue } from 'jotai'
+import { A, F, N, O, pipe } from '@mobily/ts-belt'
 
-export function CashierSidebarCartProductList() {
-  let productItems = useAtomValue(sidebarCartProductItemsAtom)
-
-  let isProductEmpty = pipe(productItems, A.length, N.lt(1))
+export function CashierSidebarCartProductList(props: { cartItems: Array<TCartProductItem> }) {
+  let isProductEmpty = pipe(
+    props.cartItems,
+    O.fromNullable,
+    O.mapWithDefault([], F.identity),
+    A.length,
+    N.lt(1),
+  )
 
   if (isProductEmpty) return null
 
   return (
     <div className='pb-4'>
-      <ScrollArea className='h-[32rem]'>
+      <ScrollArea className='h-[34.5rem]'>
         <div className='grid gap-2'>
-          <For each={productItems}>
+          <For each={props.cartItems}>
             {(args) => <CashierSidebarCartProductListItem key={args.id} {...args} />}
           </For>
         </div>

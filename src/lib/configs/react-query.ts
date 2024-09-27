@@ -1,9 +1,7 @@
 import type { QueryClientConfig } from '@tanstack/react-query'
 
-export function getReactQueryConfig(): QueryClientConfig {
-  return {
-    defaultOptions: {
-      queries: { refetchOnWindowFocus: process.env.NODE_ENV === 'production' },
-    },
-  }
+export const QUERY_CLIENT_CONFIG: QueryClientConfig = {
+  defaultOptions: {
+    queries: { refetchOnWindowFocus: process.env.NODE_ENV === 'production' },
+  },
 }
