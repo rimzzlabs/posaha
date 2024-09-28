@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 
 import { useMutateSearchParams } from '@/hooks/use-mutate-search-params'
 
-import { sidebarCartAtom } from '@/states/storage'
+import { toggleSheetCartAtom } from '@/states/cart'
 
 import { CashierProductDisplayHeaderRefresh } from './cashier-product-display-header-refresh'
 
@@ -21,11 +21,11 @@ const PLACEHOLDER = 'Cari: Minyak sayur, gula pasir, kopi'
 
 export function CashierProductDisplayHeader() {
   let id = R.useId()
-  let toggleSidebarCart = useSetAtom(sidebarCartAtom)
+  let toggleSheetCart = useSetAtom(toggleSheetCartAtom)
   let { getParams, setParams, unsetParams } = useMutateSearchParams()
   let [searchValue, setSearchValue] = R.useState(getParams('search') || '')
 
-  let onToggleSidebar = R.useCallback(() => toggleSidebarCart(), [])
+  let onToggleSheetCart = R.useCallback(() => toggleSheetCart(), [])
   let onSearchChange = R.useCallback((value: string) => {
     let synthesizedValue = pipe(value, S.replaceByRe(/s+/g, ''))
 
@@ -77,7 +77,7 @@ export function CashierProductDisplayHeader() {
         <CashierProductDisplayHeaderRefresh />
         <Button
           variant='secondary'
-          onClick={onToggleSidebar}
+          onClick={onToggleSheetCart}
           className='gap-x-2 xl:hidden xl:max-w-max'
         >
           <ShoppingBasketIcon size='1rem' />

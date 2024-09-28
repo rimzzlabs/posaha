@@ -18,7 +18,7 @@ export function CashierSidebarCartProductList(props: { cartItems: Array<TCartPro
 
   return (
     <div className='pb-4'>
-      <ScrollArea className='h-[34.5rem]'>
+      <ScrollArea className='h-[calc(100svh-26rem)] xl:h-[34.5rem]'>
         <div className='grid gap-2'>
           <For each={props.cartItems}>
             {(args) => <CashierSidebarCartProductListItem key={args.id} {...args} />}

@@ -1,5 +1,6 @@
 import { getProductList } from '@/database/query/product'
 import { CashierProductDisplay, CashierSidebarCart } from '@/modules/cashier'
+import { CashierCheckoutDialog } from '@/modules/cashier/checkout-dialog'
 import { auth } from '@/server/next-auth'
 
 import { F, O, pipe } from '@mobily/ts-belt'
@@ -32,9 +33,9 @@ export default async function TransactionCashierPage(props: TPageProps) {
         total={products.meta.total}
       />
 
-      <div className='max-md:hidden'>
-        <CashierSidebarCart />
-      </div>
+      <CashierSidebarCart />
+
+      <CashierCheckoutDialog />
     </div>
   )
 }

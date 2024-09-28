@@ -37,11 +37,14 @@ export function CashierProductDisplayItem(props: Product) {
       </div>
       <CardHeader className='p-4'>
         <CardTitle className='sr-only'>{props.name}</CardTitle>
-        <CardDescription>{props.name}</CardDescription>
+        <CardDescription className='truncate'>{props.name}</CardDescription>
 
         <p className='font-bold'>{price}</p>
-        <p className='text-sm font-medium text-muted-foreground'>Stok Tersedia: {props.stock}</p>
+        <p className='text-sm font-medium text-muted-foreground'>
+          Stok: <span className='font-semibold'>{props.stock}</span>
+        </p>
       </CardHeader>
+
       <CardFooter className='justify-end p-4 pb-3 pt-0'>
         <CashierProductDisplayItemButton productId={props.id} />
       </CardFooter>

@@ -36,7 +36,6 @@ export function useUpdateCartQty(props: TUseUpdateCartQty) {
     let skipUpdate = payload.prevQty === payload.qty
     if (skipUpdate) return
 
-    console.info(`${Date.now()}: onSearchChange is run`)
     let quantity = payload.qty
     let res = await updateQty.executeAsync({
       quantity,

@@ -1,52 +1,42 @@
 'use client'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { CardFooter } from '@/components/ui/card'
+import { SheetClose, SheetFooter } from '@/components/ui/sheet'
 
-import { sidebarCartAtom } from '@/states/storage'
+import { openDialogCheckoutAtom } from '@/states/checkout'
 
+import { B } from '@mobily/ts-belt'
 import { useSetAtom } from 'jotai'
 
-export function SidebarCartFooter() {
-  let closeSidebar = useSetAtom(sidebarCartAtom)
+type TSidebarCartFooter = { cartItems: Array<TCartProductItem>; asSheet?: boolean }
 
-  let onClickCloseSidebar = () => closeSidebar()
+export function SidebarCartFooter(props: TSidebarCartFooter) {
+  let openDialogCheckout = useSetAtom(openDialogCheckoutAtom)
 
-  return (
-    <CardFooter className='justify-end gap-2'>
-      <Button variant='link' onClick={onClickCloseSidebar}>
-        Lanjutkan Belanja
-      </Button>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button>Checkout</Button>
-        </AlertDialogTrigger>
+  let onClickProcess = (cartItems: Array<TCartProductItem>) => {
+    return () => openDialogCheckout(cartItems)
+  }
 
-        <AlertDialogContent className='max-w-5xl'>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Proses Pembelian</AlertDialogTitle>
-            <AlertDialogDescription>Detail Proses Pembelian</AlertDialogDescription>
-          </AlertDialogHeader>
+  return B.ifElse(
+    Boolean(props.asSheet),
+    () => (
+      <SheetFooter>
+        <SheetClose asChild>
+          <Button variant='secondary'>Kembali</Button>
+        </SheetClose>
 
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batalkan</AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button>Proses</Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </CardFooter>
+        <Button onClick={onClickProcess(props.cartItems)}>Proses</Button>
+      </SheetFooter>
+    ),
+    () => (
+      <CardFooter className='justify-end gap-2'>
+        <Button variant='link' className='2xl:hidden'>
+          Lanjutkan Belanja
+        </Button>
+
+        <Button onClick={onClickProcess(props.cartItems)}>Proses</Button>
+      </CardFooter>
+    ),
   )
 }
