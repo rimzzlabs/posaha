@@ -16,11 +16,14 @@ export const TRANSACTION_SCHEMA = pgTable('transaction', {
 export const TRANSACTION_ITEM_SCHEMA = pgTable('transaction_item', {
   id: text('id')
     .primaryKey()
+    .notNull()
     .$defaultFn(() => crypto.randomUUID()),
-  transactionId: text('transaction_id').references(() => TRANSACTION_SCHEMA.id),
-  productId: text('product_id').references(() => PRODUCT_SCHEMA.id),
-  productSku: text('product_sku').notNull(),
-  productName: text('product_name').notNull(),
-  productPrice: decimal('product_price', { precision: 10, scale: 2 }).notNull(),
+  transactionId: text('transaction_id')
+    .references(() => TRANSACTION_SCHEMA.id)
+    .notNull(),
+  productId: text('product_id')
+    .references(() => PRODUCT_SCHEMA.id)
+    .notNull(),
   quantity: integer('quantity').notNull(),
+  price: integer('price').notNull(),
 })

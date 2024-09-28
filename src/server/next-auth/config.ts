@@ -45,6 +45,7 @@ export const NEXT_AUTH_CONFIG = {
         args.session.user.deactivated = true
         return args.session
       }
+      args.session.user.id = res.data.id
       args.session.user.image = res.data.image
       args.session.user.role = res.data.role
       args.session.user.name = res.data.name

@@ -1,3 +1,5 @@
+'use client'
+
 import { PRODUCT_CATEGORY_COLORS } from '@/lib/constant'
 import { formatDate } from '@/lib/dates'
 

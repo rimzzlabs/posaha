@@ -97,8 +97,12 @@ const config: Config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'spin-ease': 'spin-ease 0.8s ease infinite',
       },
+      screens: {
+        '3xl': '1600px',
+      },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require('tailwindcss-animate')],
 }
 export default config
