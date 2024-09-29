@@ -28,7 +28,7 @@ export async function AccountPersonalInfo() {
     getUserByEmail,
   )
   let user = pipe(res, D.get('data'))
-  if (!user) throw new Error('Unauthorized')
+  if (!user || user === 'user not found') throw new Error('Unauthorized')
 
   let labels = ['No. KTP', 'Nama Lengkap']
   let values = [user.ktp, user.name]
