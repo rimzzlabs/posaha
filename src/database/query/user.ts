@@ -14,6 +14,7 @@ const SALT = 10
 
 export async function getUserByEmail(email: string) {
   let user = await DB.query.USER_SCHEMA.findFirst({ where: eq(USER_SCHEMA.email, email) })
+  if (!user) return queryReturn('invalid credentials' as const)
   return queryReturn(user)
 }
 

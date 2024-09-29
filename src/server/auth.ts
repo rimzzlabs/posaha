@@ -17,6 +17,7 @@ export function verifyCredentials(email: string) {
 
     if (error) return actionReturn('error')('Server Error')
     if (!res.data) return actionReturn('error')('Deactivated Error')
+    if (res.data === 'invalid credentials') return actionReturn('error')('Invalid Credential')
 
     let isMatch = await verifyPassword(password)(res.data.password)
     if (isMatch) {

@@ -45,6 +45,13 @@ export const NEXT_AUTH_CONFIG = {
         args.session.user.deactivated = true
         return args.session
       }
+      if (res.data === 'invalid credentials') {
+        console.info(
+          '(LOG ERR) auth.callback.session() err not ok: user credential has been changed',
+        )
+        args.session.user.deactivated = true
+        return args.session
+      }
       args.session.user.id = res.data.id
       args.session.user.image = res.data.image
       args.session.user.role = res.data.role
