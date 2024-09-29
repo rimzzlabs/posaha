@@ -6,13 +6,15 @@ import { SheetClose, SheetFooter } from '@/components/ui/sheet'
 
 import { openDialogCheckoutAtom } from '@/states/checkout'
 
-import { B } from '@mobily/ts-belt'
+import { A, B, N, pipe } from '@mobily/ts-belt'
 import { useSetAtom } from 'jotai'
 
 type TSidebarCartFooter = { cartItems: Array<TCartProductItem>; asSheet?: boolean }
 
 export function SidebarCartFooter(props: TSidebarCartFooter) {
   let openDialogCheckout = useSetAtom(openDialogCheckoutAtom)
+
+  let isCartEmpty = pipe(props.cartItems, A.length, N.lte(0))
 
   let onClickProcess = (cartItems: Array<TCartProductItem>) => {
     return () => openDialogCheckout(cartItems)
@@ -31,11 +33,9 @@ export function SidebarCartFooter(props: TSidebarCartFooter) {
     ),
     () => (
       <CardFooter className='justify-end gap-2'>
-        <Button variant='link' className='2xl:hidden'>
-          Lanjutkan Belanja
+        <Button disabled={isCartEmpty} onClick={onClickProcess(props.cartItems)}>
+          Proses
         </Button>
-
-        <Button onClick={onClickProcess(props.cartItems)}>Proses</Button>
       </CardFooter>
     ),
   )

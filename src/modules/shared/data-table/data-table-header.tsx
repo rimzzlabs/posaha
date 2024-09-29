@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-import { F, pipe, S } from '@mobily/ts-belt'
+import { B, F, pipe, S } from '@mobily/ts-belt'
 import { PlusIcon, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -87,12 +87,18 @@ export function DataTableHeader(props: TDataTableHeader) {
         </div>
       </div>
 
-      <Button className='ml-auto gap-x-2' asChild>
-        <Link href={href}>
-          <PlusIcon size='1em' />
-          {buttonLabel}
-        </Link>
-      </Button>
+      {B.ifElse(
+        Boolean(props.button),
+        () => (
+          <Button className='ml-auto gap-x-2' asChild>
+            <Link href={href}>
+              <PlusIcon size='1em' />
+              {buttonLabel}
+            </Link>
+          </Button>
+        ),
+        () => null,
+      )}
     </div>
   )
 }

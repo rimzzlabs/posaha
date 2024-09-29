@@ -1,14 +1,17 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+'use client'
 
+import type { TSalesListResult } from '@/database/query/sales'
 import { formatDate } from '@/lib/dates'
 import { formatPrice } from '@/lib/number'
 
-import { createColumnHelper } from '@tanstack/react-table'
-import { MinusIcon } from 'lucide-react'
-import Image from 'next/image'
-import { match, P } from 'ts-pattern'
+import { SalesDataTableColumnProduct } from './sales-data-table-column-product'
 
-const ch = createColumnHelper<Sales>()
+import { pipe } from '@mobily/ts-belt'
+import { createColumnHelper } from '@tanstack/react-table'
+import { toInt } from 'radash'
+
+type TSalesResult = TSalesListResult['data'][number]
+const ch = createColumnHelper<TSalesResult>()
 
 export const SALES_DATA_TABLE_COLUMN = [
   ch.display({
@@ -22,47 +25,27 @@ export const SALES_DATA_TABLE_COLUMN = [
       return pageIndex * pageSize + props.row.index + 1
     },
   }),
-  ch.accessor('product.image', {
-    header: 'Foto Produk',
-    cell: (props) => {
-      return match(props.getValue())
-        .with(P.nullish, () => (
-          <Tooltip delayDuration={250}>
-            <TooltipTrigger className='text-muted-foreground'>
-              <MinusIcon size='1rem' />
-              <span className='sr-only'>Tidak ada foto produk</span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className='text-sm font-medium'>Produk ini belum mempunyai foto</p>
-            </TooltipContent>
-          </Tooltip>
-        ))
-        .otherwise((url) => (
-          <Image
-            src={url}
-            alt={props.row.original.product.name}
-            width={48}
-            height={48}
-            loading='lazy'
-            className='h-auto w-auto rounded-lg'
-          />
-        ))
-    },
-  }),
   ch.accessor('createdAt', {
     header: 'Waktu & Tanggal',
     cell: (props) => formatDate(props.getValue()),
   }),
-  ch.accessor('product.name', { header: 'Nama Produk' }),
-  ch.accessor('product.sku', { header: 'SKU' }),
-  ch.accessor('product.stock', { header: 'Stok Tersisa' }),
-  ch.accessor('qty', { header: 'Jumlah Terjual' }),
-  ch.accessor('product.price', {
-    header: 'Harga Produk',
-    cell: (props) => formatPrice(props.getValue()),
+  ch.accessor('user.name', { header: 'Petugas Kasir' }),
+  ch.accessor('totalQuantity', {
+    header: 'Jumlah Produk Terjual',
+    cell: (props) => {
+      return <SalesDataTableColumnProduct {...props.row.original} />
+    },
   }),
-  ch.accessor('total', {
-    header: 'Jumlah Pendapatan',
-    cell: (props) => formatPrice(props.getValue()),
+  ch.accessor('totalAmount', {
+    header: 'Total Harga',
+    cell: (props) => pipe(props.getValue(), toInt, formatPrice),
+  }),
+  ch.accessor('customerMoney', {
+    header: 'Uang Pelanggan',
+    cell: (props) => pipe(props.getValue(), toInt, formatPrice),
+  }),
+  ch.accessor('customerChange', {
+    header: 'Uang Kembalian Pelanggan',
+    cell: (props) => pipe(props.getValue(), toInt, formatPrice),
   }),
 ]
