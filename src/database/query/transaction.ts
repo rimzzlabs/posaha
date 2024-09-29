@@ -7,9 +7,9 @@ import {
   TRANSACTION_ITEM_SCHEMA,
   TRANSACTION_SCHEMA,
 } from '../schema'
-import { getOffsetClause, getSearchClause, mergeClauseWithAnd } from '../utils'
+import { getOffsetClause, mergeClauseWithAnd } from '../utils'
 
-import { A, F, pipe, S } from '@mobily/ts-belt'
+import { A, F, N, pipe } from '@mobily/ts-belt'
 import type { SQL } from 'drizzle-orm'
 import { eq } from 'drizzle-orm'
 
@@ -18,22 +18,12 @@ export async function getUserTransactionList({
   userId,
   page,
   limit = 10,
-  search = '',
 }: TGetUserTransactionList) {
   let offset = pipe(page, getOffsetClause(limit))
-  let searchTerm = pipe(search, S.toLowerCase)
 
   let where = pipe(
     [] as Array<SQL>,
     A.append(eq(TRANSACTION_SCHEMA.userId, userId)),
-    A.append(
-      pipe(
-        searchTerm,
-        getSearchClause(PRODUCT_SCHEMA.name, PRODUCT_SCHEMA.sku, PRODUCT_SCHEMA.description),
-      ),
-    ),
-    F.toMutable,
-    A.append(eq(PRODUCT_SCHEMA.deleted, false)),
     mergeClauseWithAnd,
   )
 
@@ -47,10 +37,22 @@ export async function getUserTransactionList({
 }
 
 export async function createTransaction(data: TCreateTransactionSchema) {
+  let customerChange = pipe(
+    data.totalAmount,
+    N.subtract(data.total),
+    F.ifElse(
+      N.lt(0),
+      () => '0.00',
+      (change) => String(change),
+    ),
+  )
+
   const [transaction] = await DB.insert(TRANSACTION_SCHEMA)
     .values({
-      userId: data.userId,
-      totalAmount: String(data.totalAmount),
+      customerChange: customerChange,
+      userId: String(data.userId),
+      customerMoney: String(data.totalAmount),
+      totalAmount: String(data.total),
     })
     .returning()
   if (!transaction) throw new Error('Server error')

@@ -19,7 +19,7 @@ import { match } from 'ts-pattern'
 
 export function SidebarMenu() {
   let pathname = usePathname()
-  let session = useSession()
+  let session = useSession({ required: true })
 
   let role = pipe(session.data?.user.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
   let menu = getSidebarList(pathname, role)

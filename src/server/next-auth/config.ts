@@ -40,15 +40,8 @@ export const NEXT_AUTH_CONFIG = {
         console.info('(LOG ERR) auth.callback.session() error: ', error.message)
         return args.session
       }
-      if (!res.data) {
+      if (!res.data || res.data === 'user not found') {
         console.info('(LOG ERR) auth.callback.session() err not ok: user not found')
-        args.session.user.deactivated = true
-        return args.session
-      }
-      if (res.data === 'invalid credentials') {
-        console.info(
-          '(LOG ERR) auth.callback.session() err not ok: user credential has been changed',
-        )
         args.session.user.deactivated = true
         return args.session
       }
