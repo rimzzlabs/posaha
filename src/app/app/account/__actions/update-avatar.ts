@@ -13,7 +13,7 @@ import { tryit } from 'radash'
 export let updateAvatarAction = createSafeActionClient()
   .schema(updateAvatarSchema)
   .action(async ({ parsedInput: payload }) => {
-    const [error, res] = await tryit(updateUser)(payload)
+    const [error, res] = await tryit(updateUser)({ userId: payload.id, image: payload.image })
     if (error) {
       console.info('(LOG ERR) updateAvatarAction error: ', error.message)
       return pipe('Terjadi kesalahan pada server', actionReturn('error'))

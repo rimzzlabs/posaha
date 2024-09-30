@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem } from '@/components/ui/select'
 
-import type { createUserSchema } from '@/app/app/user/__schema/user-schema'
+import type { createUserSchema } from '@/app/app/user/__schema'
 import { USER_ROLES } from '@/lib/constant'
 import { cn, isFormPending } from '@/lib/utils'
 
@@ -48,7 +48,6 @@ export function CreateUserRole() {
     <FormField
       name='role'
       control={form.control}
-      disabled={!session}
       render={({ field }) => {
         let { backgroundColor, label } = getFieldValueLabelAndBgColor(field.value)
 

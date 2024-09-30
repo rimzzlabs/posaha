@@ -3,7 +3,7 @@
 import { createUser } from '@/database/query/user'
 import { actionReturn, extractDatabaseError } from '@/lib/req-res'
 
-import { createUserSchema } from '../__schema/user-schema'
+import { createUserSchema } from '../__schema'
 
 import { pipe } from '@mobily/ts-belt'
 import { createSafeActionClient } from 'next-safe-action'
