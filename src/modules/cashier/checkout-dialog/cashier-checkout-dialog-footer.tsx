@@ -3,7 +3,7 @@
 import { AlertDialogCancel, AlertDialogFooter } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 
-import type { TCreateTransactionSchema } from '@/app/app/product/__schema'
+import type { TCreateTransactionSchema } from '@/app/app/transaction/__schema'
 
 import { Loader2Icon, SendHorizontalIcon } from 'lucide-react'
 import { useFormContext } from 'react-hook-form'
@@ -18,7 +18,7 @@ export function CashierCheckoutDialogFooter() {
     .otherwise(() => <SendHorizontalIcon size='1em' />)
 
   return (
-    <AlertDialogFooter>
+    <AlertDialogFooter className='mt-auto'>
       <AlertDialogCancel type='button' disabled={isPending}>
         Kembali
       </AlertDialogCancel>

@@ -3,7 +3,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import type { TCreateTransactionSchema } from '@/app/app/product/__schema'
+import type { TCreateTransactionSchema } from '@/app/app/transaction/__schema'
 
 import { omit } from 'radash'
 import CurrencyInput from 'react-currency-input-field'
@@ -14,7 +14,7 @@ export function CashierCheckoutDialogMoney() {
 
   return (
     <FormField
-      name='totalAmount'
+      name='customerMoney'
       control={form.control}
       render={({ field }) => (
         <FormItem>

@@ -8,6 +8,9 @@ export const CATEGORY_SCHEMA = pgTable('product_category', {
   name: text('name').unique().notNull(),
   color: text('color').notNull(),
 
-  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { mode: 'string' })
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date().toISOString()),
   updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 })

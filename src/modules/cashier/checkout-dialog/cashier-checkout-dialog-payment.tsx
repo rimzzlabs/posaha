@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
-import type { TCreateTransactionSchema } from '@/app/app/product/__schema'
+import type { TCreateTransactionSchema } from '@/app/app/transaction/__schema'
 
 import { useFormContext } from 'react-hook-form'
 
@@ -11,7 +11,7 @@ export function CashierCheckoutDialogPayment() {
 
   return (
     <FormField
-      name='method'
+      name='paymentMethod'
       control={form.control}
       render={({ field }) => (
         <FormItem>

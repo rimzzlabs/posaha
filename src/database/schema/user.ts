@@ -18,6 +18,9 @@ export const USER_SCHEMA = pgTable('user', {
 
   deleted: integer('boolean').default(0).notNull(),
 
-  createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp('created_at', { mode: 'string' })
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date().toISOString()),
   updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 })
