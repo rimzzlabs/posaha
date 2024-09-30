@@ -7,8 +7,10 @@ import { For } from '@/components/ui/for'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { getSidebarList } from '@/lib/constant'
+import { toggleSidebarSheetAtom } from '@/states/sidebar-sheet'
 
 import { B, F, O, pipe } from '@mobily/ts-belt'
+import { useSetAtom } from 'jotai'
 import { ArrowUpRight, ChevronDownIcon } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -20,9 +22,12 @@ import { match } from 'ts-pattern'
 export function SidebarMenu() {
   let pathname = usePathname()
   let session = useSession({ required: true })
+  let toggleSidebar = useSetAtom(toggleSidebarSheetAtom)
 
   let role = pipe(session.data?.user.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
   let menu = getSidebarList(pathname, role)
+
+  let closeSidebar = () => toggleSidebar(false)
 
   return (
     <nav className='flex flex-col gap-2'>
@@ -61,7 +66,12 @@ export function SidebarMenu() {
 
                         if (subMenus.length === 0) {
                           return (
-                            <Button className='justify-normal gap-x-2' variant={variant} asChild>
+                            <Button
+                              asChild
+                              variant={variant}
+                              onClick={closeSidebar}
+                              className='justify-normal gap-x-2'
+                            >
                               <Link href={path}>
                                 <Icon size='1rem' /> {label}
                               </Link>
@@ -86,6 +96,7 @@ export function SidebarMenu() {
                                     asChild
                                     key={key}
                                     variant='ghost'
+                                    onClick={closeSidebar}
                                     className='justify-normal gap-x-2'
                                   >
                                     <Link

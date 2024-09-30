@@ -7,34 +7,9 @@ import {
   TRANSACTION_ITEM_SCHEMA,
   TRANSACTION_SCHEMA,
 } from '../schema'
-import { getOffsetClause, mergeClauseWithAnd } from '../utils'
 
 import { A, F, N, pipe } from '@mobily/ts-belt'
-import type { SQL } from 'drizzle-orm'
 import { eq } from 'drizzle-orm'
-
-type TGetUserTransactionList = TPrettify<TQueryArg & { userId: string }>
-export async function getUserTransactionList({
-  userId,
-  page,
-  limit = 10,
-}: TGetUserTransactionList) {
-  let offset = pipe(page, getOffsetClause(limit))
-
-  let where = pipe(
-    [] as Array<SQL>,
-    A.append(eq(TRANSACTION_SCHEMA.userId, userId)),
-    mergeClauseWithAnd,
-  )
-
-  return await DB.query.TRANSACTION_SCHEMA.findMany({
-    where,
-    offset,
-    limit,
-    with: { items: { with: { product: true } } },
-    orderBy: (transactions, { desc }) => [desc(transactions.createdAt)],
-  })
-}
 
 export async function createTransaction(data: TCreateTransactionSchema) {
   let customerChange = pipe(

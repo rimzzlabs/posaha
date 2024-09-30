@@ -3,16 +3,18 @@ import { TRANSACTION_SCHEMA } from '../schema'
 import { getOffsetClause, getTotalPageByLimit, queryReturnPagination } from '../utils'
 
 import { A, D, F, O, pipe } from '@mobily/ts-belt'
-import { sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export type TSalesListResult = Awaited<ReturnType<typeof getSalesList>>
-export async function getSalesList({ page, limit = 10 }: TQueryArg) {
+export async function getSalesList({ page, userId, limit = 10 }: TQueryArg & { userId?: string }) {
   let offset = pipe(page, getOffsetClause(limit))
 
+  let where = userId ? eq(TRANSACTION_SCHEMA.userId, userId) : undefined
   let [transactions, rowsData] = await Promise.all([
     DB.query.TRANSACTION_SCHEMA.findMany({
       offset,
       limit,
+      where,
       orderBy: (transaction, { desc }) => [desc(transaction.createdAt)],
       with: { items: { with: { product: true } }, user: true },
     }),
