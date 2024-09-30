@@ -12,13 +12,18 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { deleteCategoryAction } from '@/app/app/product/__actions'
+import type { updateCategorySchema } from '@/app/app/product/__schema'
+import { openUpdateCategoryDialogAtom } from '@/states/popups'
 
+import { useSetAtom } from 'jotai'
 import { ChevronDownIcon, PenIcon, Trash2Icon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import type { z } from 'zod'
 
 export function ProductCategoryDataTableAction(props: ProductCategory) {
   let router = useRouter()
+  let openUpdateCategoryDialog = useSetAtom(openUpdateCategoryDialogAtom)
 
   let onClickDelete = (id: string) => () => {
     let title = 'Hapus kategori produk ini?'
@@ -48,6 +53,9 @@ export function ProductCategoryDataTableAction(props: ProductCategory) {
       },
     })
   }
+  let onClickUpdate = (payload: z.infer<typeof updateCategorySchema>) => {
+    return () => openUpdateCategoryDialog(payload)
+  }
 
   return (
     <DropdownMenu modal={false}>
@@ -61,7 +69,9 @@ export function ProductCategoryDataTableAction(props: ProductCategory) {
       <DropdownMenuContent>
         <DropdownMenuLabel>Menu Aksi</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={onClickUpdate({ categoryId: props.id, color: props.color, name: props.name })}
+        >
           <PenIcon size='1em' />
           Perbarui Kategori
         </DropdownMenuItem>

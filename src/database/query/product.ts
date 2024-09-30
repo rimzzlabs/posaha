@@ -1,4 +1,8 @@
-import type { createProductSchema, updateProductSchema } from '@/app/app/product/__schema'
+import type {
+  createProductSchema,
+  updateProductSchema,
+  updateStockProductSchema,
+} from '@/app/app/product/__schema'
 
 import { DB } from '../config'
 import { PRODUCT_SCHEMA } from '../schema/product'
@@ -12,7 +16,7 @@ import {
   queryReturnPagination,
 } from '../utils'
 
-import { A, F, pipe, S } from '@mobily/ts-belt'
+import { A, F, N, pipe, S } from '@mobily/ts-belt'
 import { desc, eq, type SQL } from 'drizzle-orm'
 import type { z } from 'zod'
 
@@ -51,7 +55,6 @@ export async function getProductList({ page, limit = 10, search = '' }: TQueryAr
   })
 
   let rows = await pipe(PRODUCT_SCHEMA, getTableCount(where))
-
   let total = pipe(rows, getTotalPageByLimit(limit))
 
   return pipe(data, queryReturnPagination({ limit, page, rows, total }))
@@ -100,4 +103,21 @@ export async function deleteProduct(id: string) {
     .returning({ id: PRODUCT_SCHEMA.id })
 
   return queryReturn(data)
+}
+
+export async function updateStock(payload: z.infer<typeof updateStockProductSchema>) {
+  let product = await DB.query.PRODUCT_SCHEMA.findFirst({
+    columns: { stock: true },
+    where: (args, { eq }) => eq(args.id, payload.productId),
+  })
+
+  if (!product) return null
+
+  let stock = pipe(product.stock, N.add(payload.stock))
+  let [res] = await DB.update(PRODUCT_SCHEMA)
+    .set({ stock })
+    .where(eq(PRODUCT_SCHEMA.id, payload.productId))
+    .returning({ id: PRODUCT_SCHEMA.id })
+
+  return queryReturn(res)
 }

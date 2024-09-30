@@ -1,4 +1,10 @@
-import type { createUserSchema, deleteUserSchema } from '@/app/app/user/__schema/user-schema'
+import type {
+  createUserSchema,
+  deleteUserSchema,
+  updateUserPasswordSchema,
+  updateUserSchema,
+} from '@/app/app/user/__schema'
+import { verifyCredentials } from '@/server/auth'
 
 import { DB } from '../config'
 import { USER_SCHEMA } from '../schema'
@@ -90,12 +96,29 @@ export async function deleteUser(payload: z.infer<typeof deleteUserSchema>) {
 }
 
 export async function updateUser(
-  payload: Partial<typeof USER_SCHEMA.$inferInsert> & { id: string },
+  payload: Partial<z.infer<typeof updateUserSchema>> & { userId: string; image?: string },
 ) {
   let [user] = await DB.update(USER_SCHEMA)
-    .set(omit(payload, ['id']))
-    .where(eq(USER_SCHEMA.id, payload.id))
+    .set({
+      name: payload.name,
+      role: payload.role,
+      address: payload.address || undefined,
+      image: payload.image,
+    })
+    .where(eq(USER_SCHEMA.id, payload.userId))
     .returning({ id: USER_SCHEMA.id })
+
+  return queryReturn(user)
+}
+
+export async function updateUserPassword(payload: z.infer<typeof updateUserPasswordSchema>) {
+  let checkOldPassword = await verifyCredentials(payload.email)(payload.oldPassword)
+  if (!checkOldPassword.ok) {
+    return queryReturn(checkOldPassword.error)
+  }
+  let password = await bcrypt.hash(payload.newPassword, SALT)
+
+  let [user] = await DB.update(USER_SCHEMA).set({ password }).returning({ id: USER_SCHEMA.id })
 
   return queryReturn(user)
 }

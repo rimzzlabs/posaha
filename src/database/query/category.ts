@@ -1,4 +1,8 @@
-import type { createCategorySchema, deleteCategorySchema } from '@/app/app/product/__schema'
+import type {
+  createCategorySchema,
+  deleteCategorySchema,
+  updateCategorySchema,
+} from '@/app/app/product/__schema'
 
 import { DB } from '../config'
 import { CATEGORY_SCHEMA } from '../schema'
@@ -66,4 +70,16 @@ export async function deleteCategory(payload: z.infer<typeof deleteCategorySchem
     .returning({ id: CATEGORY_SCHEMA.id })
 
   return queryReturn(category)
+}
+
+export async function updateCategory(payload: z.infer<typeof updateCategorySchema>) {
+  let [product] = await DB.update(CATEGORY_SCHEMA)
+    .set({
+      name: payload.name,
+      color: payload.color,
+    })
+    .where(eq(CATEGORY_SCHEMA.id, payload.categoryId))
+    .returning({ id: CATEGORY_SCHEMA.id })
+
+  return queryReturn(product)
 }

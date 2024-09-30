@@ -3,6 +3,16 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { DataTableHeader, DataTableUI } from '../shared/data-table'
 import { PRODUCT_CATEGORY_DATA_TABLE_COLUMN } from './product-category-data-table-column'
 
+import dynamic from 'next/dynamic'
+
+let UpdateProductCategoryDialog = dynamic(
+  () =>
+    import('./update-product-category-dialog').then((mod) => ({
+      default: mod.UpdateProductCategoryDialog,
+    })),
+  { ssr: false },
+)
+
 type TProductCategoryDataTable = { data: Array<ProductCategory>; page: number; total: number }
 
 export function ProductCategoryDataTable(props: TProductCategoryDataTable) {
@@ -30,6 +40,8 @@ export function ProductCategoryDataTable(props: TProductCategoryDataTable) {
           columns={PRODUCT_CATEGORY_DATA_TABLE_COLUMN}
         />
       </CardContent>
+
+      <UpdateProductCategoryDialog />
     </Card>
   )
 }
