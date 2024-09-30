@@ -30,7 +30,7 @@ export function CashierProductDisplay({
   let isProductNotAvailable = pipe(isSearching, B.and(isProductEmpty))
 
   return (
-    <Card className='transition-all'>
+    <Card>
       <Suspense fallback={<Skeleton className='h-10 w-full' />}>
         <CashierProductDisplayHeader />
       </Suspense>
@@ -39,7 +39,7 @@ export function CashierProductDisplay({
         {B.ifElse(
           isProductAvailable,
           () => (
-            <ScrollArea className='h-[calc(100vh-20rem)]'>
+            <ScrollArea className='h-[calc(100vh-21rem)]'>
               <div className='grid grid-cols-2 gap-1.5 sm:grid-cols-3 xl:gap-2.5 2xl:gap-4 3xl:grid-cols-4'>
                 <For each={products}>
                   {(product) => <CashierProductDisplayItem {...product} key={product.id} />}

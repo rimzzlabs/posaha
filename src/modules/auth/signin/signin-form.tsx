@@ -15,13 +15,13 @@ import { InputPassword } from '@/components/ui/input-password'
 import { useSignIn } from '@/app/auth/__hooks'
 import { isFormPending } from '@/lib/utils'
 
-import { B } from '@mobily/ts-belt'
+import { B, pipe } from '@mobily/ts-belt'
 import { Loader2Icon, SendHorizonalIcon } from 'lucide-react'
 
 export function SignInForm() {
   let signIn = useSignIn()
 
-  let disabledInteractive = isFormPending(signIn.form.formState)
+  let disabledInteractive = pipe(isFormPending(signIn.form.formState), B.or(signIn.isTranstioning))
   let submitIcon = B.ifElse(
     disabledInteractive,
     () => <Loader2Icon size='1em' className='animate-spin' />,

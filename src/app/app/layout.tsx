@@ -4,7 +4,13 @@ import { HeaderContainer } from '@/layouts/header'
 import { SidebarContainer } from '@/layouts/sidebar'
 import { PrivateWrapper } from '@/layouts/wrappers'
 
+import dynamic from 'next/dynamic'
 import { Fragment, type PropsWithChildren } from 'react'
+
+let SidebarSheet = dynamic(
+  () => import('@/layouts/sidebar/sidebar-sheet').then((mod) => ({ default: mod.SidebarSheet })),
+  { ssr: false },
+)
 
 export default function AdminLayout(props: PropsWithChildren) {
   return (
@@ -12,6 +18,7 @@ export default function AdminLayout(props: PropsWithChildren) {
       <SessionCheck />
       <HeaderContainer />
       <SidebarContainer />
+      <SidebarSheet />
       <PrivateWrapper>{props.children}</PrivateWrapper>
     </Fragment>
   )

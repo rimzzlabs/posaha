@@ -22,7 +22,7 @@ export async function CashierSidebarCart() {
     <R.Fragment>
       <CashierSidebarSheetCart cartItems={cartItems} />
 
-      <div className='max-md:hidden'>
+      <div className='max-xl:hidden'>
         <Card>
           <CashierSidebarCartHeader />
 

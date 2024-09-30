@@ -12,6 +12,7 @@ import { auth } from '@/server/next-auth'
 
 import { A, B, F, N, O, pipe } from '@mobily/ts-belt'
 import { DollarSignIcon, PackageCheckIcon, PackagePlusIcon, UsersIcon } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import { draw, random, sleep, toFloat, uid } from 'radash'
 import { Fragment } from 'react'
 
@@ -25,6 +26,8 @@ export default async function AdminDashboardPage() {
 
   let role = pipe(session?.user?.role, O.fromNullable, O.mapWithDefault('cashier', F.identity))
   let isUserAdmin = role !== 'cashier'
+
+  if (!isUserAdmin) redirect('/app/transaction/cashier')
 
   return (
     <Fragment>

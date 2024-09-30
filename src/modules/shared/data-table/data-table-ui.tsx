@@ -1,7 +1,7 @@
 'use client'
 
 import { For } from '@/components/ui/for'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Table,
   TableBody,
@@ -132,6 +132,8 @@ export function DataTableUI<D>(props: TDataTableUI<D>) {
             )}
           </TableBody>
         </Table>
+
+        <ScrollBar orientation='horizontal' />
       </ScrollArea>
 
       <DataTablePagination page={props.page} total={props.total} isPending={props.isPending} />

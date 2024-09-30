@@ -39,14 +39,14 @@ export function getSidebarList(pathname: string, role?: Option<TRole>): Array<TS
   return [
     {
       label: 'Akses Cepat',
-      visible: true,
+      visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
       menus: [
         {
-          visible: true,
           label: 'Dasbor',
           path: '/app',
           icon: LayoutGridIcon,
           active: pipe(pathname, F.equals('/app')),
+          visible: pipe(role, F.equals('super-admin'), B.or(F.equals(role)('admin'))),
         },
       ],
     },
