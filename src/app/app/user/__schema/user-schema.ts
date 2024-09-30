@@ -47,3 +47,10 @@ export let updateUserPasswordSchema = z
     message: 'Kata sandi lama dan kata sandi baru tidak boleh sama',
     path: ['newPassword'],
   })
+
+export let updateUserSelfSchema = z.object({
+  userId: z.string().min(1, 'ID Pengguna tidak valid'),
+  name: z.string().min(1, 'Nama pengguna tidak valid'),
+  email: z.string().min(1, 'Harap isi bagian ini').email('Alamat surel tidak valid'),
+  address: z.string().min(1, 'Alamat tidak valid'),
+})

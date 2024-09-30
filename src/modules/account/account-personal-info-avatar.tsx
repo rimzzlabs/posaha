@@ -19,7 +19,9 @@ export function AccountPersonalInfoAvatar(props: TAccountPersonalInfoAvatar) {
   let { seed, generated, onGenerateRandom, onClickSave, onReset } = useUpdateAvatar(props)
 
   return (
-    <div className={cn('flex h-64 flex-col overflow-hidden transition-all', generated && 'h-80')}>
+    <div
+      className={cn('flex flex-col overflow-hidden transition-all md:h-64', generated && 'md:h-80')}
+    >
       <UserAvatar
         size={512}
         width={204}
@@ -27,10 +29,10 @@ export function AccountPersonalInfoAvatar(props: TAccountPersonalInfoAvatar) {
         radius={6}
         seed={seed}
         alt={props.name}
-        className='max-lg:size-40 max-md:size-24 lg:size-52'
+        className='max-lg:size-40 max-md:size-32 lg:size-52'
       />
 
-      <div className='inline-flex flex-col gap-x-2'>
+      <div className='inline-flex max-w-32 flex-col gap-x-2 md:max-w-52'>
         <div className='mt-2 inline-flex gap-x-1'>
           <Button onClick={onGenerateRandom} variant='secondary' className='w-full gap-x-2'>
             <Dice6Icon size='1em' />

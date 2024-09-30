@@ -1,10 +1,32 @@
-import { AccountPersonalInfo, AccountSidebar } from '@/modules/account'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+import { AccountPersonalInfo } from '@/modules/account'
+
+import { ShieldIcon, UserIcon } from 'lucide-react'
 
 export default function AccountPage() {
   return (
-    <div className='grid gap-3 md:grid-cols-[minmax(234px,260px)_minmax(0,1fr)] lg:min-h-[calc(100vh-7rem)] lg:gap-4 xl:grid-cols-[minmax(14.625rem,23.75rem)_minmax(0,1fr)]'>
-      <AccountSidebar />
-      <AccountPersonalInfo />
-    </div>
+    <Tabs defaultValue='account'>
+      <Card>
+        <CardHeader>
+          <TabsList className='max-w-max'>
+            <TabsTrigger value='account' className='gap-x-2'>
+              <UserIcon size='1em' />
+              Akun
+            </TabsTrigger>
+
+            <TabsTrigger value='security' className='gap-x-2'>
+              <ShieldIcon size='1em' />
+              Keamanan
+            </TabsTrigger>
+          </TabsList>
+        </CardHeader>
+
+        <CardContent>
+          <AccountPersonalInfo />
+        </CardContent>
+      </Card>
+    </Tabs>
   )
 }
