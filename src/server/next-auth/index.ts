@@ -14,6 +14,17 @@ export const AUTH_API_PREFIX = '/api/auth'
 export const AUTH_PUBLIC_ROUTES = ['/']
 export const AUTH_ROUTES = [AUTH_SIGNIN_URL]
 
+export const ADMIN_ROUTES = [
+  '/app/user/list',
+  '/app/user/create',
+  '/app/sales',
+  '/app/product/list',
+  '/app/product/create',
+  '/app/product/category/list',
+  '/app/product/category/create',
+]
+export const CASHIER_ROUTES = ['/app/transaction/list', '/app/transaction/cashierI']
+
 export const {
   signIn,
   signOut,
