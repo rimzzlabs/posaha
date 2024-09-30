@@ -4,18 +4,19 @@ import { Button } from '@/components/ui/button'
 
 import { addOrAppendToCartAction } from '@/app/app/product/__actions'
 
-import { B, F, O, pipe } from '@mobily/ts-belt'
+import { B, F, N, O, pipe } from '@mobily/ts-belt'
 import { Loader2Icon, PlusIcon } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useAction } from 'next-safe-action/hooks'
 import { toast } from 'sonner'
 import { match } from 'ts-pattern'
 
-export function CashierProductDisplayItemButton(props: { productId: string }) {
+export function CashierProductDisplayItemButton(props: { productId: string; stock: number }) {
   let session = useSession()
   let addOrAppendToCart = useAction(addOrAppendToCartAction)
 
   let userId = pipe(session.data?.user?.id, O.fromNullable)
+  let isOutOfStock = pipe(props.stock, N.lte(0))
   let isButtonDisabled = pipe(
     session.status,
     F.equals('loading'),
@@ -50,6 +51,15 @@ export function CashierProductDisplayItemButton(props: { productId: string }) {
       <Button size='sm' className='gap-x-2' disabled={isButtonDisabled}>
         <Loader2Icon size='1em' className='animate-spin-ease' />
         <span className='sr-only'>Loading..</span>
+      </Button>
+    )
+  }
+
+  if (isOutOfStock) {
+    return (
+      <Button size='sm' className='gap-x-2' disabled={isOutOfStock}>
+        {buttonIcon}
+        Stok Habis
       </Button>
     )
   }

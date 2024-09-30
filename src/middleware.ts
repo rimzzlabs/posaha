@@ -4,10 +4,12 @@ import {
   AUTH_API_PREFIX,
   AUTH_SIGNIN_URL,
   AUTH_PUBLIC_ROUTES,
+  ADMIN_ROUTES,
+  CASHIER_ROUTES,
 } from '@/server/next-auth'
 import { NEXT_AUTH_CONFIG } from '@/server/next-auth/config'
 
-import { A, B, pipe, S } from '@mobily/ts-belt'
+import { A, B, F, pipe, S } from '@mobily/ts-belt'
 import NextAuth from 'next-auth'
 import { NextResponse } from 'next/server'
 
@@ -22,6 +24,18 @@ export default middleware(async (req) => {
   let isAuthRoutes = pipe(AUTH_ROUTES, A.includes(url.pathname))
   let isPublicRoutes = pipe(AUTH_PUBLIC_ROUTES, A.includes(url.pathname), B.inverse)
 
+  let preventCashierAccess = pipe(
+    ADMIN_ROUTES,
+    A.includes(url.pathname),
+    B.and(F.equals(session?.role, 'cashier')),
+  )
+
+  let preventAdminAccess = pipe(
+    CASHIER_ROUTES,
+    A.includes(url.pathname),
+    B.and(B.inverse(F.equals(session?.role, 'cashier'))),
+  )
+
   if (isApiAuthRoute) {
     if (!session) return NextResponse.redirect(new URL(AUTH_SIGNIN_URL, url), redirectStatus)
     return NextResponse.next()
@@ -34,6 +48,14 @@ export default middleware(async (req) => {
 
   if (!session && isPublicRoutes) {
     return NextResponse.redirect(new URL(AUTH_SIGNIN_URL, url), redirectStatus)
+  }
+
+  if (preventCashierAccess) {
+    return NextResponse.redirect(new URL('/app/transaction/list', url), redirectStatus)
+  }
+
+  if (preventAdminAccess) {
+    return NextResponse.redirect(new URL('/app', url), redirectStatus)
   }
 
   return NextResponse.next()

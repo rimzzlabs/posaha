@@ -60,7 +60,7 @@ export function CashierProductDisplayItem(props: Product) {
       </CardHeader>
 
       <CardFooter className='justify-end p-4 pb-3 pt-0'>
-        <CashierProductDisplayItemButton productId={props.id} />
+        <CashierProductDisplayItemButton productId={props.id} stock={props.stock} />
       </CardFooter>
     </Card>
   )
