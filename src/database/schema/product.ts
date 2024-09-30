@@ -24,6 +24,9 @@ export const PRODUCT_SCHEMA = pgTable('product', {
   deleted: boolean('deleted').default(false),
   deletedAt: timestamp('deleted_at'),
 
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'string' })
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date().toISOString()),
   createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
 })

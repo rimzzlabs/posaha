@@ -1,13 +1,16 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
+
 import type { TSalesListResult } from '@/database/query/sales'
 import { formatDate } from '@/lib/dates'
 import { formatPrice } from '@/lib/number'
 import { SalesDataTableColumnProduct } from '@/modules/sales/sales-data-table-column-product'
 
-import { pipe } from '@mobily/ts-belt'
+import { F, O, pipe } from '@mobily/ts-belt'
 import { createColumnHelper } from '@tanstack/react-table'
 import { toInt } from 'radash'
+import { match } from 'ts-pattern'
 
 type TSalesResult = TSalesListResult['data'][number]
 const ch = createColumnHelper<TSalesResult>()
@@ -45,5 +48,19 @@ export const CASHIER_TRANSACTION_DATA_TABLE_COLUMN = [
   ch.accessor('customerChange', {
     header: 'Uang Kembalian Pelanggan',
     cell: (props) => pipe(props.getValue(), toInt, formatPrice),
+  }),
+  ch.accessor('paymentMethod', {
+    header: 'Metode Pembayaran',
+    cell: (props) => (
+      <Badge variant='secondary'>
+        {match(props.getValue())
+          .with('cash', () => 'Uang Kertas')
+          .otherwise(() => 'Tidak diketahui')}
+      </Badge>
+    ),
+  }),
+  ch.accessor('remark', {
+    header: 'Catatan',
+    cell: (props) => pipe(O.fromNullable(props.getValue()), O.mapWithDefault('-', F.identity)),
   }),
 ]

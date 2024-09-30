@@ -1,4 +1,4 @@
-import type { TCreateTransactionSchema } from '@/app/app/product/__schema'
+import type { TCreateTransactionSchema } from '@/app/app/transaction/__schema'
 
 import { DB } from '../config'
 import {
@@ -13,8 +13,8 @@ import { eq } from 'drizzle-orm'
 
 export async function createTransaction(data: TCreateTransactionSchema) {
   let customerChange = pipe(
-    data.totalAmount,
-    N.subtract(data.total),
+    data.customerMoney,
+    N.subtract(data.totalAmount),
     F.ifElse(
       N.lt(0),
       () => '0.00',
@@ -27,7 +27,9 @@ export async function createTransaction(data: TCreateTransactionSchema) {
       customerChange: customerChange,
       userId: String(data.userId),
       customerMoney: String(data.totalAmount),
-      totalAmount: String(data.total),
+      totalAmount: String(data.totalAmount),
+      paymentMethod: data.paymentMethod,
+      remark: data.remark,
     })
     .returning()
   if (!transaction) throw new Error('Server error')
@@ -48,8 +50,8 @@ export async function createTransaction(data: TCreateTransactionSchema) {
 
       await DB.update(PRODUCT_SCHEMA)
         .set({
-          stock: product.stock - item.quantity,
-          sold: product.sold + item.quantity,
+          stock: pipe(product.stock, N.subtract(item.quantity)),
+          sold: pipe(product.sold, N.add(item.quantity)),
         })
         .where(eq(PRODUCT_SCHEMA.id, item.productId))
 

@@ -22,7 +22,6 @@ export function CashierProductDisplayItemButton(props: { productId: string }) {
     B.or(!userId),
     B.or(addOrAppendToCart.isExecuting),
     B.or(addOrAppendToCart.isPending),
-    B.or(addOrAppendToCart.isTransitioning),
   )
   let buttonIcon = match(isButtonDisabled)
     .with(true, () => <Loader2Icon size='1em' className='animate-spin-ease' />)

@@ -1,9 +1,9 @@
+import { useCalculateTotals } from '@/app/app/product/__hooks'
 import { formatPrice } from '@/lib/number'
 import { checkoutAtom, closeDialogCheckoutAtom, togglePendingCheckoutAtom } from '@/states/checkout'
 
 import { createTransactionAction } from '../__actions'
 import { createTransactionSchema, type TCreateTransactionSchema } from '../__schema'
-import { useCalculateTotals } from './use-calculate-totals'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { A, F, O, pipe } from '@mobily/ts-belt'
@@ -31,36 +31,39 @@ export function useCreateTransaction() {
   let form = useForm<TCreateTransactionSchema>({
     mode: 'all',
     defaultValues: {
-      total,
       userId,
       cartItems,
       totalQuantity,
-      totalAmount: '' as unknown as number,
+      customerMoney: '' as unknown as number,
+      totalAmount: total,
     },
     resolver: zodResolver(createTransactionSchema),
   })
 
-  let onSubmit = form.handleSubmit(async (values) => {
-    togglePendingCheckout()
-    toast.dismiss()
-    toast.loading('Memproses permintaan, harap tunggu beberapa saat')
-    let res = await createTransactionAction(values)
-    if (res?.serverError || res?.validationErrors || !res?.data) {
-      return toast.error('Terjadi kesalahan pada server, harap coba beberapa saat lagi')
-    }
+  let onSubmit = form.handleSubmit(
+    async (values) => {
+      togglePendingCheckout()
+      toast.dismiss()
+      toast.loading('Memproses permintaan, harap tunggu beberapa saat')
+      let res = await createTransactionAction(values)
+      if (res?.serverError || res?.validationErrors || !res?.data) {
+        return toast.error('Terjadi kesalahan pada server, harap coba beberapa saat lagi')
+      }
 
-    if (!res.data.ok) {
-      return toast.error(res.data.error)
-    }
+      if (!res.data.ok) {
+        return toast.error(res.data.error)
+      }
 
-    let totalAmount = pipe(res.data.data.totalAmount, toInt, formatPrice)
-    toast.dismiss()
-    togglePendingCheckout()
-    closeDialogCheckout()
-    toast.success('Transaksi berhasil!', {
-      description: `Transaksi dengan jumlah pembayaran sebesar ${totalAmount} berhasil`,
-    })
-  })
+      let totalAmount = pipe(res.data.data.totalAmount, toInt, formatPrice)
+      toast.dismiss()
+      togglePendingCheckout()
+      closeDialogCheckout()
+      toast.success('Transaksi berhasil!', {
+        description: `Transaksi dengan jumlah pembayaran sebesar ${totalAmount} berhasil`,
+      })
+    },
+    (err) => console.info(err),
+  )
 
   return { ...form, onSubmit }
 }

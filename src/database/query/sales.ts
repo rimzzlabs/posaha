@@ -29,8 +29,10 @@ export async function getSalesList({ page, userId, limit = 10 }: TQueryArg & { u
     A.map((trx) => ({
       id: trx.id,
       user: trx.user,
+      remark: trx.remark,
       createdAt: trx.createdAt,
       totalAmount: trx.totalAmount,
+      paymentMethod: trx.paymentMethod,
       customerMoney: trx.customerMoney,
       customerChange: trx.customerChange,
       totalQuantity: pipe(trx.items, A.length),

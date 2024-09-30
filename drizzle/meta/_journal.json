@@ -127,6 +127,20 @@
       "when": 1727624003831,
       "tag": "0017_broken_paper_doll",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1727680616819,
+      "tag": "0018_crazy_silver_surfer",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1727681094733,
+      "tag": "0019_fresh_vulture",
+      "breakpoints": true
     }
   ]
 }

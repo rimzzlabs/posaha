@@ -10,7 +10,7 @@ import { ProductDataTableAction } from './product-data-table-action'
 
 import { F, N, pipe, S } from '@mobily/ts-belt'
 import { createColumnHelper } from '@tanstack/react-table'
-import { MinusIcon } from 'lucide-react'
+import { ImageIcon, MinusIcon } from 'lucide-react'
 import Image from 'next/image'
 import { match, P } from 'ts-pattern'
 
@@ -27,15 +27,10 @@ export const PRODUCT_DATA_TABLE_COLUMN = [
     cell: (props) => {
       return match(props.getValue())
         .with(P.nullish, () => (
-          <Tooltip delayDuration={250}>
-            <TooltipTrigger className='text-muted-foreground'>
-              <MinusIcon size='1rem' />
-              <span className='sr-only'>Tidak ada foto produk</span>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className='text-sm font-medium'>Produk ini belum mempunyai foto</p>
-            </TooltipContent>
-          </Tooltip>
+          <div className='flex h-12 w-12 items-center justify-center rounded-md bg-muted text-muted-foreground'>
+            <ImageIcon size='1rem' className='shrink-0' />
+            <span className='sr-only'>Belum ada foto</span>
+          </div>
         ))
         .otherwise((url) => (
           <Image

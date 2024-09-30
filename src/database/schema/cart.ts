@@ -15,5 +15,8 @@ export const CART_ITEM_SCHEMA = pgTable('cart_item', {
     .notNull(),
   quantity: integer('quantity').notNull().default(1),
   createdAt: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { mode: 'string' })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date().toISOString()),
 })

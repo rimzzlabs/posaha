@@ -16,6 +16,7 @@ import { DataTablePaginationItem } from './data-table-pagination-item'
 import type { TUseDataTablePagination } from './hooks/use-data-table-pagination'
 import { useDataTablePagination } from './hooks/use-data-table-pagination'
 
+import { B } from '@mobily/ts-belt'
 import { Fragment } from 'react'
 
 type TDataTablePagination = TPrettify<
@@ -50,8 +51,12 @@ export function DataTablePagination(props: TDataTablePagination) {
             </PaginationItem>
           </Fragment>
         )}
-        {!props.isPending && (
-          <For each={pages}>{(args) => <DataTablePaginationItem {...args} {...props} />}</For>
+        {B.ifElse(
+          B.inverse(Boolean(props.isPending)),
+          () => (
+            <For each={pages}>{(args) => <DataTablePaginationItem {...args} {...props} />}</For>
+          ),
+          () => null,
         )}
       </PaginationContent>
     </Pagination>

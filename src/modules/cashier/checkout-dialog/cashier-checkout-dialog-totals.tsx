@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 
 import { useCalculateTotals } from '@/app/app/product/__hooks'
-import type { TCreateTransactionSchema } from '@/app/app/product/__schema'
+import type { TCreateTransactionSchema } from '@/app/app/transaction/__schema'
 import { formatPrice } from '@/lib/number'
 
 import { useFormContext, useWatch } from 'react-hook-form'
@@ -11,8 +11,8 @@ export function CashierCheckoutDialogTotals({ cartItems }: { cartItems: Array<TC
   let { totalQuantity, total, calcCustomerMoney } = useCalculateTotals(cartItems)
   let form = useFormContext<TCreateTransactionSchema>()
 
-  let method = useWatch({ control: form.control, name: 'method' })
-  let money = useWatch({ control: form.control, name: 'totalAmount' })
+  let method = useWatch({ control: form.control, name: 'paymentMethod' })
+  let money = useWatch({ control: form.control, name: 'customerMoney' })
 
   let { change, missing } = calcCustomerMoney({ total, money })
 

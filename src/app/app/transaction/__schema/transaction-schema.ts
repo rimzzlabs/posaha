@@ -13,17 +13,18 @@ export let createTransactionSchema = z
         quantity: z.number().min(1, 'Kuantitas produk tidak valid'),
       }),
     ),
-    total: z.number().min(1, 'Total belanja tidak valid'),
+    totalAmount: z.number().min(1, 'Total belanja tidak valid'),
     totalQuantity: z.number().min(1, 'Kuantitas produk tidak valid'),
-    totalAmount: z.preprocess(
+    customerMoney: z.preprocess(
       (a) => toInt(a, 0),
       z
         .number({ invalid_type_error: 'Harap masukkan uang pelanggan' })
         .min(1, 'Harap masukan uang pelanggan'),
     ),
-    method: z.enum(['cash'], { message: 'Harap pilih metode pembayaran' }),
+    paymentMethod: z.enum(['cash'], { message: 'Harap pilih metode pembayaran' }),
+    remark: z.string().max(255, 'Catatan maksimal 255 Karakter!').optional(),
   })
-  .refine(({ total, totalAmount }) => totalAmount >= total, {
+  .refine(({ totalAmount, customerMoney }) => customerMoney >= totalAmount, {
     message: 'Uang pembeli tidak cukup untuk membayar belanja ini',
-    path: ['totalAmount'],
+    path: ['customerMoney'],
   })

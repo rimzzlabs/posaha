@@ -13,7 +13,7 @@ import {
 } from '../utils'
 
 import { A, F, pipe, S } from '@mobily/ts-belt'
-import { desc, eq, sql, type SQL } from 'drizzle-orm'
+import { desc, eq, type SQL } from 'drizzle-orm'
 import type { z } from 'zod'
 
 export async function getProductById(id: string) {
@@ -83,7 +83,6 @@ export async function updateProduct(payload: z.infer<typeof updateProductSchema>
       stock: payload.stock,
       categoryId: payload.category,
       description: payload.description,
-      updatedAt: sql`now()`,
     })
     .where(eq(PRODUCT_SCHEMA.id, payload.id))
     .returning({ id: PRODUCT_SCHEMA.id })
