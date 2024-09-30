@@ -2,7 +2,6 @@ import type {
   createUserSchema,
   deleteUserSchema,
   updateUserPasswordSchema,
-  updateUserSchema,
 } from '@/app/app/user/__schema'
 import { verifyCredentials } from '@/server/auth'
 
@@ -95,15 +94,15 @@ export async function deleteUser(payload: z.infer<typeof deleteUserSchema>) {
   return queryReturn(user)
 }
 
-export async function updateUser(
-  payload: Partial<z.infer<typeof updateUserSchema>> & { userId: string; image?: string },
-) {
+type TUpdateUserPayload = Omit<Partial<typeof USER_SCHEMA.$inferInsert>, 'id'> & { userId: string }
+export async function updateUser(payload: TUpdateUserPayload) {
   let [user] = await DB.update(USER_SCHEMA)
     .set({
       name: payload.name,
       role: payload.role,
       address: payload.address || undefined,
       image: payload.image,
+      email: payload.email,
     })
     .where(eq(USER_SCHEMA.id, payload.userId))
     .returning({ id: USER_SCHEMA.id })
