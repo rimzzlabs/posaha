@@ -37,14 +37,15 @@ export function useCalculateTotals(cartItems: Array<TCartProductItem> = []) {
   }, [cartItems])
 
   let calcCustomerMoney = R.useCallback((payload: { total: number; money: number }) => {
+    let money = toFloat(payload.money, 0)
     let change = pipe(
-      payload.money,
+      money,
       N.subtract(payload.total),
       F.ifElse(N.gt(0), F.identity, () => 0),
     )
     let missing = pipe(
       payload.total,
-      N.subtract(payload.money),
+      N.subtract(money),
       F.ifElse(N.gt(0), F.identity, () => 0),
     )
 

@@ -15,10 +15,12 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 
+import { NEXT_PUBLIC_TAX_FEE } from '@/lib/configs/environment-client'
 import { formatPrice } from '@/lib/number'
 
 import type { Option } from '@mobily/ts-belt'
 import { A, D, F, N, O, pipe } from '@mobily/ts-belt'
+import { toFloat } from 'radash'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
 let chartConfig = {
@@ -28,18 +30,19 @@ let chartConfig = {
   },
 } satisfies ChartConfig
 
-let PPH_TAX = 0.005 // 0.5%
-
 type TDashboardChart = {
-  data: Option<Array<{ month: string; sale: number }>>
+  data: Option<Array<{ month: string; revenue: number }>>
 }
+
+const PPH_TAX = toFloat(NEXT_PUBLIC_TAX_FEE, 0)
+
 export function DashboardChart(props: TDashboardChart) {
   let data = pipe(props.data, O.mapWithDefault([], F.identity))
-  let grossRevenue = pipe(data, A.map(D.getUnsafe('sale')), A.reduce(0, N.add))
+  let grossRevenue = pipe(data, A.map(D.getUnsafe('revenue')), A.reduce(0, N.add))
   let netRevenue = pipe(
     data,
-    A.map((value) => ({ sale: value.sale, tax: value.sale * PPH_TAX })),
-    A.map((value) => N.subtract(value.tax)(value.sale)),
+    A.map((value) => ({ revenue: value.revenue, tax: value.revenue * PPH_TAX })),
+    A.map((value) => N.subtract(value.tax)(value.revenue)),
     A.reduce(0, N.add),
   )
 
@@ -61,7 +64,7 @@ export function DashboardChart(props: TDashboardChart) {
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator='line' />} />
-            <Bar dataKey='sale' fill='var(--color-sale)' radius={6} />
+            <Bar dataKey='revenue' fill='var(--color-sale)' radius={6} />
           </BarChart>
         </ChartContainer>
       </CardContent>

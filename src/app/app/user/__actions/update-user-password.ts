@@ -30,3 +30,22 @@ export let updateUserPasswordAction = createSafeActionClient()
 
     return actionReturn('success')(res)
   })
+
+export let updateUserPasswordSelfAction = createSafeActionClient()
+  .schema(updateUserPasswordSchema)
+  .action(async ({ parsedInput: payload }) => {
+    const [error, res] = await tryit(updateUserPassword)(payload)
+
+    if (error) {
+      return actionReturn('error')('Terjadi kesalahan pada server')
+    }
+
+    if (typeof res.data === 'string') {
+      let message = match(res.data)
+        .with('Invalid Credential', () => 'Kata sandi lama pengguna salah')
+        .otherwise(() => 'Terjadi kesalahan pada server')
+      return actionReturn('error')(message)
+    }
+
+    return actionReturn('success')(res)
+  })

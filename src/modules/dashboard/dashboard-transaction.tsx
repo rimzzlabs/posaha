@@ -12,42 +12,34 @@ import {
 import { For } from '@/components/ui/for'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
+import type { TGetDashboardResult } from '@/database/query/sales'
 import { formatPrice } from '@/lib/number'
 import { cn } from '@/lib/utils'
 
-import type { Option } from '@mobily/ts-belt'
 import { B, O, pipe } from '@mobily/ts-belt'
-import { ArrowRight, EyeIcon, InboxIcon, Package, RefreshCwIcon } from 'lucide-react'
-import { random, sleep } from 'radash'
+import { ArrowRight, InboxIcon, RefreshCwIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { toFloat } from 'radash'
 import * as R from 'react'
-import { toast } from 'sonner'
 
 type TDashboardTransaction = {
-  data: Option<
-    Array<{
-      id: string
-      name: string
-      price: number
-      qty: number
-      total: number
-      timestamp: string
-    }>
-  >
+  data: TGetDashboardResult['data']['transactions']
 }
 export function DashboardTransaction(props: TDashboardTransaction) {
-  let [pending, setPending] = R.useState(false)
+  let router = useRouter()
+  let [isPending, startTransition] = R.useTransition()
+
   let transactions = pipe(
     props.data,
     O.mapWithDefault([], (data) => data),
   )
-  let [isEmpty, setIsEmpty] = R.useState(true)
 
-  let mockRefresh = async () => {
-    setPending(true)
-    await sleep(random(800, 1800))
-    setPending(false)
-    setIsEmpty(transactions.length === 0)
-    toast.success('Data berhasil diperbarui!')
+  let isEmpty = transactions.length === 0
+
+  let onClickRefresh = () => {
+    startTransition(() => {
+      router.refresh()
+    })
   }
 
   return (
@@ -59,13 +51,13 @@ export function DashboardTransaction(props: TDashboardTransaction) {
         </div>
 
         <Button
+          onClick={onClickRefresh}
+          disabled={isPending}
           size='sm'
           variant='secondary'
-          disabled={pending}
-          onClick={mockRefresh}
           className='gap-x-2'
         >
-          <RefreshCwIcon size='1em' className={cn(pending && 'animate-spin')} />
+          <RefreshCwIcon size='1em' className={cn(isPending && 'animate-spin-ease')} />
           Perbarui
         </Button>
       </CardHeader>
@@ -81,29 +73,15 @@ export function DashboardTransaction(props: TDashboardTransaction) {
                     {(trx) => (
                       <Card key={trx.id} className='flex items-end shadow-none'>
                         <CardHeader className='p-4'>
-                          <CardTitle className='relative'>{trx.name}</CardTitle>
+                          <CardTitle className='relative'>{trx.cashier}</CardTitle>
                           <CardDescription className='font-semibold text-emerald-500'>
-                            {formatPrice(trx.total)}
+                            + {formatPrice(toFloat(trx.totalAmount, 0))}
                           </CardDescription>
                           <CardDescription>
-                            <span className='font-semibold'>Jumlah Pembelian</span>: {trx.qty}
-                          </CardDescription>
-                          <CardDescription>
-                            <span className='font-semibold'>Harga Produk</span>:{' '}
-                            {formatPrice(trx.price)}
+                            <span className='font-semibold'>Jumlah Pembelian</span>:{' '}
+                            {trx.totalQuantity}
                           </CardDescription>
                         </CardHeader>
-
-                        <CardFooter className='ml-auto flex-col items-end gap-1 p-4'>
-                          <Button className='gap-x-1' size='sm' variant='ghost'>
-                            <Package size='1em' />
-                            Lihat Produk
-                          </Button>
-                          <Button className='gap-x-1' size='sm' variant='secondary'>
-                            <EyeIcon size='1em' />
-                            Lihat Transaksi
-                          </Button>
-                        </CardFooter>
                       </Card>
                     )}
                   </For>
