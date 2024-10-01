@@ -8,7 +8,6 @@ import { match, P } from 'ts-pattern'
 type TDashboardCard = {
   label: string
   value: string | number
-  percentage: number
   icon: LucideIcon
   formatter?: (value: number) => string
 }
@@ -30,7 +29,6 @@ export function DashboardCard(props: TDashboardCard) {
       </CardHeader>
       <CardContent>
         <p className='mb-2 text-2xl font-bold'>{formatter(toFloat(props.value, 1))}</p>
-        <p className='text-xs text-muted-foreground'>{props.percentage}% dari bulan lalu</p>
       </CardContent>
     </Card>
   )

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-import { AccountPersonalInfo } from '@/modules/account'
+import { AccountPersonalInfo, AccountSecurity } from '@/modules/account'
 
 import { ShieldIcon, UserIcon } from 'lucide-react'
 
@@ -25,6 +25,8 @@ export default function AccountPage() {
 
         <CardContent>
           <AccountPersonalInfo />
+
+          <AccountSecurity />
         </CardContent>
       </Card>
     </Tabs>
