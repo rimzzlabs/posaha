@@ -1,5 +1,6 @@
 'use server'
 
+import { getUserByEmail } from '@/database/query/user'
 import { actionReturn } from '@/lib/req-res'
 import { signIn } from '@/server/next-auth'
 
@@ -15,7 +16,10 @@ export let signInAction = createSafeActionClient()
   .action(async ({ parsedInput: payload }) => {
     try {
       await signIn('credentials', payload)
-      return pipe({ signed: true }, actionReturn('success'))
+      let user = await getUserByEmail(payload.email)
+      if (user.data === 'user not found') throw new Error('User not found')
+
+      return pipe({ signed: true, role: user.data.role }, actionReturn('success'))
     } catch (error) {
       if (error instanceof AuthError) {
         switch (error.type) {

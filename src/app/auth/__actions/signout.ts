@@ -7,5 +7,6 @@ import { createSafeActionClient } from 'next-safe-action'
 
 export let signOutAction = createSafeActionClient().action(async () => {
   await signOut()
+
   return actionReturn('success')({ signed: false })
 })

@@ -6,6 +6,7 @@ import { auth } from '@/server/next-auth'
 import './globals.css'
 
 import type { Metadata } from 'next'
+import { SessionProvider } from 'next-auth/react'
 import PlusJakartaSansLocal from 'next/font/local'
 import type { PropsWithChildren } from 'react'
 
@@ -44,10 +45,12 @@ export default async function RootLayout(props: PropsWithChildren) {
   return (
     <html lang='id' translate='no' suppressHydrationWarning>
       <body className={pjs.variable}>
-        <Provider session={session}>
-          <Toaster />
-          {props.children}
-        </Provider>
+        <SessionProvider session={session} refetchOnWindowFocus>
+          <Provider>
+            <Toaster />
+            {props.children}
+          </Provider>
+        </SessionProvider>
       </body>
     </html>
   )

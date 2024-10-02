@@ -28,12 +28,14 @@ export default middleware(async (req) => {
     ADMIN_ROUTES,
     A.includes(url.pathname),
     B.and(F.equals(session?.role, 'cashier')),
+    B.and(Boolean(session)),
   )
 
   let preventAdminAccess = pipe(
     CASHIER_ROUTES,
     A.includes(url.pathname),
     B.and(B.inverse(F.equals(session?.role, 'cashier'))),
+    B.and(Boolean(session)),
   )
 
   if (isApiAuthRoute) {
