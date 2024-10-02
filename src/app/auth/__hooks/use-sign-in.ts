@@ -24,7 +24,6 @@ export function useSignIn() {
     toast.dismiss()
     toast.loading('Memproses, harap tunggu...')
     let res = await signInAction(values)
-    await session.update()
     toast.dismiss()
 
     if (res?.data && 'ok' in res.data && !res.data.ok) {
@@ -37,8 +36,10 @@ export function useSignIn() {
       return
     }
 
+    await session.update()
+
     let url = pipe(
-      O.fromNullable(session.data?.user?.role),
+      O.fromNullable(session.data?.user.role),
       O.mapWithDefault('/app', (role) =>
         role === 'cashier' ? '/app/transaction/cashier' : '/app',
       ),
