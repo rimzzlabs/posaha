@@ -1,16 +1,12 @@
-'use client'
-
 import { ToggleTheme } from '@/components/ui/toggle-theme'
 
 import { PublicHeaderNavbarItem } from './public-header-navbar-item'
 
 import { B } from '@mobily/ts-belt'
-import { useSession } from 'next-auth/react'
+import type { Session } from 'next-auth'
 
-export function PublicHeaderNavbar() {
-  let session = useSession()
-
-  let isAuthenticated = session.status === 'authenticated'
+export function PublicHeaderNavbar(props: { session: Session | null }) {
+  let isAuthenticated = Boolean(props.session?.user?.id)
 
   let button = B.ifElse(
     isAuthenticated,

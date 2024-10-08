@@ -25,6 +25,8 @@ export const ADMIN_ROUTES = [
 ]
 export const CASHIER_ROUTES = ['/app/transaction/list', '/app/transaction/cashierI']
 
+export const PRIVATE_ROUTES = ADMIN_ROUTES.concat(CASHIER_ROUTES)
+
 export const {
   signIn,
   signOut,

@@ -29,8 +29,8 @@ export function HeaderNavbarProfile(props: TWithSession) {
   let image = pipe(
     props,
     D.get('session'),
-    O.map((session) => session.user),
-    O.mapWithDefault(name, (user) => user.image),
+    O.map((session) => session?.user),
+    O.mapWithDefault(name, (user) => user?.image),
     O.fromNullable,
     O.mapWithDefault(name, F.identity),
   )

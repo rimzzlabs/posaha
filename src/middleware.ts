@@ -3,13 +3,13 @@ import {
   AUTH_ROUTES,
   AUTH_API_PREFIX,
   AUTH_SIGNIN_URL,
-  AUTH_PUBLIC_ROUTES,
   ADMIN_ROUTES,
   CASHIER_ROUTES,
+  PRIVATE_ROUTES,
 } from '@/server/next-auth'
 import { NEXT_AUTH_CONFIG } from '@/server/next-auth/config'
 
-import { A, B, F, pipe, S } from '@mobily/ts-belt'
+import { A, pipe, S } from '@mobily/ts-belt'
 import NextAuth from 'next-auth'
 import { NextResponse } from 'next/server'
 
@@ -20,43 +20,40 @@ export default middleware(async (req) => {
   let url = req.nextUrl
   let redirectStatus = { status: 307 }
 
+  let isPrivateRoutes = pipe(PRIVATE_ROUTES, A.includes(url.pathname))
+  if (isPrivateRoutes && !session) {
+    return NextResponse.redirect(new URL(AUTH_SIGNIN_URL, url), redirectStatus)
+  }
+
   let isApiAuthRoute = pipe(url.pathname, S.includes(AUTH_API_PREFIX))
-  let isAuthRoutes = pipe(AUTH_ROUTES, A.includes(url.pathname))
-  let isPublicRoutes = pipe(AUTH_PUBLIC_ROUTES, A.includes(url.pathname), B.inverse)
-
-  let preventCashierAccess = pipe(
-    ADMIN_ROUTES,
-    A.includes(url.pathname),
-    B.and(F.equals(session?.role, 'cashier')),
-    B.and(Boolean(session)),
-  )
-
-  let preventAdminAccess = pipe(
-    CASHIER_ROUTES,
-    A.includes(url.pathname),
-    B.and(B.inverse(F.equals(session?.role, 'cashier'))),
-    B.and(Boolean(session)),
-  )
-
   if (isApiAuthRoute) {
     if (!session) return NextResponse.redirect(new URL(AUTH_SIGNIN_URL, url), redirectStatus)
     return NextResponse.next()
   }
 
+  let isAuthRoutes = pipe(AUTH_ROUTES, A.includes(url.pathname))
   if (isAuthRoutes) {
     if (session) return NextResponse.redirect(new URL(AUTH_SIGNED, url), redirectStatus)
+
     return NextResponse.next()
   }
 
-  if (!session && isPublicRoutes) {
-    return NextResponse.redirect(new URL(AUTH_SIGNIN_URL, url), redirectStatus)
-  }
-
-  if (preventCashierAccess) {
+  let isCashierTryingToAccessAdmin = Boolean(
+    session &&
+      session.role === 'cashier' &&
+      (ADMIN_ROUTES.includes(url.pathname) || url.pathname === '/app'),
+  )
+  if (isCashierTryingToAccessAdmin) {
     return NextResponse.redirect(new URL('/app/transaction/list', url), redirectStatus)
   }
 
-  if (preventAdminAccess) {
+  let isAdminTryingToAccessCashier = Boolean(
+    session &&
+      (session.role === 'admin' || session?.role === 'super-admin') &&
+      CASHIER_ROUTES.includes(url.pathname),
+  )
+
+  if (isAdminTryingToAccessCashier) {
     return NextResponse.redirect(new URL('/app', url), redirectStatus)
   }
 

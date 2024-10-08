@@ -1,9 +1,13 @@
+import { auth } from '@/server/next-auth'
+
 import { PublicHeaderNavbar } from './public-header-navbar'
 
 import { LandPlotIcon } from 'lucide-react'
 import Link from 'next/link'
 
-export function PublicHeaderContainer() {
+export async function PublicHeaderContainer() {
+  let session = await auth()
+
   return (
     <header className='fixed inset-x-0 top-0 z-[99] border-b bg-background'>
       <div className='mx-auto flex h-16 w-11/12 max-w-6xl items-center'>
@@ -12,7 +16,7 @@ export function PublicHeaderContainer() {
           <p className='text-lg font-bold'>Posaha</p>
         </Link>
 
-        <PublicHeaderNavbar />
+        <PublicHeaderNavbar session={session} />
       </div>
     </header>
   )

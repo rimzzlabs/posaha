@@ -29,7 +29,7 @@ export function CashierCheckoutDialogForm() {
       <Form {...form}>
         <div className='grid gap-x-3 md:grid-cols-2 lg:gap-x-4'>
           <div>
-            <ScrollArea className='h-48 md:h-72'>
+            <ScrollArea className='h-[calc(20svh)] md:h-72'>
               <div className='grid gap-2'>
                 <For each={cartItems}>
                   {(item) => <CashierCheckoutDialogProductItem {...item} />}
