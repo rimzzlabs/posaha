@@ -35,9 +35,7 @@ export function CashierCheckoutDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Proses Pembelian</AlertDialogTitle>
           <AlertDialogDescription>
-            Pastikan daftar produk yang hendak di proses sudah sesuai dengan permintaan pelanggan,
-            tanyakan sekali lagi untuk mengkonfirmasi pembelian mereka agar tidak ada kesalahan pada
-            pembelian produk.
+            Pastikan daftar produk yang hendak di proses sudah sesuai dengan permintaan pelanggan.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
