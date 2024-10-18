@@ -22,7 +22,7 @@ export default async function TransactionCashierPage(props: TPageProps) {
     O.mapWithDefault('1', F.identity),
     toInt,
   )
-  let products = await getProductList({ page, search, limit: 20 })
+  let products = await getProductList({ page, search, limit: 10 })
 
   return (
     <div className='grid gap-2.5 xl:grid-cols-[minmax(480px,768px)_minmax(324px,1fr)] 3xl:grid-cols-[minmax(768px,1196px)_minmax(440px,1fr)]'>

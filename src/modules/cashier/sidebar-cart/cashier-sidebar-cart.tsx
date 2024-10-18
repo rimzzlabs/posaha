@@ -23,7 +23,7 @@ export async function CashierSidebarCart() {
       <CashierSidebarSheetCart cartItems={cartItems} />
 
       <div className='max-xl:hidden'>
-        <Card>
+        <Card className='sticky top-[5.5rem]'>
           <CashierSidebarCartHeader />
 
           <CardContent>
